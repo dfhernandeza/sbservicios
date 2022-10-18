@@ -1,0 +1,44 @@
+﻿@model IEnumerable<AppWebSantaBeatriz.Models.Cotizaciones.EstadoCotizacionModel>
+
+@{
+    ViewBag.Title = "VerEstadosCotizaciones";
+}
+
+<h2 style="text-align:center">Estados de Cotizaciones</h2>
+
+<p style="margin-top:25px">
+    <a class="btn btn-danger" href="@Url.Action("NuevoEstadoCotizacion")">Nuevo</a>
+
+</p>
+<table class="table">
+    <tr>
+        <th width="20%">
+            @Html.DisplayNameFor(model => model.Estado)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </th>
+       
+       
+        <th width="18%"></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Estado)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descripcion)
+        </td>
+      
+      
+        <td>
+            <a class="btn btn-danger" href="@Url.Action("EditaEstadoCotizacion", new { id = item.ID })">Editar</a>
+            <a class="btn btn-success" href="@Url.Action("EliminaEstadCotizacion", new { id = item.ID })">Eliminar</a>
+        </td>
+    </tr>
+}
+
+</table>
+

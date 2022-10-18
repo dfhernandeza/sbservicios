@@ -1,0 +1,52 @@
+﻿@model AppWebSantaBeatriz.Models.UsuariosViewModel
+
+@{
+    ViewBag.Title = "EliminarUsuario";
+}
+
+<h2>EliminarUsuario</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>UsuariosViewModel</h4>
+    <hr />
+    @using (Html.BeginForm())
+    {
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.UserName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.UserName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+
+        </dl>
+
+
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input name="Name" style="display:none" type="text" value="@Model.Name" />
+            <input name="Id" style="display:none" type="text" value="@Model.Id" />
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

@@ -1,0 +1,70 @@
+﻿@model BibliotecaDeClases.Modelos.ServicioAutomotriz.FotoModel
+
+@{
+    ViewBag.Title = "EditarFoto";
+}
+
+<h2 class="text-center">Editar Foto</h2>
+
+<div class="container-fluid">
+    <form enctype="multipart/form-data" method="post" action="@Url.Action("EditarFoto")">
+        <div class="row">
+            <div class="col-sm-4">
+                <label>Nombre</label>
+                <input name="Nombre" value="@Model.Nombre" class="form-control" />
+            </div>
+            <div class="col-sm-2">
+                <label>Categoria</label>
+                <select class="form-control" name="IDCategoria">
+                    <option value="">-Seleccionar-</option>
+                    @foreach (var item in Model.CategoriasFotos)
+                    {
+                        if (item.Value == Model.IDCategoria)
+                        {
+                            <option selected value="@item.Value">@item.Text</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+
+                    }
+
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <label>Sección</label>
+                <select class="form-control" name="IDSeccion">
+                    <option value="">-Seleccionar-</option>
+                    @foreach (var item in Model.Secciones)
+                    {
+                        if (item.Value == Model.IDSeccion)
+                        {
+                            <option selected value="@item.Value">@item.Text</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+
+                    }
+
+                </select>
+            </div>
+            <div class="col-sm-4">
+                <label>Foto</label>
+                <input name="Foto" class="form-control" type="file" />
+            </div>
+            <div class="col-sm-12">
+                <label class="form-label">Descripción</label>
+                <textarea name="Descripcion" class="form-control">@Model.Descripcion</textarea>
+            </div>
+            <div class="col-sm-12 mt-3">
+                <img width="250" height="250" src="@Model.URL" />
+            </div>
+            <div class="col-sm-12 mt-3">
+                <input class="btn btn-outline-success" type="submit" value="Enviar" />
+            </div>
+        </div>
+    </form>
+</div>

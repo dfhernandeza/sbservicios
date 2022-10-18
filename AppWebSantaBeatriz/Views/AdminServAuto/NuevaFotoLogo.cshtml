@@ -1,0 +1,41 @@
+﻿@model BibliotecaDeClases.Modelos.ServicioAutomotriz.FotoLogoModel
+
+@{
+    ViewBag.Title = "NuevaFotoLogo";
+}
+
+<h2>Nueva Foto Logo</h2>
+<form enctype="multipart/form-data" method="post" action="@Url.Action("NuevaFotoLogo")">
+    <div class="row">
+        <div class="col-sm-3">
+            <label class="form-label">
+                Marca
+            </label>
+            <select class="form-control" name="IDMarca">
+                <option value="">
+                    -Seleccionar-
+                </option>
+                @foreach (var item in Model.Marcas)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+        </div>
+        <div class="col-sm-3">
+            <label class="form-label">
+                Imagen
+            </label>
+            <input name="Foto" class="form-control" type="file" />
+
+        </div>
+
+    </div>
+    <div class="row mt-2">
+        <div class="col-sm-3">
+           <input type="submit" class="btn btn-outline-success" />
+        </div>
+     
+
+    </div>
+</form>
+

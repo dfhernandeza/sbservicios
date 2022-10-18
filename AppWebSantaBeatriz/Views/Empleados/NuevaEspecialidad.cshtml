@@ -1,0 +1,58 @@
+﻿@model BibliotecaDeClases.Modelos.EspecialidadModel
+
+@{
+    ViewBag.Title = "NuevaEspecialidad";
+}
+
+<h2 style="margin-top:20px;margin-bottom:20px">Nueva Especialidad</h2>
+
+<div class="container-fluid fondogris">
+    <form method="post" action="@Url.Action("NuevaEspecialidad")">
+        @Html.AntiForgeryToken()
+
+
+
+
+        <div class="row border-dark align-items-end">
+            <div class="form-group col-md-4">
+                <label for="Especialidad">Especialidad</label>
+                <input type="text" name="Especialidad" id="Especialidad" class="form-control" />
+            </div>
+            <div class="form-group col-md-4">
+                <label for="ValorHH">Valor HH</label>
+            <input name="ValorHH" id="ValorHH" class="form-control" />
+            </div>
+            <div class="form-group col-md-4 align-bottom" style="vertical-align:bottom !important">
+
+                <button type="submit" class="btn btn-block botonrojo">Aceptar </button>
+            </div>
+
+
+        </div>
+        <div class="row border-dark">
+            <div class="col-12">
+                <label for="Descripcion">Descripción</label>
+                <textarea id="Descripcion" name="Descripcion" style="text-transform:uppercase" rows="2" class="form-control"></textarea>
+
+                @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+            </div>
+
+        </div>
+
+    </form>
+
+
+
+    <div class="margenes">
+        <a href="~/Empleados/VerEspecialidades" class="btn btn-primary">Volver</a>
+
+    </div>
+</div>
+
+
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

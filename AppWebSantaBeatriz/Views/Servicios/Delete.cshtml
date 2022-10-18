@@ -1,0 +1,123 @@
+﻿@model AppWebSantaBeatriz.Models.Servicios.ServicioModel
+
+@{
+    ViewBag.Title = "Eliminar Servicio";
+}
+<link href="~/Content/SB/SB.css" rel="stylesheet" />
+
+
+<h3>¿Confirma que desea eliminar este servicio?</h3>
+<div>
+  
+    <dl class="dl-horizontal">
+        <dt>
+            Servicio
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NombreServicio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Encargado)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Encargado)
+        </dd>
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaInicio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaInicio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaTermino)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaTermino)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descripcion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumPedido)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumPedido)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Estado)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Estado)
+        </dd>
+
+
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoServicio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TipoServicio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CLiente)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CLiente)
+        </dd>
+
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Contacto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Contacto)
+        </dd>
+
+
+
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ubicacion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ubicacion)
+        </dd>
+
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Confirmar" class="btnNaranjo" /> 
+            <a class="btnAzul" style="text-decoration:none" href="@Url.Action("VerServicios")">Volver</a>
+            
+        </div>
+    }
+</div>

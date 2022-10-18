@@ -1,0 +1,483 @@
+﻿@model IEnumerable<AppWebSantaBeatriz.Models.CotizacionPersonalModel>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+
+@{
+    ViewBag.Title = "Detalle Personal";
+}
+
+@{double suma = 0;
+    foreach (var row in Model)
+    {
+        suma = suma + (double)row.Total;
+    }
+}
+
+
+<h1 style="text-align:center">Detalle Personal</h1>
+
+
+<div class="row">
+    <div class="col-md-9">
+        <h3 class="margenes">Cotización: @ViewBag.id </h3>
+    </div>
+    <div class="col-md-3">
+        <h3 id="Total" class="margenes">Total : @suma.ToString("C") </h3>
+    </div>
+
+</div>
+
+<p>
+    <button type="button" class="btn btn-primary" id="boton" style="margin-top:10px">Nuevo</button>
+
+</p>
+
+@*Tabla*@
+
+<table class="table">
+    <tr>
+        <th style="display:none">
+           
+        </th>
+        <th style="display:none">
+
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Especialidad)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Cantidad)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.HH)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TotalHH)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ValorHH)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Total)
+        </th>
+        <th width="16%"></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td style="display:none">
+
+                @item.ID
+            </td>
+          <td style="display:none">
+            @item.IDEspecialidad
+          </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Especialidad)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cantidad)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HH)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalHH)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ValorHH)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Total)
+            </td>
+            <td>
+                <input type="button" class="btn btn-success" value="Editar" id="BtnEditar" />
+                <input type="button" class="btn btn-danger" value="Eliminar" id="BtnEliminar" />         
+         </td>
+        </tr>
+    }
+
+</table>
+
+
+<div>
+    <a class="btn btn-danger" href="@Url.Action("VerCotizacion","Cotizaciones", new {id = ViewBag.id})">Volver</a>
+</div>
+
+@*Modal Ingresar y Editar*@
+
+
+    <div class="modal fade" id="ModalPersonal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:blue">
+                    <h4 class="modal-title expander_style text-white">Personal</h4>
+                    <button type="button" id="CerrarModal" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+                </div>
+                <div class="modal-body">
+
+
+
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <form id="myform">
+
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group form-inline">
+
+
+                                        <select id="Esp" class="form-control" name="Especialidad" style="margin-left: 5px">Especialidad</select>
+
+                                        <input name="ValorHH" class="form-control" style="margin-left:5px;width:100px" id="ValorHH" placeholder="Valor HH" />
+
+                                        <input name="Cantidad" class="form-control" id="Cantidad" style="width:110px;margin-left:5px" placeholder="Cantidad" />
+
+                                        <input name="HH" id="HH" class="form-control" style="width:75px;margin-left:5px" placeholder="HH" />
+
+                                        <input name="TotalHH" class="form-control" id="TotalHH" style="width:100px;margin-left:5px" placeholder="TotalHH" />
+
+                                        <input name="TotalPlata" id="TotalPlata" class="form-control" style="width:95px;margin-left:5px" placeholder="Total" />
+
+
+
+                                        <input type="button" id="Ingresar" value="Ingresar" class="btn btn-primary" style="margin-left:10px" />
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </form>
+
+
+                    }
+
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    @*Modal Eliminar*@
+
+
+    <div class="modal fade" id="ModalEliminar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header botonazul">
+                    <h5 class="modal-title" id="exampleModalLabel">Eliminar Personal</h5>
+                    <button type="button" class="close" id="CerrarModalEliminar" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+
+                    <h2 id="EliminarParrafo"></h2>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="CerrarEliminarPersonalF">Cerrar</button>
+                    <button type="button" id="ConfirmarEliminar" class="btn btn-primary">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+    var IDPersonal;
+    var Origen;
+   //Abre modal
+    //=======================================================================================================
+    $(function () {
+
+         $('#boton').on('click', function (e) {
+
+             Origen = 'Nuevo'
+             $('#ModalPersonal').modal('show');
+
+         });
+
+        $(document).on('click', '#BtnEliminar' ,function (e) {
+            var row = $(this).closest("tr");   // Finds the closest row <tr>
+            var tds = row.find("td");
+            IDPersonal = tds[0].innerText;
+            document.getElementById("EliminarParrafo").innerHTML = "¿Confirma que desea eliminar " + tds[2].innerText + " de la lista de personal?";
+
+            $('#ModalEliminar').modal('show');
+
+        });
+
+
+
+    });
+    //Cierra modal
+    //=======================================================================================================
+    $(function () {
+        $('#CerrarModal').on('click', function (e) {
+
+            LimpiarModal();
+
+        });
+
+        $('#CerrarEliminarPersonalF').on('click', function (e) {
+
+            $('#ModalEliminar').modal('hide');
+
+        });
+
+
+        $('#CerrarModalEliminar').on('click', function (e) {
+
+               $('#ModalEliminar').modal('hide');
+
+        });
+    });
+     //=======================================================================================================
+     // Limpia Modal
+        function LimpiarModal() {
+            $('#Esp').val(0);
+            $('#ValorHH').val('');
+            $('#Cantidad').val('');
+            $('#HH').val('');
+            $('#TotalHH').val('');
+            $('#TotalPlata').val('');
+            $('#ModalPersonal').modal('hide');
+        };
+    //=======================================================================================================
+    // Obtiene valor HH
+    $(function () {
+        $('#Esp').on('change', function (e) {
+
+
+            $.ajax({
+                url: "/CotPersonal/GetValorHH/",
+                type: 'POST',
+                async: false,
+                dataType: 'text',
+                data: {
+                    id: $("#Esp").val()
+                },
+                success: function (data) {
+
+                    data = JSON.parse(data);
+                    $("#ValorHH").val(data);
+                },
+            });
+
+
+
+        });
+    });
+    //=======================================================================================================
+    //Ingresa o edita un elemento
+
+    $(function () {
+
+        $('#Ingresar').on('click', function (e) {
+             if (Origen == 'Nuevo') {
+                     $.ajax({
+                         url: "/CotPersonal/NuevoPersonal/",
+                         type: 'POST',
+                         async: false,
+                         dataType: 'text',
+                         data: {
+                             idcot: '@ViewBag.id',
+                             idespecialidad: $('#Esp').val(),
+                             hh: $('#HH').val(),
+                             cantidad: $('#Cantidad').val(),
+                             valorhh: $('#ValorHH').val()
+
+                         },
+                         success: function () {
+
+                             location.reload();
+                         },
+                     });
+
+             }
+         else{
+
+                 $.ajax({
+                     url: "/CotPersonal/EditarPersonal/",
+                     type: 'POST',
+                     async: false,
+                     dataType: 'text',
+                     data: {
+                         id: IDPersonal,
+                         idespecialidad: $('#Esp').val(),
+                         hh: $('#HH').val(),
+                         cantidad: $('#Cantidad').val(),
+                         valorhh: $('#ValorHH').val()
+
+                     },
+                     success: function () {
+
+                         location.reload();
+                     },
+                 });
+
+
+
+
+
+             }
+
+
+        });
+
+
+    });
+    //=======================================================================================================
+// Calcula automaticamente el total de HH
+    $(function () {
+
+        $("#Cantidad,#HH").keyup(function (e) {
+
+            var q = $("#Cantidad").val();
+            var p = $("#HH").val();
+            var result = "";
+
+            if (q !== "" && p !== "" && $.isNumeric(q) && $.isNumeric(p)) {
+                result = parseFloat(q) * parseFloat(p);
+            }
+            $("#TotalHH").val(result);
+
+        });
+
+    });
+ //=======================================================================================================
+// Calcula automaticamente el total de Dinero
+    $(function () {
+
+
+        $("#HH,#TotalHH").keyup(function (e) {
+
+            var q = $("#TotalHH").val();
+            var p = $("#ValorHH").val();
+            var result = "";
+
+            if (q !== "" && p !== "" && $.isNumeric(q) && $.isNumeric(p)) {
+                result = parseFloat(q) * parseFloat(p);
+            }
+            $("#TotalPlata").val(result);
+
+        });
+
+    });
+    //================================================================================================
+    //Carga Especialidades
+    //================================================================================================
+    $(function () {
+        $(document).ready(function () {
+
+            $.ajax({
+                url: "/CotPersonal/GetEspecialidades/",
+                type: 'POST',
+                async: false,
+                dataType: 'text',
+                data: {
+
+                },
+                success: function (data) {
+
+                    data = JSON.parse(data);
+                    $('#Esp').append(
+                        $('<option></option>').val('0').html('Especialidad')
+                    );
+                    $(data).each(function (i, item) {
+
+                        $('#Esp').append(
+                            $('<option></option>').val(item.Value).html(item.Text)
+                        );
+                    });
+                },
+            });
+
+        });
+    });
+   //================================================================================================
+    //Abre el modal para editar
+   //================================================================================================
+    $(function () {
+
+        $(document).on('click', "#BtnEditar", function () {
+
+
+            Origen = "Editar"
+            var row = $(this).closest("tr");   // Finds the closest row <tr>
+            var tds = row.find("td");
+            IDPersonal = tds[0].innerText;
+            $("#Esp").val(parseInt(tds[1].innerText));
+            $("#ValorHH").val(tds[6].innerText.replace(/[^0-9,-]+/g, ""));
+            $("#Cantidad").val(tds[3].innerText);
+            $("#HH").val(tds[4].innerText);
+            $("#TotalHH").val(tds[5].innerText);
+            $("#TotalPlata").val(tds[7].innerText.replace(/[^0-9,-]+/g, ""));
+
+
+            $('#ModalPersonal').modal('show');
+
+        });
+
+
+
+
+    });
+    //================================================================================================
+    //Eliminar una especialidad
+
+    $(function () {
+
+        $('#ConfirmarEliminar').on('click', function (e) {
+
+                     $.ajax({
+                         url: "/CotPersonal/BorrarPersonal/",
+                         type: 'POST',
+                         async: false,
+                         dataType: 'text',
+                         data: {
+                             id: IDPersonal
+
+
+                         },
+                         success: function () {
+
+                             location.reload();
+
+                             $('#ModalEliminar').modal('hide');
+
+                         },
+                     });
+
+        });
+    });
+
+
+
+
+
+    </script>
+
+
+
+
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval", "~/bundles/jquery", "~/bundles/bootstrap", "~/Content/css")
+
+    }

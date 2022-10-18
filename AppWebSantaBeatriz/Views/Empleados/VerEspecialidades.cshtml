@@ -1,0 +1,71 @@
+﻿@model IEnumerable<BibliotecaDeClases.Modelos.EspecialidadModel>
+
+@{
+    ViewBag.Title = "Ver Especialidades";
+}
+
+<h2 style="margin-top:20px;margin-bottom:20px">Especialidades</h2>
+<link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+<p>
+    <a class="btn btn-danger" href="~/Empleados/NuevaEspecialidad/">Nueva</a>
+    
+</p>
+<style>
+    .encabezado {
+        background: rgb(34,59,195);
+        background: linear-gradient(37deg, rgba(34,59,195,1) 0%, rgba(255,128,0,1) 100%);
+    }
+</style>
+<table class="tabla">
+    <tr class="encabezado">
+        <th>
+           ID
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Especialidad)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ValorHH)
+        </th>
+        <th style="width:58%">
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </th>
+     
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Especialidad)
+        </td>
+        <td>
+            @item.ValorHH.ToString("C")
+        
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descripcion)
+        </td>
+  
+        <td>
+            <div class="d-flex justify-content-around">
+
+
+                <a href="@Url.Action("EditarEspecialidad", new { idespecialidad = item.ID})" class="btn btn-primary">
+                    <img src="~/Content/Pictures/editar.png" />
+                </a>
+                <a href="@Url.Action("VerEspecialidad", new { idespecialidad = item.ID})" class="btn btn-danger">
+                    <img src="~/Content/Pictures/detail.png" />
+                </a>
+                <a href="@Url.Action("EliminarEspecialidad", new { idespecialidad = item.ID})" class="btn btn-success">
+                    <img src="~/Content/Pictures/delete.png" />
+                </a>
+            </div>
+        </td>
+    </tr>
+}
+
+</table>

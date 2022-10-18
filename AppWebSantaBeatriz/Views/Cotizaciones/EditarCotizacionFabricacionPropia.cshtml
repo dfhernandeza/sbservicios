@@ -1,0 +1,85 @@
+﻿@model AppWebSantaBeatriz.Models.Cotizaciones.SubCotizacionModel
+
+@{
+    ViewBag.Title = "EditarCotizacionFabricacionPropia";
+}
+
+<h2 style="text-align:center;margin-bottom:30px">Editar Cotizacion Item Fabricacion Propia</h2>
+
+<script>
+    $(document).ready(function () {
+       $('.form-control').css('text-transform','uppercase')
+
+    });
+</script>
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="container-fluid fondogris">
+        <form>
+            @Html.HiddenFor(x=>x.Origen)
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="row align-items-end">
+                <div class="col-md-9">
+                    <div class="form-group">
+                        <label for="CotizacionPrincipal">Cotización Principal</label>
+             
+                        <input type="text" class="form-control" name="CotizacionPrincipal" id="CotizacionPrincipal" value="@Model.CotizacionPrincipal" style="border-radius:25px" />
+                        <input type="text" style="display:none" value="@Model.IDCotizacionPrincipal" id="IDCotizacionPrincipal" name="IDCotizacionPrincipal" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="d-grid gap-2">
+                           <input type="submit" value="Ingresar" class="btn btn-danger" />
+                        </div>
+                  
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-end">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="Servicio">Nombre del producto</label>
+                        <input type="text" class="form-control" name="Servicio" id="Servicio" value="@Model.Producto" />
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="Unidad">Unidad</label>
+                        <input type="text" class="form-control" name="Unidad" id="Unidad" value="@Model.Unidad" />
+                        @Html.ValidationMessageFor(model => model.Unidad, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="Cantidad">Cantidad</label>
+                        <input type="text" class="form-control" name="Cantidad" id="Cantidad" value="@Model.Cantidad" />
+                        @Html.ValidationMessageFor(model => model.Cantidad, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Detalles">Detalles</label>
+                <textarea class="form-control" id="Detalles" placeholder="El servicio consiste en..." name="Detalles" rows="4">@Model.Detalles</textarea>
+                @Html.ValidationMessageFor(model => model.Detalles, "", new { @class = "text-danger" })
+            </div>
+            <div style="margin-top:10px">
+                @if (Model.Origen == "Arauco")
+                {
+                    <a href="@Url.Action("Detalles", "CotizacionArauco", new {id = Model.IDCotizacionPrincipal })" class="btn btn-success">Volver</a>
+                }
+                else
+                {
+                    <a href="@Url.Action("VerCotizacion", new {id = Model.IDCotizacionPrincipal })" class="btn btn-success">Volver</a>
+                }
+
+            </div>
+        </form>
+    </div>
+}
+

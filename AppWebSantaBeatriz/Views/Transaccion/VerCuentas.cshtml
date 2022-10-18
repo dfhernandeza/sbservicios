@@ -1,0 +1,67 @@
+﻿@model IEnumerable<AppWebSantaBeatriz.Models.Transacciones.CuentaModel>
+
+@{
+    ViewBag.Title = "Ver Cuentas";
+}
+<link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+<h2 style="text-align:center">Listado de Cuentas Contables</h2>
+<style>
+    .encabezado {
+        background: rgb(4,0,255);
+        background: linear-gradient(37deg, rgba(4,0,255,1) 10%, rgba(232,255,0,1) 100%);
+    }
+</style>
+<p>
+    <a class="btn btn-danger margenes" href="@Url.Action("NuevaCuenta")">Nueva Cuenta</a>
+
+</p>
+<table class="tabla">
+    <tr class="encabezado">
+        <th>
+        ID
+        </th>
+        <th width="15%">
+            @Html.DisplayNameFor(model => model.Nombre)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.Tipo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </th>
+        <th width="15%"></th>
+    </tr>
+
+@foreach (var item in Model) {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.ID)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Nombre)
+    </td>
+
+    <td>
+        @Html.DisplayFor(modelItem => item.Tipo)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Descripcion)
+    </td>
+
+    <td >
+        <a class="btn btn-danger" href="@Url.Action("EditarCuenta",new {id = item.ID })">
+            <img src="~/Content/Pictures/editar.png" />
+        </a>
+        <a class="btn btn-success" href="@Url.Action("VerCuenta",new {id = item.ID })">
+            <img src="~/Content/Pictures/detail.png" />
+        </a>
+        <a class="btn btn-primary" href="@Url.Action("EliminaCuenta",new {id = item.ID })">
+            <img src="~/Content/Pictures/delete.png" />
+        </a>
+
+    </td>
+</tr>
+}
+
+</table>

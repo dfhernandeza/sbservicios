@@ -1,0 +1,50 @@
+﻿@model IEnumerable<AppWebSantaBeatriz.Models.Transacciones.TipoDocumentoModel>
+
+@{
+    ViewBag.Title = "Ver Tipos de Documentos";
+}
+<link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+<h2>Tipos de Documentos</h2>
+
+<p>
+    <a href="@Url.Action("NuevoTipoDocumento")" class="btn btn-danger">Nuevo</a>
+
+</p>
+<table class="tabla">
+    <tr class="encabezado">
+        <th>
+           ID
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </th>
+        <th style="width:55%">
+           Descripción
+        </th>
+        <th style="width:15%"></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descripcion)
+        </td>
+        <td>
+            <a class="btn btn-primary" href="@Url.Action("EditaTipoDocumento",new { idtipo=item.ID })">
+                <img src="~/Content/Pictures/editar.png" />
+            </a>
+         
+            <a class="btn btn-danger" href="@Url.Action("EliminaTipoDocumento",new { idtipo=item.ID })">
+                <img src="~/Content/Pictures/delete.png" />
+            </a>
+           
+    </tr>
+}
+
+</table>

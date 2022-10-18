@@ -1,0 +1,199 @@
+﻿@model IEnumerable<BibliotecaDeClases.EmpleadoModel>
+
+@{
+    ViewBag.Title = "VerEmpleados";
+}
+
+<h2 style="margin-top:20px;margin-bottom:30px;color:white;text-align:center">Listado de Personal</h2>
+<head>
+    <link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+    <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+    <script src="~/Scripts/Funciones.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+</head>
+<script>
+    $(function () {
+        $('#buscar').keyup(function (e) {
+            var idempleado = $("#buscar").val()
+            $.ajax({
+                url: "/Empleados/GetEmpleados/",
+                type: 'POST',
+                async: false,
+                dataType: 'json',
+                data: {
+                    id: idempleado
+
+                },
+                success: function (data) {
+                    $("#tabla").find("tr:not(:first)").remove();
+                  gma  $(data).each(function (i, item) {
+                        var links = ' <td> <a style="text-decoration:none;margin-right:5px" href="/Empleados/Delete/' + item.ID + '"> <img title="Eliminar este Empleado" id="imgEliminar" style="width:32px;height:32px" src="/Content/Pictures/iconfinder_Error_32686.png" /> </a>' +
+                            '<a style="text-decoration:none;margin-right:5px" href="/Empleados/Detalles/' + item.ID + '"href="/Empleados/Delete/' + item.IDEmpleado + '"><img title="Abrir Ficha de este Empleado" style="width:32px;height:32px" src="/Content/Pictures/iconfinder_Female-user-info_205682.png" /> </a>' +
+                            '<a style="text-decoration:none" href="/Empleados/Edit/' + item.ID + '"> <img title="Editar Información de este Empleado" style="width:32px;height:32px" src="/Content/Pictures/iconfinder_drawings_564223.png" /> </a></td>';
+                        var row = $(
+                            '<tr><td>' + formatrut(item.IDEmpleado) + '</td><td>' + item.Nombre + '</td><td>' + item.Apellido + '</td><td>' + item.Especialidad + '</td> ' + links + ' </tr>');
+                        $('#tabla').append(row);
+                    });
+                },
+            });
+
+        });
+
+    });
+    $(document).ready(function (e) {
+        $('[data-bs-toggle="tooltip"]').tooltip();
+    });
+
+
+
+</script>
+<p>
+    <a href="@Url.Action("CrearEmpleado")">
+        <img data-bs-toggle="tooltip" data-bs-placement="top" title="Nuevo Empleado" style="width:50px;height:50px" src="~/Content/Pictures/iconfinder_add_users_plus_group_170889.png" />
+    </a>
+    @*<input type="text" style="float:right" class="form-control-lg" id="buscar" name="buscar" />
+    <img style="float:right;margin-right:20px;width:50px;height:50px;margin-right:20px" src="~/Content/Pictures/iconfinder_search_people_find_170923.png" />*@
+    
+
+</p>
+<table class="tabla" id="tabla">
+    <tr class="encabezado">
+        <th>
+
+            Rut
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Apellido)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Especialidad)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Usuario)
+        </th>
+        <th>Correo Actualización</th>
+        <th width="14%"></th>
+    </tr>
+
+@foreach (var item in Model) {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.IDEmpleado)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Nombre)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Apellido)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Especialidad)
+    </td>
+    @if (item.Usuario != null)
+    {
+        <td>
+            @item.Usuario.ToLower()
+
+        </td>
+    }
+    else
+    {
+        <td>No creado</td>
+    }
+    @if (item.FechaCorreoAct != null)
+    {
+        <td>
+            @(item.FechaCorreoAct?.ToString("dd-MM-yyyy HH:mm"))
+
+        </td>
+    }
+    else
+    {
+        <td>No Enviado</td>
+    }
+    <td>
+        <div class="d-flex justify-content-around">
+            <a style="text-decoration:none" href=@Url.Action("Delete",new { id = item.ID })>
+                <img data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar este Empleado" id="imgEliminar" style="width:32px;height:32px" src="~/Content/Pictures/iconfinder_Error_32686.png" />
+            </a>
+            <a style="text-decoration:none" href=@Url.Action("Detalles",new { id = item.ID })>
+
+                <img data-bs-toggle="tooltip" data-bs-placement="top" title="Abrir Ficha de este Empleado" style="width:32px;height:32px" src="~/Content/Pictures/iconfinder_Female-user-info_205682.png" />
+            </a>
+            <a style="text-decoration:none" href=@Url.Action("Edit",new { id = item.ID })>
+
+                <img data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Información de este Empleado" style="width:32px;height:32px" src="~/Content/Pictures/iconfinder_drawings_564223.png" />
+            </a>
+            <a style="text-decoration:none" href=@Url.Action("RegistrarVacaciones",new { idempleado = item.ID })>
+
+                <img data-bs-toggle="tooltip" data-bs-placement="top" title="Registrar Vacaciones" style="width:32px;height:32px" src="~/Content/Pictures/vacaciones-de-verano.png" />
+            </a>
+            @if (item.Usuario == null)
+            {
+                <a style="text-decoration:none" id="btnregistrar" data-username="@item.Email" data-idempleado="@item.ID" href=@Url.Action("Register","Account",new { username = item.Email, idempleado = item.ID })>
+                    <img data-bs-toggle="tooltip" data-bs-placement="top" title="Crear Usuario" style="width:32px;height:32px" src="~/Content/Pictures/user.png" />
+
+                </a>
+            }
+            <button style="border:none;background-color:white" data-idempleado="@item.ID" id="btnActualizarDatos" type="button">
+                <img src="~/Content/Pictures/email.png" data-bs-toggle="tooltip" style="width:32px;height:32px" data-bs-placement="top" title="Enviar Correo Actualizar Datos" />
+            </button>
+            <div class="spinner-border text-primary d-none" role="status">
+                <span class="sr-only"></span>
+            </div>
+            @if (item.Actualizado)
+            {
+                <a style="text-decoration:none" href=@Url.Action("ObtenerFormularioDatosEmpleado",new { idempleado = item.ID })>
+
+                    <img data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar Formulario" style="width:32px;height:32px" src="~/Content/Pictures/download-pdf.png" />
+                </a>
+            }
+
+
+        </div>
+
+
+
+    </td>
+</tr>
+}
+
+</table>
+<div id="registrar" class="d-none">
+    
+</div>
+<script>
+    $(document).on('click', '#btnregistrar', function (e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        /*var url = "/Account/Register?username=" + $(this).data('username') + "&idempleado=" + $(this).data('idempleado') + "&nombre=" + $(this).data('nombre');*/
+        $('#registrar').load(url + " .cont", function () {
+            $('#registrar').removeClass('d-none').dialog({ position: { my: 'top', at: 'top+100' }, title: "Registro", resize: "auto", width:"auto"});
+            $('.ui-dialog-titlebar-close').text('x').css('font-size', '12px');
+        });
+
+    });
+    $(document).on("click", '#btnActualizarDatos', function (e) {
+        var btn = $(this);
+        var spinner = btn.closest('td').find('.spinner-border');
+        btn.hide();
+        spinner.removeClass('d-none');
+        var idempleado = $(btn).data('idempleado');
+        $.ajax({
+            type: "POST",
+            url: "/Account/correoActualizacionDatosAsync/",
+            data: { idempleado:idempleado},
+            dataType: "json",
+            success: function (response) {
+                btn.show();
+                spinner.hide();
+                location.reload();
+            }
+        });
+    });
+</script>

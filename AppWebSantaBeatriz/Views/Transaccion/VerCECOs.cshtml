@@ -1,0 +1,77 @@
+﻿@model IEnumerable<BibliotecaDeClases.Modelos.Transacciones.CECOsModel>
+
+@{
+    ViewBag.Title = "Ver Centros de Costos";
+}
+<link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+<h2 style="margin-bottom:50px;margin-top:25px;text-align:center">Listado de Centros de Costos</h2>
+<style>
+    .encabezado {
+        background: rgb(34,255,250);
+        background: linear-gradient(37deg, rgba(34,255,250,1) 2%, rgba(248,0,255,1) 100%);
+    }
+</style>
+<p  style="margin-bottom:30px">
+    <a href="@Url.Action("NuevoCECO")">
+        <img title="Nuevo Centro de Costos" style="width:50px;height:50px" src="~/Content/Pictures/iconfinder_money_bag_45068.png" />
+   </a>
+   
+</p>
+<table class="tabla">
+    <tr class="encabezado">
+        <th>
+            @Html.DisplayNameFor(model => model.ID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Gasto)
+        </th>
+      
+        <th style="width:25% !important">
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </th>
+        <th >
+            @Html.DisplayNameFor(model => model.Estado)
+        </th>
+        <th style="width:14%"></th>
+    </tr>
+
+@foreach (var item in Model) {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.ID)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Nombre)
+    </td>
+    <td>
+        @item.Gasto.ToString("C")
+    </td>
+   
+    <td>
+        @Html.DisplayFor(modelItem => item.Descripcion)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Estado)
+    </td>
+    <td>
+        <a style="text-decoration:none;margin-right:10px" href=@Url.Action("EliminarCECO",new { idceco = item.ID })>
+            <img title="Eliminar este Centro de Costos" id="imgEliminar" style="width:32px;height:32px" src="~/Content/Pictures/iconfinder_Error_32686.png" />
+        </a>
+        <a style="text-decoration:none;margin-right:10px" href=@Url.Action("DetalleCECO",new { idceco = item.ID })>
+            
+
+            <img title="Ver más información" style="width:32px;height:32px" src="~/Content/Pictures/iconfinder_stock_view-details_24335.png" />
+        </a>
+        <a style="text-decoration:none" href=@Url.Action("EditarCECO",new { idceco = item.ID })>
+
+            <img title="Editar Centro de Costos" style="width:32px;height:32px" src="~/Content/Pictures/iconfinder_drawings_564223.png" />
+        </a>
+       
+    </td>
+</tr>
+}
+
+</table>

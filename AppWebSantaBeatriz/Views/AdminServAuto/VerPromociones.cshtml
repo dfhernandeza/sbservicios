@@ -1,0 +1,57 @@
+﻿@model IEnumerable<BibliotecaDeClases.Modelos.ServicioAutomotriz.PromocionModel>
+
+@{
+    ViewBag.Title = "VerPromociones";
+}
+
+<h2 class="text-center mb-5">Promociones</h2>
+
+<p>
+    <a class="btn btn-outline-dark" href="@Url.Action("NuevaPromocion")">Nueva</a>
+</p>
+<table class="table">
+    <tr>
+       
+        <th>
+            @Html.DisplayNameFor(model => model.Titulo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Precio)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Vigente)
+        </th>
+        <th>
+           Foto
+        </th>
+       
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+       
+        <td class="celda">
+
+            @Html.DisplayFor(modelItem => item.Titulo)
+        </td>
+        <td class="celda">
+            @item.Precio.ToString("C")
+        </td>
+        <td class="celda">
+            @Html.DisplayFor(modelItem => item.Descripcion)
+        </td>
+        <td class="celda">
+            @Html.DisplayFor(modelItem => item.Vigente)
+        </td>
+        <td class="celda">
+            <img width="150" height="150" src="@item.URL" />
+           
+        </td>
+       
+    </tr>
+}
+
+</table>

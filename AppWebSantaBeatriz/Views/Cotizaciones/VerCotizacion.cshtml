@@ -1,0 +1,1529 @@
+﻿@model AppWebSantaBeatriz.Models.CotizacionModel
+
+@{
+    ViewBag.Title = "VerCotizacion";
+}
+
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="~/Scripts/Funciones.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
+<style>
+    .ui-front {
+        z-index: 9999999 !important;
+    }
+    .body {
+        width: 100%;
+        height: 100%;
+        font-family: sans-serif;
+        background: #606c88; /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #3f4c6b, #606c88); /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+
+    .fila {
+        background-color: #f7f7f7;
+        border-bottom: solid;
+        border-color: white;
+        color: blue
+    }
+
+    .sombra {
+        box-shadow: inset 0 3px 6px rgba(0,0,0,0.16), 0 4px 6px rgba(0,0,0,0.45)
+    }
+
+    .segundafila {
+        background-color: #240090;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        color: white;
+        border-bottom: solid;
+        border-color: white;
+        font-weight: bold
+    }
+
+    .tercerafila {
+        background-color: #f7f7f7;
+        color: #000000;
+        border-bottom: solid;
+        border-color: white;
+        border-width: 5px;
+    }
+
+    .vertical-center {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+        right: 20%
+    }
+
+    .borde {
+        border-right: solid;
+        border-color: white;
+    }
+
+    .cuartafila {
+        background-color: #f7f7f7;
+        color: green;
+        font-weight: 900;
+        border-bottom: solid;
+        border-color: white;
+        border-width: 5px
+    }
+
+    .button1 {
+        background-color: white;
+        color: black;
+        border: 2px solid #4CAF50;
+    }
+
+        .button1:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+    .button3 {
+        background-color: white;
+        color: black;
+        border: 2px solid #f44336;
+    }
+
+        .button3:hover {
+            background-color: #f44336;
+            color: white;
+        }
+
+    .container-fluid {
+        font-family: Arial, Helvetica, sans-serif
+    }
+
+    @@media (max-width: 475px) {
+        /* td {
+            font-size: 2vw !important;
+            padding: 4px !important;
+        }*/
+      /*  .mobiles {
+            width: 1245px!important;
+            font-size:2vw;
+        }*/
+      body{
+          font-size:2vw!important;
+      }
+        .button1 {
+            background-color: white;
+            color: black;
+            border: 2px solid #4CAF50;
+        }
+    }
+</style>
+
+
+
+
+@* Scripts materiales *@
+<script>
+    var origen;
+    var IDMaterial;
+    var items = [];
+    $(document).ready(function () {
+        $.ajax({
+            type: "POST",
+            url: "/Transaccion/obtenerAllItems/",
+            dataType: "json",
+            success: function (response) {
+                items = response;
+                $('#ItemMaterialModal').autocomplete({
+                    source: items
+                    //source: function (request, response) {
+                    //
+                    //},
+
+
+                });
+            }
+        });
+    })
+
+
+
+
+
+
+
+    $(function () {
+        $(document).ready(function () {
+
+            $('option').css({ 'background-color': 'blue', 'color': 'white' });
+        });
+
+    });
+
+    //Cambia el estado de la cotización
+    $(function () {
+        $(document).on('change', '#Estado', function () {
+
+            $.ajax({
+                url: "/Cotizaciones/CambiaEstado/",
+                type: 'POST',
+                async: false,
+                dataType: 'text',
+                data: {
+                    idcoti: '@Model.ID',
+                    idestado: $('#Estado').val()
+                },
+                success: function (data) {
+
+
+                },
+            });
+
+        });
+
+
+    });
+
+
+    $(function () {
+        $(document).ready(function () {
+
+            if ($('#Estado').text() == 'APROBADA') {
+
+                $('#BtnServicio').css("display", "block");
+            }
+            else {
+
+                $('#BtnServicio').css("display", "none");
+            }
+
+
+
+
+            $(document).on('change', '#Estado', function () {
+
+                if ($('#Estado').text() == 'APROBADA') {
+
+                    $('#BtnServicio').css("display", "block");
+                }
+
+                else {
+
+                    $('#BtnServicio').css("display", "none");
+                }
+
+
+
+            });
+
+
+
+        });
+
+
+    });
+
+    //Calcula automáticamente el valor total
+    $(document).ready(function (e) {
+
+        $(document).on('keyup', "#CantidadMaterialModal,#PrecioMaterialModal", function (e) {
+            multiplica('#CantidadMaterialModal', "#PrecioMaterialModal", "#VTotalMaterialModal");
+        });
+
+
+    });
+
+    //Llena Modal Editar material
+    //=======================================================================
+    $(document).ready(function () {
+        $(document).on('click', '#btnEditarMaterial', function (e) {
+            origen = 'Editar';
+            var tr = $(this).closest('.row');
+            $('#ItemMaterialModal').val($(tr.find('#itemcell')).text());
+            $('#UnidadMaterialModal').val($(tr.find('#unidadcell')).text());
+            $('#CantidadMaterialModal').val($(tr.find('#cantidadcell')).text());
+            $('#PrecioMaterialModal').val(Number($(tr.find('#punitariocell')).text().replace(/[^0-9,-]+/g, "")));
+            $('#VTotalMaterialModal').val(Number($(tr.find('#totalcell')).text().replace(/[^0-9,-]+/g, "")));
+            $('#IDCategoriaModal').val($(tr.find('#categoriacell')).text());
+            IDMaterial = $(tr.find('#idcell')).text();
+            $('#materialModal').modal('show');
+
+        });
+
+    });
+
+    //Ingresa o edita material
+    $(document).ready(function () {
+
+        $(document).on('click', '#IngresarMaterialModal', function (e) {
+            if (origen == 'Editar') {
+
+                $.ajax({
+                    url: "/CotMaterial/EditaMaterial/",
+                    type: 'POST',
+                    async: false,
+                    dataType: 'text',
+                    data: {
+                        idcot: IDMaterial,
+                        item: $("#ItemMaterialModal").val(),
+                        unidad: $("#UnidadMaterialModal").val(),
+                        punitario: $('#PrecioMaterialModal').val(),
+                        cantidad: $("#CantidadMaterialModal").val(),
+                        idcategoria: $('#IDCategoriaModal').val()
+                    },
+                    success: function (data) {
+
+                        $("#materialModal").modal('hide');
+                        location.reload();
+                    },
+                });
+
+            }
+            else {
+
+                $.ajax({
+                     url: "/CotMaterial/NuevoMaterial/",
+                     type: 'POST',
+                     async: false,
+                     dataType: 'text',
+                     data: {
+                         idcot: $('#ID').val(),
+                         item: $("#ItemMaterialModal").val(),
+                         unidad: $("#UnidadMaterialModal").val(),
+                         punitario: $("#PrecioMaterialModal").val(),
+                         cantidad: $("#CantidadMaterialModal").val(),
+                         idcategoria: $('#IDCategoriaModal').val()
+                     },
+                     success: function (data) {
+
+                         $("#materialModal").modal('hide');
+                         location.reload();
+                     },
+                 });
+
+
+
+            }
+
+        });
+
+    });
+    //=======================================================================
+
+    //Elimina material
+
+    $(document).ready(function () {
+
+        $(document).on('click', "#btnEliminarMaterial", function (e) {
+            var tr = $(this).closest('.row');
+            IDMaterial = $(tr.find('#idcell')).text();
+
+            $("#eliminaMaterialModal").modal('show');
+            document.getElementById("MaterialEliminado").innerHTML = '¿Confirma que desea eliminar  ' + $(tr.find('#itemcell')).text() + ' de la lista de materiales?';
+        });
+
+        $(document).on('click', "#EliminaMaterial", function () {
+
+            $.ajax({
+                url: "/CotMaterial/BorrarMaterial/",
+                type: 'POST',
+                async: false,
+                dataType: 'text',
+                data: {
+                    id: IDMaterial,
+                },
+                success: function (data) {
+
+                    $("#eliminaMaterialModal").modal('hide');
+                    location.reload();
+                },
+            });
+
+
+        });
+    })
+
+    //=============================================================================
+    //Eventos
+    $(document).ready(function () {
+        $(document).on('click', '#btnNuevoMaterial', function (e) {
+            $('#materialModal').modal('show');
+            origen = 'Nuevo';
+           
+        });
+        $(document).on('shown.bs.modal', '#materialModal', function (e) {
+            $('#ItemMaterialModal').focus();
+        });
+        $("#CerrarModal").click(function () {
+
+
+            $("#materialModal").modal('hide');
+            LimpiaMaterialModal();
+        });
+
+        $("#CerrarEliminarMaterial").click(function () {
+
+
+            $("#eliminaMaterialModal").modal('hide');
+
+        });
+        $("#CerrarEliminarMaaterialF").click(function () {
+
+
+            $("#eliminaMaterialModal").modal('hide');
+
+        });
+
+
+
+    })
+
+    function LimpiaMaterialModal() {
+        $('#materialModal').find('input').not('.btn').val('');
+        $('#materialModal').modal('hide');
+    };
+
+</script>
+
+@* Scripts Personal *@
+<script>
+    var IDPersonal;
+    var Origen;
+    //Abre modal
+    //=======================================================================================================
+    $(function () {
+
+        $('#btnNuevoPersonal').on('click', function (e) {
+
+            Origen = 'Nuevo'
+            $('#ModalPersonal').modal('show');
+
+        });
+
+        $(document).on('click', '#btnEliminarPersonal', function (e) {
+
+            var tr = $(this).closest('.row');
+            IDPersonal = $(tr.find('#idcell')).text();
+
+            document.getElementById("EliminarPersonalParrafo").innerHTML = "¿Confirma que desea eliminar " + $(tr.find('#especialidadcell')).text() + " de la lista de personal?";
+
+            $('#ModalEliminarPersonal').modal('show');
+
+        });
+
+
+
+    });
+    //Cierra modal
+    //=======================================================================================================
+    $(function () {
+        $('#CerrarPersonalModal').on('click', function (e) {
+
+            $('#ModalPersonal').modal('hide');
+            LimpiarPersonalModal();
+
+        });
+
+        $('#CerrarEliminarPersonalF').on('click', function (e) {
+
+            $('#ModalEliminarPersonal').modal('hide');
+
+        });
+
+
+        $('#CerrarModalEliminar').on('click', function (e) {
+
+            $('#ModalEliminarPersonal').modal('hide');
+
+        });
+    });
+    //=======================================================================================================
+    // Limpia Modal
+    function LimpiarPersonalModal() {
+        $('#ModalPersonal').find('input').not('.btn').val('');
+        $('#ModalPersonal').find('select').val(0)
+        $('#ModalPersonal').modal('hide');
+    };
+    //=======================================================================================================
+    // Obtiene valor HH
+    $(document).ready(function () {
+        $(document).on('change', '#IDEspecialidadModal', function (e) {
+            $.ajax({
+                url: "/CotPersonal/GetValorHH/",
+                type: 'POST',
+                async: false,
+                dataType: 'text',
+                data: {
+                    id: $(this).val()
+                },
+                success: function (data) {
+
+                    data = JSON.parse(data);
+                    $("#ValorHHModal").val(data);
+                },
+            });
+
+        });
+
+    });
+
+    //=======================================================================================================
+    //Ingresa o edita un elemento
+
+    $(function () {
+
+        $('#IngresarPersonalModal').on('click', function (e) {
+            if (Origen == 'Nuevo') {
+                $.ajax({
+                    url: "/CotPersonal/NuevoPersonal/",
+                    type: 'POST',
+                    async: false,
+                    dataType: 'text',
+                    data: {
+                        idcot: $('#ID').val(),
+                        idespecialidad: $('#IDEspecialidadModal').val(),
+                        hh: $('#HHModal').val(),
+                        cantidad: $('#CantidadPersonalModal').val(),
+                        valorhh: $('#ValorHHModal').val()
+
+                    },
+                    success: function () {
+
+                        location.reload();
+                    },
+                });
+
+            }
+            else {
+
+                $.ajax({
+                    url: "/CotPersonal/EditarPersonal/",
+                    type: 'POST',
+                    async: false,
+                    dataType: 'text',
+                    data: {
+                        id: IDPersonal,
+                        idespecialidad: $('#IDEspecialidadModal').val(),
+                        hh: $('#HHModal').val(),
+                        cantidad: $('#CantidadPersonalModal').val(),
+                        valorhh: $('#ValorHHModal').val()
+
+                    },
+                    success: function () {
+
+                        location.reload();
+                    },
+                });
+
+
+
+
+
+            }
+
+
+        });
+
+
+    });
+    //=======================================================================================================
+    // Calcula automaticamente el total de HH
+
+    $(document).ready(function () {
+        $(document).on('keyup', "#CantidadPersonalModal,#HHModal", function (e) {
+            multiplica("#CantidadPersonalModal", "#HHModal", "#TotalHHModal");
+        });
+        // Calcula automaticamente el total de Dinero
+        $(document).on('keyup', "#HHModal,#TotalHHModal", function (e) {
+            multiplica("#TotalHHModal", "#ValorHHModal", "#TotalPersonalModal");
+        });
+
+    });
+
+
+
+    //================================================================================================
+    //Abre el modal para editar
+    //================================================================================================
+    $(function () {
+
+        $(document).on('click', "#btnEditarPersonal", function () {
+            Origen = "Editar"
+            var tr = $(this).closest('.row');
+
+            IDPersonal = $(tr.find('#idcell')).text();
+            $("#IDEspecialidadModal").val($(tr.find('#idEspecialidad')).text());
+            $("#ValorHHModal").val(Number($(tr.find('#valorhh')).text().replace(/[^0-9,-]+/g, "")));
+            $("#CantidadPersonalModal").val($(tr.find('#cantidadcell')).text());
+            $("#HHModal").val($(tr.find('#hhcell')).text());
+            $("#TotalHHModal").val($(tr.find('#totalhhcell')).text());
+            $("#TotalPersonalModal").val(Number($(tr.find('#totalcell')).text().replace(/[^0-9,-]+/g, "")));
+
+
+            $('#ModalPersonal').modal('show');
+
+        });
+
+
+
+
+    });
+    //================================================================================================
+    //Eliminar una especialidad
+
+    $(function () {
+
+        $('#ConfirmarEliminarPersonalModal').on('click', function (e) {
+
+            $.ajax({
+                url: "/CotPersonal/BorrarPersonal/",
+                type: 'POST',
+                async: false,
+                dataType: 'text',
+                data: {
+                    id: IDPersonal
+
+
+                },
+                success: function () {
+
+                    location.reload();
+
+                    $('#ModalEliminarPersonal').modal('hide');
+
+                },
+            });
+
+        });
+    });
+
+
+
+
+
+</script>
+
+@* Scripts Seguridad *@
+<script>
+    var Origen;
+    var IDSeguridad;
+    //Abre modal
+    //===============================================================================================================================================================================
+    $(function () {
+        $(document).on('click', '#btnNuevoEPP', function () {
+
+            $('#nuevoEPPModal').modal('show');
+            Origen = "Nuevo"
+        });
+        $(document).on('click', '#btnEditarSeguridad', function () {
+            var row = $(this).closest(".row");
+            IDSeguridad = $(row.find('#idcell')).text()
+            $("#ItemSeguridadModal").val($(row.find('#itemcell')).text());
+            $("#CantidadSeguridadModal").val($(row.find('#cantidadcell')).text());
+            $("#PrecioSeguridadModal").val(Number($(row.find('#valorcell')).text().replace(/[^0-9,-]+/g, "")));
+            $("#VTotalSeguridadModal").val(Number($(row.find('#totalcell')).text().replace(/[^0-9,-]+/g, "")));
+            $('#nuevoEPPModal').modal('show');
+            Origen = "Editar"
+        });
+
+
+
+
+    });
+
+    //Ingresa un nuevo EPP o Edita
+    //===============================================================================================================================================================================
+
+    $(function () {
+        $(document).on('click', '#IngresarSeguridadModal', function () {
+            if (Origen == 'Nuevo') {
+
+                $.ajax({
+                    url: "/CotSeguridad/CotiSeguridad/",
+                    type: 'POST',
+                    async: false,
+                    dataType: 'text',
+                    data: {
+                        idcot: $('#ID').val(),
+                        item: $('#ItemSeguridadModal').val(),
+                        cantidad: $('#CantidadSeguridadModal').val(),
+                        punitario: $('#PrecioSeguridadModal').val()
+                    },
+                    success: function (data) {
+
+                        $("#nuevoEPPModal").modal('hide');
+                        location.reload();
+                    },
+                });
+
+            }
+
+            else {
+
+                $.ajax({
+                    url: "/CotSeguridad/EditarSeguridad/",
+                    type: 'POST',
+                    async: false,
+                    dataType: 'text',
+                    data: {
+                        id: IDSeguridad,
+                        item: $('#ItemSeguridadModal').val(),
+                        cantidad: $('#CantidadSeguridadModal').val(),
+                        punitario: $('#PrecioSeguridadModal').val()
+                    },
+                    success: function (data) {
+
+                        $("#nuevoEPPModal").modal('hide');
+                        location.reload();
+                    },
+                });
+            }
+
+        });
+
+    });
+    //===============================================================================================================================================================================
+    //Calcula el total automáticamente
+    $(document).ready(function () {
+        $(document).on('keyup', "#CantidadSeguridadModal,#PrecioSeguridadModal", function (e) {
+            multiplica("#CantidadSeguridadModal", "#PrecioSeguridadModal", "#VTotalSeguridadModal");
+        });
+    });
+
+    //===============================================================================================================================================================================
+
+    //Cierra modal
+    $(function () {
+        $(document).on('click', '#CerrarModal', function () {
+            LimpiarSeguridadModal();
+            $("#nuevoEPPModal").modal('hide');
+        });
+    });
+    //===============================================================================================================================================================================
+
+    //Limpiar
+    function LimpiarSeguridadModal() {
+        $("#nuevoEPPModal").find('input').not('.btn').val('');
+        $("#nuevoEPPModal").modal('hide');
+    };
+    //===============================================================================================================================================================================
+    //Abre elemento a eliminar
+    $(function () {
+        $(document).on('click', "#btnEliminarSeguridad", function () {
+            var row = $(this).closest(".row");
+            IDSeguridad = $(row.find('#idcell')).text()
+
+            $("#eliminaEPPModal").modal('show');
+            document.getElementById("EPPEliminado").innerHTML = '¿Confirma que desea eliminar  ' + $(row.find('#itemcell')).text() + ' de la lista de Elementos de seguridad?';
+        });
+    });
+
+    //Elimina elemento seleccionado
+    $(function () {
+        $(document).on('click', "#EliminaEPP", function () {
+
+            $.ajax({
+                url: "/CotSeguridad/BorrarSeguridad/",
+                type: 'POST',
+                async: false,
+                dataType: 'text',
+                data: {
+                    id: IDSeguridad,
+                },
+                success: function (data) {
+
+                    $("#eliminaEPPModal").modal('hide');
+                    location.reload();
+                },
+            });
+
+
+        });
+
+    });
+
+
+
+
+</script>
+
+@* Scripts Equipos y Servicios *@
+<script type="text/javascript">
+    var Origen;
+    var IDEquipos;
+    //Abre modal
+    //===============================================================================================================================================================================
+    $(function () {
+        $(document).on('click', '#btnNuevoEquipo', function () {
+
+            $('#nuevoEquipoModal').modal('show');
+            Origen = "Nuevo"
+        });
+        $(document).on('click', '#btnEditarEquipo', function () {
+            origen = 'Editar';
+            var tr = $(this).closest('.row');
+            $('#ItemEquiposModal').val($(tr.find('#itemcell')).text());
+            $('#UnidadEquiposModal').val($(tr.find('#unidadcell')).text());
+            $('#CantidadEquiposModal').val($(tr.find('#cantidadcell')).text());
+            $('#PrecioEquiposModal').val(Number($(tr.find('#punitariocell')).text().replace(/[^0-9,-]+/g, "")));
+            $('#VTotalEquiposModal').val(Number($(tr.find('#totalcell')).text().replace(/[^0-9,-]+/g, "")));
+            IDEquipos = $(tr.find('#idcell')).text();
+            $('#nuevoEquipoModal').modal('show');
+        });
+
+
+
+
+    });
+
+    //Ingresa un nuevo equipo o Edita
+    //===============================================================================================================================================================================
+
+    $(function () {
+        $(document).on('click', '#IngresarEquiposModal', function () {
+            if (Origen == 'Nuevo') {
+
+                $.ajax({
+                    url: "/CotEquiposServicios/CotiEquiposServicios/",
+                    type: 'POST',
+                    async: false,
+                    dataType: 'text',
+                    data: {
+                        idcot: $('#ID').val(),
+                        item: $('#ItemEquiposModal').val(),
+                        unidad: $('#UnidadEquiposModal').val(),
+                        cantidad: $('#CantidadEquiposModal').val(),
+                        punitario: $('#PrecioEquiposModal').val()
+                    },
+                    success: function (data) {
+
+                        $("#nuevoEquipoModal").modal('hide');
+                        location.reload();
+                    },
+                });
+
+
+
+            }
+
+            else {
+
+
+                $.ajax({
+                    url: "/CotEquiposServicios/EditarEquiposServicios/",
+                    type: 'POST',
+                    async: false,
+                    dataType: 'text',
+                    data: {
+                        id: IDEquipos,
+                        item: $('#ItemEquiposModal').val(),
+                        unidad: $('#UnidadEquiposModal').val(),
+                        cantidad: $('#CantidadEquiposModal').val(),
+                        punitario: $('#PrecioEquiposModal').val()
+                    },
+                    success: function (data) {
+
+                        $("#nuevoEquipoModal").modal('hide');
+                        location.reload();
+                    },
+                });
+
+
+
+
+
+            }
+
+
+
+        });
+
+    });
+    //===============================================================================================================================================================================
+    //Calcula el total automáticamente
+    $(document).ready(function () {
+        $(document).on('keyup', '#CantidadEquiposModal,#PrecioEquiposModal', function (e) {
+            multiplica('#CantidadEquiposModal', '#PrecioEquiposModal', '#VTotalEquiposModal');
+        });
+    })
+
+
+    //===============================================================================================================================================================================
+
+    //Cierra modal
+    $(function () {
+
+        $(document).on('click', '#CerrarModal', function () {
+
+            LimpiarEquipoModal();
+            $("#nuevoEquipoModal").modal('hide');
+
+
+        });
+
+
+
+    });
+    //===============================================================================================================================================================================
+
+    //Limpiar
+    function LimpiarEquipoModal() {
+        $("#nuevoEquipoModal").find('input').not('.btn').val('');
+
+    };
+    //===============================================================================================================================================================================
+    //Abre elemento a eliminar
+    $(function () {
+        $(document).on('click', "#btnEliminarEquipo", function () {
+            var row = $(this).closest(".row");   // Finds the closest row <tr>
+            IDEquipos = $(row.find('#idcell')).text();
+
+            $("#eliminaEquipoModal").modal('show');
+            document.getElementById("EquipoEliminado").innerHTML = '¿Confirma que desea eliminar  ' + $(row.find('#itemcell')).text() + ' de la lista de equipos y servicios?';
+        });
+    });
+
+    //Elimina elemento seleccionado
+    $(function () {
+        $(document).on('click', "#EliminaEquipo", function () {
+
+            $.ajax({
+                url: "/CotEquiposServicios/BorrarEquiposServicios/",
+                type: 'POST',
+                async: false,
+                dataType: 'text',
+                data: {
+                    id: IDEquipos,
+                },
+                success: function (data) {
+
+                    $("#eliminaEquipoModal").modal('hide');
+                    location.reload();
+                },
+            });
+
+
+        });
+
+    });
+
+</script>
+
+@* Scripts Fabricación Propia *@
+<script>
+    var IDProduccionPropia;
+    $(document).ready(function () {
+        $(document).on('click', '#btnEliminarFabricacion', function (e) {
+            var row = $(this).closest('.row');
+            IDProduccionPropia = $(row.find('#idcell')).text();
+            var item = $(row.find('#itemcell')).text();
+
+            $('#eliminaFabricacionPropiaModal').modal('show');
+            $('#FabricacionPropiaEliminado').text('¿Confirma que desea eliminar ' + item + ' de la lista?');
+
+        });
+        $(document).on('click', '#EliminaItemFPropia', function (e) {
+            $.ajax({
+                url: "/Cotizaciones/EliminaItemFabricacionPropia/",
+                type: 'POST',
+                async: false,
+                dataType: 'text',
+                data: {
+                    id: IDProduccionPropia,
+                    idprincipal: $('#ID').val()
+                },
+                success: function (data) {
+
+                    $("#eliminaFabricacionPropiaModal").modal('hide');
+                    location.reload();
+                },
+            });
+        });
+
+        $(document).on('click', '#CerrarEliminarEquipo', function (e) {
+            $('#eliminaFabricacionPropiaModal').modal('hide');
+
+        });
+
+        $(document).on('click', '#CerrarEliminarEquipoF', function (e) {
+            $('#eliminaFabricacionPropiaModal').modal('hide');
+
+        });
+
+
+
+
+
+    });
+</script>
+<div style="overflow-x:auto">
+    <div class="container-fluid mobiles" style="padding:20px;border-radius:25px;">
+        <div style="text-align: center; padding-top: 15px; border-top-left-radius: 8px; border-top-right-radius: 8px" class="row fila">
+            @Html.HiddenFor(x => x.ID)
+            <div class="col-md-10"><h5 style="font-weight:900;font-family:Arial, Helvetica, sans-serif">@Model.Servicio</h5></div>
+            <div class="col-md-2"><h5>@Html.DropDownListFor(model => model.Estado, new SelectList(Model.Estados, "Value", "Text"), new { @class = "btn btn-danger ", @style = "margin-left:1px;height:auto;font-size:x-small", @ID = "Estado" })</h5></div>
+        </div>
+        <div class="row segundafila align-items-center">
+            <div class="col-md-2 borde">
+                <div style="font-family:Arial, Helvetica, sans-serif">Fecha :  @Model.Fecha.ToString("dd-MM-yyyy")</div>
+            </div>
+            <div class="col-md-3 borde">
+                <div>Cliente:  @Model.Cliente</div>
+                <input style="display:none" id="IDCliente" value="@Model.IDCliente" />
+            </div>
+            <div class="col-md-3 borde">
+                <div>Supervisor:  @Model.Supervisor</div>
+            </div>
+            <div class="col-md-2">
+                <div>SP: @Model.SolicitudPedido </div>
+
+            </div>
+            <div class="col-2-md">
+                <div>T. Ejecución: @Model.TiempoEjecucion </div>
+
+            </div>
+
+        </div>
+        <div style="background-color: #F13C20;color:white" class="row tercerafila">
+            <div class="col-md-12">
+                <strong style="font-weight:500;font-size:30px">Detalles</strong>
+            </div>
+        </div>
+        <div class="row tercerafila">
+            <div class="col-md-12" style="font-family:Arial, Helvetica, sans-serif">
+                @Model.Detalles
+            </div>
+        </div>
+        @*Totales
+            =================================================================================================================================================   *@
+        <div class="row cuartafila">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-9">Materiales</div>
+                    <div class="col-3">@Model.TotalMateriales.ToString("C")</div>
+                </div>
+                <div class="row">
+                    <div class="col-9">Personal</div>
+                    <div class="col-3">@Model.TotalPersonal.ToString("C")</div>
+                </div>
+                <div class="row">
+                    <div class="col-9">Seguridad</div>
+                    <div class="col-3">@Model.TotalSeguridad.ToString("C")</div>
+                </div>
+                <div class="row">
+                    <div class="col-9">Equipos y Servicios</div>
+                    <div class="col-3">@Model.TotalEquipos.ToString("C")</div>
+                </div>
+                <div class="row">
+                    <div class="col-9">Gtos.Grals. y Útil.: (Ctos. abtos. % convenido s/costo personal)                        </div>
+                    <div class="col-3">@(((Model.TotalEquipos +  Model.TotalMateriales + Model.TotalSeguridad + Model.TotalPersonal + Model.TotalSubCotizaciones)*Model.GastosGenerales/100).ToString("C"))</div>
+                </div>
+                <div class="row" style="background-color:gold">
+                    <div class="col-9">Valor Total Oferta</div>
+                    <div class="col-3">@(((Model.TotalEquipos + Model.TotalMateriales + Model.TotalSeguridad + Model.TotalPersonal + Model.TotalSubCotizaciones) *(1 + Model.GastosGenerales/100 )).ToString("C"))</div>
+                </div>
+
+            </div>
+        </div>
+        @*Tabla Materiales
+            =================================================================================================================================================   *@
+        <div class="row" style=" background-color: #5CDB95;font-weight: 900;padding: 2px;color:white">
+            <div class="col-6">Compra materiales, repuestos y equipos</div>
+            <div class="col-1">Unidad</div>
+            <div class="col-1">Cantidad</div>
+            <div class="col-1">P$ Unit</div>
+            <div class="col-1">Total</div>
+            <div class="col-2 text-center"><input type="button" id="btnNuevoMaterial" style="font-size:xx-small" class="btn btn-dark" value="Nuevo"></div>
+        </div>
+        @{ foreach (var item in Model.ListaMateriales)
+            {
+                <div class="row" style="padding:3px;background-color:white">
+                    <div id="idcell" style="display:none">@item.ID</div>
+                    <div id="itemcell" class="col-6">@item.Item</div>
+                    <div id="unidadcell" class="col-1">@item.Unidad</div>
+                    <div id="cantidadcell" class="col-1">@(item.Cantidad?.ToString("0.#"))</div>
+                    <div id="punitariocell" class="col-1">@(item.PUnitario?.ToString("C"))</div>
+                    <div id="totalcell" class="col-1">@(item.VTotal?.ToString("C"))</div>
+                    <div class="d-none" id="categoriacell">@item.IDCategoria</div>
+                    <div class="col-2 text-center">
+                        <input type="button" id="btnEditarMaterial" style="font-size:xx-small" class="btn button1" value="Editar">
+                        <input type="button" id="btnEliminarMaterial" style="font-size:xx-small" class="btn button3" value="Eliminar">
+                    </div>
+                </div>
+
+
+            }
+        }
+        @*Tabla Personal
+            =====================================================================================================================================================*@
+        <div class="row" style="background-color:#5CDB95;font-weight:900;padding:2px;color:white">
+            <div class="col-5">Detalle Personal por especialidad</div>
+            <div class="col-1">Cantidad</div>
+            <div class="col-1">HH</div>
+            <div class="col-1">Total HH</div>
+            <div class="col-1">Valor HH</div>
+            <div class="col-1">Valor HH</div>
+            <div class="col-2 text-center"><input type="button" id="btnNuevoPersonal" style="font-size:xx-small" class="btn btn-dark" value="Nuevo"></div>
+        </div>
+        @{ foreach (var item in Model.ListaPersonal)
+            {
+                <div class="row" style="padding: 3px; background-color: white">
+                    <div id="idcell" style="display:none">@item.ID</div>
+                    <div id="idEspecialidad" style="display:none">@item.IDEspecialidad</div>
+                    <div id="especialidadcell" class="col-5">@item.Especialidad </div>
+                    <div id="cantidadcell" class="col-1">@(item.Cantidad?.ToString("0.#"))</div>
+                    <div id="hhcell" class="col-1">@(item.HH?.ToString("0.#"))</div>
+                    <div id="totalhhcell" class="col-1">@(item.TotalHH?.ToString("0.#"))</div>
+                    <div id="valorhh" class="col-1">@(item.ValorHH?.ToString("C"))</div>
+                    <div id="totalcell" class="col-1">@(item.Total?.ToString("C"))</div>
+                    <div class="col-2 text-center">
+                        <input type="button" id="btnEditarPersonal" style="font-size:xx-small" class="btn button1" value="Editar">
+                        <input type="button" id="btnEliminarPersonal" style="font-size:xx-small" class="btn button3" value="Eliminar">
+                    </div>
+                </div>
+
+
+            }
+        }
+        @*Tabla Seguridad
+            =====================================================================================================================================================*@
+        <div class="row" style="background-color:#5CDB95;font-weight:900;padding:2px;color:white">
+            <div class="col-7">Seguridad</div>
+            <div class="col-1">Cantidad</div>
+            <div class="col-1">Valor</div>
+            <div class="col-1">Total</div>
+            <div class="col-2 text-center"><input type="button" id="btnNuevoEPP" style="font-size:xx-small" class="btn btn-dark" value="Nuevo"></div>
+        </div>
+        @{ foreach (var item in Model.ListaSeguridad)
+            {
+                <div class="row" style="padding:3px;background-color:white">
+                    <div id="idcell" style="display:none">@item.ID</div>
+                    <div id="itemcell" class="col-7">@item.Item</div>
+                    <div id="cantidadcell" class="col-1">@item.Cantidad</div>
+                    <div id="valorcell" class="col-1">@(item.PUnitario?.ToString("C"))</div>
+                    <div id="totalcell" class="col-1">@(item.Total?.ToString("C"))</div>
+                    <div class="col-2 text-center">
+                        <input type="button" id="btnEditarSeguridad" style="font-size:xx-small" class="btn button1" value="Editar">
+                        <input type="button" id="btnEliminarSeguridad" style="font-size:xx-small" class="btn button3" value="Eliminar">
+                    </div>
+                </div>
+
+
+            }
+        }
+        @*Tabla Equipos y Servicios
+            =====================================================================================================================================================*@
+        <div class="row" style="background-color:#5CDB95;font-weight:900;padding:2px;color:white">
+            <div class="col-6">Equipos y Servicios</div>
+            <div class="col-1">Unidad</div>
+            <div class="col-1">Cantidad</div>
+            <div class="col-1">P$ Unit</div>
+            <div class="col-1">Total</div>
+            <div class="col-2 text-center"><input type="button" id="btnNuevoEquipo" style="font-size:xx-small" class="btn btn-dark" value="Nuevo"></div>
+        </div>
+        @{ foreach (var item in Model.ListaEquipos)
+            {
+                <div class="row" style="padding:3px;background-color:white">
+                    <div id="idcell" style="display:none">@item.ID</div>
+                    <div id="itemcell" class="col-6">@item.Item</div>
+                    <div id="unidadcell" class="col-1">@item.Unidad</div>
+                    <div id="cantidadcell" class="col-1">@item.Cantidad</div>
+                    <div id="punitariocell" class="col-1">@(item.PUnitario?.ToString("C"))</div>
+                    <div id="totalcell" class="col-1">@(item.Total?.ToString("C"))</div>
+                    <div class="col-2 text-center">
+                        <input type="button" id="btnEditarEquipo" style="font-size:xx-small" class="btn button1" value="Editar">
+                        <input type="button" id="btnEliminarEquipo" style="font-size:xx-small" class="btn button3" value="Eliminar">
+                    </div>
+                </div>
+
+
+            }
+        }
+        @* Tabla Fabricación propia  *@
+
+        <div class="row" style="background-color:#5CDB95;font-weight:900;padding:2px;color:white">
+            <div class="col-6">Item Fabricación Propia</div>
+            <div class="col-1">Unidad</div>
+            <div class="col-1">Cantidad</div>
+            <div class="col-1">P$ Unit</div>
+            <div class="col-1">Total</div>
+            <div class="col-2 text-center">
+                <a class="btn btn-dark" id="btnNuevaFabricacion" style="font-size:xx-small" href="@Url.Action("NuevaCotizacionFabricacionPropia",new {idcotiprincipal = Model.ID, cotiprincipal = Model.Servicio, origen = "Otras" })">Nuevo</a>
+            </div>
+        </div>
+        @{ foreach (var item in Model.ListaProductosPropios)
+            {
+                <div class="row" style="padding:3px">
+                    <div id="idcell" style="display:none">@item.ID</div>
+                    <div id="itemcell" class="col-6">@item.Servicio</div>
+                    <div id="unidadcell" class="col-1">@item.Unidad</div>
+                    <div id="cantidadcell" class="col-1">@item.Cantidad</div>
+                    <div id="punitariocell" class="col-1">@(((item.Total/item.Cantidad))?.ToString("C"))</div>
+                    <div id="totalcell" class="col-1">@((item.Total).ToString("C"))</div>
+                    <div class="col-2 text-center">
+                        <a id="btnEditarFabricacion" href="@Url.Action("EditarCotizacionFabricacionPropia",new { id = item.ID })" style="font-size:xx-small" class="btn button1" value="Editar">Editar</a>
+                        <input type="button" id="btnEliminarFabricacion" style="font-size:xx-small" class="btn button3" value="Eliminar">
+                        <a id="btnDetalleFabricacion" href="@Url.Action("VerProductoFabricacionPropia",new { id = item.ID })" style="font-size:xx-small" class="btn button3" value="Detalles">Detalles</a>
+                    </div>
+                </div>
+
+
+            }
+        }
+
+
+    </div>
+</div>
+<a title="Imprimir Excel" href="@Url.Action("GetExcelFileAsync", new {id = Model.ID })"><img class="pdf" src="~/Content/Pictures/excelicon.png" /></a>
+
+
+@*=====================================================================================================================================================================*@
+@* Modals *@
+
+@*Modal Materiales*@
+@*=====================================================================================================================================================================*@
+<div class="modal fade" id="materialModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header botonrojo">
+                <h5 class="modal-title" id="exampleModalLabel">Nuevo Material</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row align-items-end">
+                   
+                            <div class="col-md-4">
+                                <label class="sr-only" for="ItemModal">Item</label>
+                                <input id="ItemMaterialModal"  style="text-transform:uppercase" type="text" class="form-control" />
+                            </div>
+                            <div class="col-md-1">
+                                <label class="sr-only" for="UnidadModal">Unidad</label>
+                                <input id="UnidadMaterialModal" style="text-transform:uppercase" type="text" class="form-control" />
+                            </div>
+                            <div class="col-md-2">
+                                <label class="sr-only" for="Categoría">Categoría</label>
+
+                                <select class="form-control" style="" id="IDCategoriaModal">
+                                    <option value="0">-Seleccionar-</option>
+                                    @foreach (var row in Model.CategoriasMRE)
+                                    {
+                                        <option value="@row.Value">@row.Text</option>
+
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-1">
+                                <label class="sr-only" for="CantidadModal">Cantidad</label>
+                                <input id="CantidadMaterialModal"   type="text" class="form-control" />
+                            </div>
+                            <div class="col-md-2">
+                                <label class="sr-only" for="PrecioModal">Precio</label>
+                                <input id="PrecioMaterialModal"   type="text" class="form-control" />
+                            </div>
+                            <div class="col-md-1">
+                                <label class="sr-only" for="VTotalModal">Total</label>
+                                <input id="VTotalMaterialModal" type="text" class="form-control" />
+                            </div>
+                            <div class="col-md-1">
+                                <input type="button" id="IngresarMaterialModal" value="OK" class="btn btn-primary" />
+                            </div>
+                      
+
+
+
+
+                    
+                </div>
+
+
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="eliminaMaterialModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header botonazul">
+                <h5 class="modal-title" id="exampleModalLabel">Eliminar Material</h5>
+                <button type="button" class="close" id="CerrarEliminarMaterial" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                <h2 id="MaterialEliminado"></h2>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="CerrarEliminarMaaterialF">Cerrar</button>
+                <button type="button" id="EliminaMaterial" class="btn btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal Personal*@
+@*=====================================================================================================================================================================*@
+<div class="modal fade" id="ModalPersonal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:blue">
+                <h4 class="modal-title expander_style text-white">Personal</h4>
+                <button type="button" id="CerrarPersonalModal" class="btn-close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <form id="myform">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row row-cols-lg-auto g-1 align-items-end">
+                                <div class="col-12">
+                                    <select id="IDEspecialidadModal" class="form-control" name="Especialidad" style="margin-left: 5px; width: 300px">
+
+                                        <option value="0">-Seleccionar-</option>
+                                        @foreach (var item in Model.Especialidades)
+                                        {
+                                            <option value="@item.ID">@item.Especialidad</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <input name="ValorHHModal" class="form-control" style="margin-left:5px;width:150px" id="ValorHHModal" placeholder="Valor HH" />
+                                </div>
+                                <div class="col-12">
+                                    <input name="CantidadPersonalModal" class="form-control" id="CantidadPersonalModal" style="width:140px;margin-left:5px" placeholder="Cantidad" />
+                                </div>
+                                <div class="col-12">
+                                    <input name="HH" id="HHModal" class="form-control" style="width:75px;margin-left:5px" placeholder="HH" />
+                                </div>
+                                <div class="col-12">
+                                    <input name="TotalHH" class="form-control" id="TotalHHModal" style="width:100px;margin-left:5px" placeholder="TotalHH" />
+                                </div>
+                                <div class="col-12">
+                                    <input name="TotalPlata" id="TotalPersonalModal" class="form-control" style="width:95px;margin-left:5px" placeholder="Total" />
+                                </div>
+                                <div class="col-12">
+                                    <input type="button" id="IngresarPersonalModal" value="Ingresar" class="btn btn-primary" style="margin-left:10px" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="ModalEliminarPersonal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header botonazul">
+                <h5 class="modal-title" id="exampleModalLabel">Eliminar Personal</h5>
+                <button type="button" class="close" id="CerrarModalEliminar" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                <h2 id="EliminarPersonalParrafo"></h2>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="CerrarEliminarPersonalF">Cerrar</button>
+                <button type="button" id="ConfirmarEliminarPersonalModal" class="btn btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal Seguridad *@
+
+<div class="modal fade" id="nuevoEPPModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header botonrojo">
+                <h5 class="modal-title" id="exampleModalLabel">Nuevo Elemento de Segruidad</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body align-content-center">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row row-cols-lg-auto g-1 align-items-end">
+                            <div class="col-12">
+                                <input id="ItemSeguridadModal" placeholder="Item" style="width:200px;text-transform:uppercase" type="text" class="form-control" />
+                            </div>
+                            <div class="col-12">
+                                <input id="CantidadSeguridadModal" style="width:95px;margin-left:5px" placeholder="Cantidad" type="text" class="form-control" />
+                            </div>
+                            <div class="col-12">
+                                <input id="PrecioSeguridadModal" placeholder="Precio" style="width:95px;margin-left:5px" type="text" class="form-control" />
+                            </div>
+                            <div class="col-12">
+                            <input id="VTotalSeguridadModal" style="width:95px;margin-left:5px" placeholder="Total" type="text" class="form-control" />
+                            </div>
+                            <div class="col-12">
+                                <input type="button" id="IngresarSeguridadModal" value="Ingresar" class="btn btn-primary" style="margin-left:10px" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="eliminaEPPModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header botonazul">
+                <h5 class="modal-title" id="exampleModalLabel">Eliminar EPP</h5>
+                <button type="button" class="close" id="CerrarEliminarEPP" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                <h2 id="EPPEliminado"></h2>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="CerrarEliminarEPPF">Cerrar</button>
+                <button type="button" id="EliminaEPP" class="btn btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal Equipos y Servicios *@
+<div class="modal fade" id="nuevoEquipoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#240090;color:white">
+                <h5 class="modal-title" id="exampleModalLabel">Nuevo Equipo o Servicio</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row row-cols-lg-auto g-1 align-items-end">
+                            <div class="col-12">
+                                <input id="ItemEquiposModal" placeholder="Item" style="width:200px;text-transform:uppercase" type="text" class="form-control" />
+                            </div>
+                            <div class="col-12">
+                                <input id="UnidadEquiposModal" style="width:95px;margin-left:5px;text-transform:uppercase" placeholder="Unidad" type="text" class="form-control" />
+                            </div>
+                            <div class="col-12">
+                                <input id="CantidadEquiposModal" style="width:95px;margin-left:5px" placeholder="Cantidad" type="text" class="form-control" />
+                            </div>
+                            <div class="col-12">
+                                <input id="PrecioEquiposModal" placeholder="Precio" style="width:95px;margin-left:5px" type="text" class="form-control" />
+                            </div>
+                            <div class="col-12">
+                                <input id="VTotalEquiposModal" style="width:95px;margin-left:5px" placeholder="Total" type="text" class="form-control" />
+                            </div>
+                            <div class="col-12">
+                                <input type="button" id="IngresarEquiposModal" value="Ingresar" class="btn btn-primary" style="margin-left:10px" />
+                            </div>
+                            
+                            
+                            
+                            
+                            
+                            
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="eliminaEquipoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header botonazul">
+                <h5 class="modal-title" id="exampleModalLabel">Eliminar Equipo o Servicio</h5>
+                <button type="button" class="close" id="CerrarEliminarEquipo" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                <h2 id="EquipoEliminado"></h2>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="CerrarEliminarEquipoF">Cerrar</button>
+                <button type="button" id="EliminaEquipo" class="btn btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal Eliminar Fabricación Propia *@
+
+<div class="modal fade" id="eliminaFabricacionPropiaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Eliminar Item de Fabricación Propia</h5>
+                <button type="button" class="close" id="CerrarEliminarEquipo" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                <h2 id="FabricacionPropiaEliminado"></h2>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="CerrarEliminarEquipoF">Cerrar</button>
+                <button type="button" id="EliminaItemFPropia" class="btn btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

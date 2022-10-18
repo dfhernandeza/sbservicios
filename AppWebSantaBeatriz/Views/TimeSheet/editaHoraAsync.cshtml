@@ -1,0 +1,57 @@
+﻿@model BibliotecaDeClases.Modelos.Transacciones.HorasExtraModel
+
+@{
+    ViewBag.Title = "editaHoraAsync";
+}
+<div class="container-fluid" id="editarForm">
+    <form action="@Url.Action("editaHoraAsync")" method="post">
+        <div class="row">
+            <input class="d-none" name="ID" value="@Model.ID" />
+            <input class="d-none" name="IDDocumento" value="@Model.IDDocumento" />
+            <input class="d-none" name="IDTransaccion" value="@Model.IDTransaccion" />
+            <input class="d-none" name="IDEmpleado" value="@Model.IDEmpleado" />
+            <div class="col-sm-2">
+                <label class="form-label">Fecha</label>
+                <input type="text" class="fecha form-control" name="Fecha" value="@Model.Fecha.ToString("dd-MM-yyyy")" />
+            </div>
+            <div class="col-sm-1">
+                <label class="form-label">Horas</label>
+                <input type="text" class="form-control" name="Horas" value="@Model.Horas.ToString("0.##")" />
+            </div>
+            <div class="col-sm-1">
+                <label class="form-label">Factor</label>
+                <input type="text" class="form-control" name="Factor" value="@Model.Factor.ToString("0.##")" />
+            </div>
+            <div class="col-sm-8">
+                <label class="form-label">Centro de Costos</label>
+                <select name="IDCECO" class="form-control">
+                    @foreach (var item in Model.CECOs)
+                    {
+                        if (Model.IDCECO.ToString() == item.Value)
+                        {
+                            <option selected="selected" value="@item.Value">@item.Text</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    }
+
+                </select>
+            </div>
+            <div class="col-sm-12">
+                <label class="form-label">
+                    Comentarios
+                </label>
+                <textarea class="form-control" name="Comentarios">@Model.Comentarios</textarea>
+            </div>
+            <div class="COL-SM-12 mt-2">
+                <input type="submit" class="btn btn-outline-success" value="Editar" />
+
+            </div>
+        </div>
+
+    </form>
+</div>
+
+

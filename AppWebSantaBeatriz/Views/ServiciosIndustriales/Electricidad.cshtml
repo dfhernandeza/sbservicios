@@ -1,0 +1,117 @@
+﻿@model BibliotecaDeClases.Modelos.ServiciosIndustriales.PaginaServicioModel
+
+@{
+    ViewBag.Title = "Electricidad Domiciliaria, Comercial e Industrial";
+    Layout = "/Views/Shared/_LayoutAlternativo.cshtml";
+}
+<head>
+
+    <link href="~/Content/SB/Galerias.css" rel="stylesheet" />
+    <style>
+        main {
+            background-color: #dce1df!important;
+            padding-top: 25px;
+        }
+        @@media(min-width:576px)
+        {
+            .textocentroSM {
+                width: 948px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+        @@media(max-width:576px) {
+            .textocentroSM {
+                padding:0px 3rem 0px 3rem;
+            }
+        }
+    </style>
+</head>
+    <h2 class="textocentroSM mb-5 fw-bolder">Electricidad Domiciliaria, Comercial e Industrial</h2>
+    
+    <p class="textocentroSM fst-italic mb-4 fw-bold">
+        Santa Beatriz Servicios en Electricidad ofrece técnico eléctrico para instalaciones en baja tensión, instalación y reparación de motores eléctricos,
+        control y automatización de sistemas y procesos, instalación de bombas de agua y sistemas de riego, normalización e integración de tableros eléctricos, instalación y diseño de sistemas solares
+        y Circuito Cerrado de Televisión (CCTV).
+    </p>
+    
+
+    <div class="cards">
+        @foreach (var item in Model.Fotos)
+        {
+            <div class="card">
+                <div class="card__image-holder">
+                    <img class="card__image" src="@item.URL" alt="wave" />
+                </div>
+                <div class="card-title">
+                    <a href="#" class="toggle-info btn">
+                        <span class="left"></span>
+                        <span class="right"></span>
+                    </a>
+                    <h2>
+                        @item.Nombre
+                        <small></small>
+                    </h2>
+                </div>
+                <div class="card-flap flap1">
+                    <div class="card-description">
+                        @item.Descripcion
+                    </div>
+                </div>
+            </div>
+        }
+
+
+
+
+    </div>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        var zindex = 10;
+
+        $("div.card").click(function (e) {
+            e.preventDefault();
+
+            var isShowing = false;
+
+            if ($(this).hasClass("show")) {
+                isShowing = true
+            }
+
+            if ($("div.cards").hasClass("showing")) {
+                // a card is already in view
+                $("div.card.show")
+                    .removeClass("show");
+
+                if (isShowing) {
+                    // this card was showing - reset the grid
+                    $("div.cards")
+                        .removeClass("showing");
+                } else {
+                    // this card isn't showing - get in with it
+                    $(this)
+                        .css({ zIndex: zindex })
+                        .addClass("show");
+
+                }
+
+                zindex++;
+
+            } else {
+                // no cards in view
+                $("div.cards")
+                    .addClass("showing");
+                $(this)
+                    .css({ zIndex: zindex })
+                    .addClass("show");
+
+                zindex++;
+            }
+
+        });
+    });
+</script>

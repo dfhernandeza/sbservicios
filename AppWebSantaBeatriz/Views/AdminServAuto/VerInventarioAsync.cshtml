@@ -1,0 +1,329 @@
+﻿@model IEnumerable<BibliotecaDeClases.Modelos.ServicioAutomotriz.InventarioModel>
+
+@{
+    ViewBag.Title = "Inventarios";
+}
+<link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+<style>
+    .encabezado {
+        background: rgb(241,0,82);
+        background: linear-gradient(94deg, rgba(241,0,82,1) 18%, rgba(218,139,0,1) 45%, rgba(255,132,0,1) 76%);
+    }
+</style>
+<h2 class="mb-5">Inventarios</h2>
+
+<div class="row">
+    <div class="col-md-2 mb-sm-3">
+        <input placeholder="Buscar" class="form-control text-uppercase" id="filtroTextBox" />
+    </div>
+    <div class="col-md-2 mb-sm-3">
+        <div class="btn-group">
+            <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                Seleccionar Categoría
+            </button>
+            <ul class="dropdown-menu">
+                @foreach (var item in ViewBag.Categorias)
+                {
+                    <li><a class="dropdown-item dropcategorias" data-id="@item.Value">@item.Text</a></li>
+                }
+
+
+            </ul>
+        </div>
+    </div>
+    <div class="col-sm-2 mb-md-3">
+        <input class="form-control" id="categoriaInput" placeholder="Categoría" readonly />
+    </div>
+    <div class="col-sm-1">
+        <button class="btn btn-danger" id="eliminarFiltrosBtn" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar Filtros">
+            <img src="~/Content/Pictures/delete.png" />
+        </button>
+    </div>
+  
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                Ordenar
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                <li>
+                    <div class="btn-group dropend w-100">
+                        <button class="dropdown-item dropdown-toggle" type="button" id="dropdownMenuButton2.1" data-bs-toggle="dropdown" aria-expanded="false">
+                            Stock
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2.1">
+                            <li><a class="dropdown-item" id="stockascBtn">Ascendente</a></li>
+                            <li><a class="dropdown-item" id="stockdescBtn">Descendente</a></li>
+
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <div class="btn-group dropend w-100">
+                        <button class="dropdown-item dropdown-toggle" type="button" id="dropdownMenuButton2.2" data-bs-toggle="dropdown" aria-expanded="false">
+                            Aro
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2.2">
+                            <li><a class="dropdown-item" href="#">Ascendente</a></li>
+                            <li><a class="dropdown-item" href="#">Descendente</a></li>
+
+                        </ul>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</div>
+@{ var arreglo = Model.ToArray();}
+<table class="tabla" id="tablaInventario">
+    <tr class="encabezado">
+        <th>
+            @Html.DisplayNameFor(model => model.Item)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Categoria)
+        </th>
+        <th>
+            P$. Venta
+        </th>
+        <th>
+            P$. Compra
+        </th>
+        <th>
+            Stock
+        </th>
+
+
+        <th></th>
+    </tr>
+    @for (int i = 0; i < 20; i++)
+    {
+        <tr>
+            <td>
+               @arreglo[i].Item
+            </td>
+            <td>
+                @arreglo[i].Categoria
+            </td>
+            <td>
+                @arreglo[i].PVENTA.ToString("C")
+            </td>
+            <td>
+                @arreglo[i].PCompra.ToString("C")
+            </td>
+            <td>
+                @arreglo[i].STOCK.ToString("#,#0")
+            </td>
+
+
+            <td>
+                @if (arreglo[i].Product == false)
+                {
+                    if (arreglo[i].Categoria == "NEUMATICOS")
+                    {
+                        <a href="@Url.Action("NuevoNeumatico", new { iditem = arreglo[i].ID })" class="btn btn-outline-success">Crear</a>
+
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("NuevoProducto", new { id = arreglo[i].ID })" class="btn btn-outline-primary">Crear</a>
+
+                    }
+
+                }
+            </td>
+        </tr>
+    }
+   
+
+</table>
+<script>
+    var data = @Html.Raw(Json.Encode(Model));
+    var index = 50;
+    var a = [];
+    a.length
+    $(document).ready(function () {
+        $('[data-bs-toggle="tooltip"]').tooltip();
+    });
+    $(document).on('keyup','#filtroTextBox', function (e) {
+        var text = $(this).val();
+        var cat = $('#categoriaInput').val();
+       filtro(text, cat);
+    });
+    $(document).on('click', '.dropcategorias', function () {
+        var cat = $(this).data('id');
+        var text = $('#filtroTextBox').val();
+        $('#categoriaInput').val(cat);
+        filtro(text, cat);
+
+
+    });
+    function filtro(text, cat) {
+
+        if (cat == '') {
+            var regex = new RegExp(text.toUpperCase(), 'g');
+            var response = data.filter(x => x.Item.match(regex));
+            $('#tablaInventario tr:not(:first)').remove();
+            $(response).each(function (i, item) {
+                var row;
+                if (item.Product == false) {
+                    var btn = '';
+                    if (item.Categoria == "NEUMATICOS") {
+                        btn = '<a href="/AdminServAuto/NuevoNeumatico?iditem=' + item.ID + '" class="btn btn-outline-success">Crear</a>';
+                    }
+                    else {
+                        btn = '<a href="/AdminServAuto/NuevoProducto?id=' + item.ID + '" class="btn btn-outline-primary">Crear</a>';
+                    }
+                    row = '<tr><td>' + item.Item + '</td><td>' + item.Categoria + '</td><td>' + FormateaPeso(item.PVENTA) + '</td><td>' + FormateaPeso(item.PCompra) + '</td><td>' + item.STOCK + `</td><td>${btn}</td></tr>`;
+                }
+                else {
+                    row = '<tr><td>' + item.Item + '</td><td>' + item.Categoria + '</td><td>' + FormateaPeso(item.PVENTA) + '</td><td>' + FormateaPeso(item.PCompra) + '</td><td>' + item.STOCK + '</td><td></td></tr>';
+                }
+                $('#tablaInventario').append(row);
+
+            });
+        }
+        else if (text == '') {
+            var response = data.filter(x => x.Categoria == cat);
+            $('#tablaInventario tr:not(:first)').remove();
+            $(response).each(function (i, item) {
+                var row;
+                if (item.Product == false) {
+                    var btn = '';
+                    if (item.Categoria == "NEUMATICOS") {
+                        btn = '<a href="/AdminServAuto/NuevoNeumatico?iditem=' + item.ID + '" class="btn btn-outline-success">Crear</a>';
+                    }
+                    else {
+                        btn = '<a href="/AdminServAuto/NuevoProducto?id=' + item.ID + '" class="btn btn-outline-primary">Crear</a>';
+                    }
+                    row = '<tr><td>' + item.Item + '</td><td>' + item.Categoria + '</td><td>' + FormateaPeso(item.PVENTA) + '</td><td>' + FormateaPeso(item.PCompra) + '</td><td>' + item.STOCK + `</td><td>${btn}</td></tr>`;
+                }
+                else {
+                    row = '<tr><td>' + item.Item + '</td><td>' + item.Categoria + '</td><td>' + FormateaPeso(item.PVENTA) + '</td><td>' + FormateaPeso(item.PCompra) + '</td><td>' + item.STOCK + '</td><td></td></tr>';
+                }
+                $('#tablaInventario').append(row);
+
+            });
+        }
+        else {
+            var regex = new RegExp(text.toUpperCase(), 'g');
+            var response = data.filter(x => x.Item.match(regex) && x.Categoria == cat);
+            $('#tablaInventario tr:not(:first)').remove();
+            $(response).each(function (i, item) {
+                var row;
+                if (item.Product == false) {
+                    var btn = '';
+                    if (item.Categoria == "NEUMATICOS") {
+                        btn = '<a href="/AdminServAuto/NuevoNeumatico?iditem=' + item.ID + '" class="btn btn-outline-success">Crear</a>';
+                    }
+                    else {
+                        btn = '<a href="/AdminServAuto/NuevoProducto?id=' + item.ID + '" class="btn btn-outline-primary">Crear</a>';
+                    }
+                    row = '<tr><td>' + item.Item + '</td><td>' + item.Categoria + '</td><td>' + FormateaPeso(item.PVENTA) + '</td><td>' + FormateaPeso(item.PCompra) + '</td><td>' + item.STOCK + `</td><td>${btn}</td></tr>`;
+                }
+                else {
+                    row = '<tr><td>' + item.Item + '</td><td>' + item.Categoria + '</td><td>' + FormateaPeso(item.PVENTA) + '</td><td>' + FormateaPeso(item.PCompra) + '</td><td>' + item.STOCK + '</td><td></td></tr>';
+                }
+                $('#tablaInventario').append(row);
+
+            });
+        }
+
+
+
+
+
+
+    }
+
+
+    $(document).on('click','#eliminarFiltrosBtn', function () {
+        $('#filtroTextBox,#categoriaInput').val('');
+        filtro('', '');
+    });
+    $(window).scroll(function () {
+        if ($(window).scrollTop() == ($(document).height() - $(window).height())) {
+            var j = 0;
+            while (j < 50 && index < data.length) {
+                var row;
+                if (data[index].Product == false) {
+                    var btn = '';
+                    if (data[index].Categoria == "NEUMATICOS") {
+                        btn = '<a href="/AdminServAuto/NuevoNeumatico?iditem=' + data[index].ID + '" class="btn btn-outline-success">Crear</a>';
+                    }
+                    else {
+                        btn = '<a href="/AdminServAuto/NuevoProducto?id=' + data[index].ID + '" class="btn btn-outline-primary">Crear</a>';
+                    }
+                    row = '<tr><td>' + data[index].Item + '</td><td>' + data[index].Categoria + '</td><td>' + FormateaPeso(data[index].PVENTA) + '</td><td>' + FormateaPeso(data[index].PCompra) + '</td><td>' + data[index].STOCK + `</td><td>${btn}</td></tr>`;
+                }
+                else {
+                    row = '<tr><td>' + data[index].Item + '</td><td>' + data[index].Categoria + '</td><td>' + FormateaPeso(data[index].PVENTA) + '</td><td>' + FormateaPeso(data[index].PCompra) + '</td><td>' + data[index].STOCK + '</td><td></td></tr>';
+                }
+                $('#tablaInventario').append(row);
+                j++;
+                index++;
+            }
+
+        }
+    });
+    function llenarTabla(datos) {
+        $('#tablaInventario').find('tr').not(':first').remove();
+        var filas = '';
+        $(datos).each(function (i, item) {
+            var neuma = '';
+            if (item.Product == false) {
+                if (item.Categoria == "NEUMATICOS") {
+                    neuma = `<a href="/AdminServAuto/NuevoNeumatico?iditem=${item.ID}" class="btn btn-outline-success">Crear</a>`;
+
+                }
+                else {
+                    neuma = `<a href="/AdminServAuto/NuevoProducto?id=${item.ID}" class="btn btn-outline-primary">Crear</a>`;
+
+
+                }
+
+            }
+
+
+            filas = filas + `<tr>
+            <td>
+               ${item.Item}
+            </td>
+            <td>
+                ${item.Categoria}
+            </td>
+            <td>
+                ${item.PVENTA}
+            </td>
+            <td>
+                ${item.PCompra}
+            </td>
+            <td>
+                ${item.STOCK}
+            </td>
+
+
+            <td>${neuma}</td>
+
+
+        </tr>`;
+
+
+        });
+        $('#tablaInventario').append(filas);
+    }
+    $(document).on('click', '#stockdescBtn', function () {
+        data.sort(GetSortOrder('STOCK','desc'));
+        llenarTabla(data);
+
+    });
+    $(document).on('click', '#stockascBtn', function () {
+        data.sort(GetSortOrder('STOCK', 'asc'));
+        llenarTabla(data);
+
+    });
+</script>

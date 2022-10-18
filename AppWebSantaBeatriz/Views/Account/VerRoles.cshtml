@@ -1,0 +1,95 @@
+﻿@model IEnumerable<AppWebSantaBeatriz.Models.RolesModel>
+
+@{
+    ViewBag.Title = "Ver Roles";
+}
+
+<h2>Roles</h2>
+<link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+<script src="~/Scripts/Funciones.js"></script>
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+<style>
+    .encabezado {
+        background: rgb(111,48,212);
+        background: linear-gradient(37deg, rgba(111,48,212,1) 30%, rgba(94,0,255,1) 100%);
+    }
+
+    .tabla {
+        width: 20%
+    }
+
+    h2 {
+        text-align: start
+    }
+
+    td, th {
+        font-size: 20px
+    }
+</style>
+<p>
+
+</p>
+<table class="tabla">
+    <tr class="encabezado">
+        <th>
+            @Html.DisplayNameFor(model => model.Rol)
+        </th>
+        <th>
+            <div class="d-flex justify-content-center">
+                <a id="nuevo" href="@Url.Action("NuevoRol")">
+
+                    <img data-bs-toggle="tooltip" data-bs-placement="top" title="Nuevo Rol" src="~/Content/Pictures/add-file.png" style="height:28px;width:28px" />
+                </a>
+            </div>
+
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rol)
+            </td>
+            <td>
+                <div class="d-flex justify-content-around">
+                    <a class="btn btn-danger" id="editarbtn" data-id="@item.Id" href="@Url.Action("EditarRol",new {id = item.Id })">
+                        <img data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Rol" src="~/Content/Pictures/editar.png" />
+                    </a>
+                    <a class="btn btn-success" href="@Url.Action("EliminarRol",new {id = item.Id })">
+                        <img data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar Rol" src="~/Content/Pictures/delete.png" />
+                    </a>
+                </div>
+
+
+            </td>
+        </tr>
+    }
+
+</table>
+<div class="d-none" id="nuevoRol"></div>
+<script>
+    $(document).ready(function (e) {
+        $('[data-bs-toggle="tooltip"]').tooltip();
+               
+    });
+    $(document).on('click', '#editarbtn', function (e) {
+        e.preventDefault();
+        var url = "/Account/EditarRol/" + $(this).data('id');
+        $('#nuevoRol').load(url + " .cont", function () {
+            $('#nuevoRol').removeClass('d-none').dialog({ position: { my: 'top', at: 'top+100' }, title: "Editar Rol" });
+            $('.ui-dialog-titlebar-close').text('x').css('font-size', '12px');
+        });
+    });
+    $(document).on('click', '#nuevo', function (e) {
+        e.preventDefault();
+        var url = "/Account/NuevoRol";
+        $('#nuevoRol').load(url + " .cont", function () {
+            $('#nuevoRol').removeClass('d-none').dialog({ position: { my: 'top', at: 'top+100' }, title: "Nuevo Rol" });
+            $('.ui-dialog-titlebar-close').text('x').css('font-size', '12px');
+        });
+    });
+
+
+</script>

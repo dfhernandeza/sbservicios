@@ -1,0 +1,435 @@
+﻿@model BibliotecaDeClases.Modelos.Transacciones.DocumentoModel
+@{
+
+    ViewBag.Title = "Nuevo";
+}
+
+
+<link href="~/datetimepicker-master/jquery.datetimepicker.css" rel="stylesheet" />
+<script src="~/datetimepicker-master/build/jquery.datetimepicker.full.min.js"></script>
+
+<style>
+
+    .resalte:hover {
+        cursor: pointer;
+    }
+  .form-control{
+      font-size:10px
+  }
+  .form-select{
+      font-size:12px
+  }
+</style>
+<script>
+    //Variables Globales
+    var filaseleccionada;
+    var fechahoy;
+    var ing;
+   //Configuración datetimepicker
+   //=================================================================================================================
+    $(document).ready(function () {
+
+        jQuery('.entrada').datetimepicker({
+            format: 'd-m-Y H:i',
+            formatTime: 'H:i',
+            formatDate: 'd-m-Y',
+            step: 15,
+            hours12: false,
+            /*closeOnTimeSelect: true,*/
+            //onSelectDate: function (ct, $i) {
+            //    $i.datetimepicker('hide');
+                
+            //},
+            dayOfWeekStart:1
+        });
+
+        jQuery('.salida').datetimepicker({
+            format: 'd-m-Y H:i',
+            formatTime: 'H:i',
+            formatDate: 'd-m-Y',
+            step: 15,
+            hours12: false,
+           /* closeOnDateSelect: true,*/
+            //onSelectDate: function (ct, $i) {
+            //    $i.datetimepicker('hide');
+            //},
+            dayOfWeekStart: 1
+        });
+
+
+
+        jQuery('#Fecha').datetimepicker({
+            format: 'd-m-Y',
+            formatDate: 'd-m-Y',
+            closeOnDateSelect: true,
+            timepicker: false,
+            closeOnDateSelect: true,
+            onSelectDate: function (ct, $i) {
+                $i.datetimepicker('hide');
+                $("#TablaDetalle tr:last").css('display','table-row')
+
+            },
+            dayOfWeekStart: 1
+        });
+
+
+       
+    });
+
+    //$('body').on('focus', ".entrada", function () {
+    //    $(this).datetimepicker();
+    //});
+
+
+    $.datetimepicker.setLocale('es');
+   //=================================================================================================================
+
+    $(function () {
+        $(document).ready(function () {
+
+          //Calculo de horas 
+          //=================================================================================================================
+
+            $(document).on('change', "#Entrada,#Salida", function () {
+
+                var row = $(this).closest("tr");
+                var a = row.find("#Entrada").val();
+                var b = row.find("#Salida").val();
+               
+        
+
+                if (a !== "" && b !== "") {
+
+                    var q = row.find("#Entrada").datetimepicker('getValue');
+                    var p = row.find("#Salida").datetimepicker('getValue');
+                    var diff = (p - q)/36e5;
+                   row.find("#Horas").val(diff);
+                }
+
+                
+
+            });
+         //=================================================================================================================
+
+        //Fecha max y min
+         //=================================================================================================================
+            $(document).on('change', "#Fecha", function () {
+
+                 fechahoy = $('#Fecha').val(); 
+           
+
+
+                $("#Entrada, #Salida").datetimepicker({ minDate: fechahoy, maxDate: fechahoy });
+               
+
+            });
+        //=================================================================================================================
+
+        //Hora minima
+        //=================================================================================================================
+          
+            $(document).on('change', "#Entrada", function () {
+                var $tr = $(this).closest('tr');
+                var x = new Date($('#Entrada').datetimepicker('getValue')).getHours();
+                var y = new Date($('#Entrada').datetimepicker('getValue')).getMinutes();
+            
+                if (y == 45) {
+                    x = x + 1;
+                    y = "00";
+                }
+                else {
+                    y = y + 15;
+                }
+                var hora = x.toString() + ':' + y.toString();
+
+               $tr.find("#Salida").datetimepicker({ minTime: hora});
+
+            });
+
+
+
+        //=================================================================================================================
+
+        //Insertar
+        //=================================================================================================================
+            $(document).on('click', "#BtnInsertar", function () {
+
+                var $tr = $(this).closest('tr');
+           
+                var $clone = $tr.clone();
+                
+                var x = new Date($tr.find('#Salida').datetimepicker('getValue')).getHours();
+                var y = new Date($tr.find('#Salida').datetimepicker('getValue')).getMinutes();
+                var hora = x.toString() + ':' + y.toString();
+
+
+
+                $clone.find('input').not('#BtnInsertar').val('');
+                $tr.find("#BtnInsertar").remove();
+                $clone.find('textarea').val('');
+                $clone.find('select').val(0);
+
+                $clone.find('#Entrada').datetimepicker({minDate: fechahoy, maxDate: fechahoy, minTime: hora, step: 15, format: 'd-m-Y H:i', formatTime: 'H:i', formatDate: 'd-m-Y'});
+                $clone.find('#Entrada').val($tr.find('#Salida').val());
+                $clone.find('#Salida').datetimepicker({ minDate: fechahoy, maxDate: fechahoy, step: 15, minTime: hora, format: 'd-m-Y H:i', formatTime: 'H:i', formatDate: 'd-m-Y' });
+                $tr.css('background-color', '');
+                $("#TablaDetalle tr:last").after($clone);
+                $("#horastotales").val(sumar());
+                ing = 'si'
+
+
+            });
+
+
+        });
+        //=================================================================================================================
+
+        //Función sumar
+        //=================================================================================================================
+        function sumar() {
+            var resultado = 0;
+            $('#TablaDetalle > tbody > tr').not(':first').not(':last').each(function (i, row) {
+
+                resultado = resultado + parseFloat($(row).find('#Horas').val());
+
+            });
+
+
+            return resultado;
+        }
+
+        //Resaltar
+        //=================================================================================================================
+        $(function () {
+            $(document).on('click', '.resalte', function (e) {
+                if ($(this).closest('tr').find('#ComentariosFila').val() !== "" && ing !== 'si') {
+                    $(this).css('background-color', 'gold');
+                    
+
+                }
+                $('.resalte').not(this).each(function (i, row) {
+                    var fila = $(row).closest('tr');
+                    fila.css('background-color', '');
+                });
+                filaseleccionada = $(this).closest('tr');
+                ing = '';
+            });
+
+
+        });
+
+
+        //Eliminar
+        //=================================================================================================================
+        $(function () {
+            $(document).keyup(function (e) {
+
+                if (e.keyCode == 46 && filaseleccionada !== undefined && filaseleccionada.index() == $("#TablaDetalle tr:last").prev().index()) {
+
+                    filaseleccionada.remove();
+                    $("#horastotales").val(sumar());
+                }
+
+            });
+        });
+
+
+        //Ingresar
+        //=================================================================================================================
+       
+
+
+    });
+
+    $(function () {
+
+        $(document).on('click', '#BtnIngresar', function (e) {
+            
+            var doc = {};
+            var HH = [];
+          
+            $('#docForm .form-control').each(function (i, item) {
+                var key = $(item).attr('name');
+                doc[key] = $(item).val().toUpperCase();
+            });         
+            $("#IDEmpleado option:selected").each(function (k, fila) {
+                $('#TablaDetalle tr:not(:first)').each(function (i, row) {
+                    if ($(row).find('#CecoRow').attr("selectedIndex") !== 0 && $(row).find('#Entrada').val() && $(row).find('#Salida').val() && $(row).find('#ComentariosFila').val()  ) {
+                        var trans = {};
+                        $(row).find('.ok').each(function (j, item) {
+                            var key = $(item).attr('name');
+                            trans[key] = $(item).val().toUpperCase();
+                        });
+                        trans["IDEmpleado"] = $(fila).val();
+                        HH.push(trans);
+                    }
+                  
+                });
+            });
+            doc["HH"] = HH;
+            $.ajax({
+                type: "POST",
+                url: "/TimeSheet/NuevoTimeSheet/",
+                data: JSON.stringify(doc),
+                dataType: "json",
+                contentType:"application/json",
+                success: function () {
+
+                }
+            });
+            
+
+
+        });
+
+    });
+
+</script>
+
+
+
+
+
+<div class="container-fluid fondogris">
+
+    <div class="row">
+        <div class="col-11">
+            <h2 class="mb-5 text-center" style="margin-bottom:20px">Hoja de Tiempo</h2>
+        </div>
+
+        <div class="col-1">
+            <div class="float-end">
+                <input type="button" class="btn btn-success" id="BtnIngresar" value="Ingresar" />
+            </div>
+
+        </div>
+    </div>
+
+    <form id="docForm">
+        <div class="row border-dark align-items-end">
+            <div class="form-group col-md-4">
+
+                <label for="IDEmpleado">Empleado</label>
+                <select name="IDEmpleado" id="IDEmpleado" size="@(Model.ListaEmpleados.ToArray().Length+1)" class="form-select" multiple aria-label="multiple select example">
+                    <option style="text-align:center" selected>Seleccionar uno o varios</option>
+                    @foreach (var row in Model.ListaEmpleados)
+                    {
+                        <option style="text-align:center" value="@row.ID">
+                            @(row.Nombre + ' ' + row.Apellido)
+                        </option>
+                    }
+                </select>              
+            </div>
+            <div class="col-md-4">
+                <div style="align-self:flex-end">
+                    <label for="IDSupervisor">Supervisor</label>
+                    <select name="IDSupervisor" id="IDSupervisor" class="form-control">
+                        <option style="text-align:center">-Seleccionar-</option>
+                        @foreach (var row in Model.Supervisores)
+                        {
+                            <option style="text-align:center" value="@row.Value">
+                                @(row.Text)
+                            </option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="Fecha">Fecha</label>
+                <input type="text" class="form-control" name="FechaDocumento" id="Fecha" autocomplete="off" />
+                @Html.ValidationMessageFor(model => model.FechaDocumento, "", new { @class = "text-danger" })
+            </div>
+
+
+
+
+
+        </div>
+
+        <div class="row mt-3">
+
+            <div class="form-group col-6">
+                <label for="descripcion">Descripción</label>
+                <textarea class="form-control" id="Descripcion" name="Descripcion" rows="2" style="text-transform:uppercase"></textarea>
+                @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+
+            </div>
+
+            <div class="form-group col 6">
+                <label for="descripcion">Comentarios</label>
+                <textarea class="form-control" id="Comentarios" rows="2" name="Comentarios" style="text-transform:uppercase"></textarea>
+                @Html.ValidationMessageFor(model => model.Comentarios, "", new { @class = "text-danger" })
+
+            </div>
+
+        </div>
+
+
+
+    </form>
+
+    <table id="TablaDetalle" style="margin-top:15px" class="table">
+        <tr><th style="border:none">Centro Costos</th><th style="border:none">Entrada</th><th style="border:none">Salida</th><th style="border:none">Horas</th><th style="border:none">Comentarios</th><th style="border:none"></th> </tr>
+        <tr class="resalte" style="display:none">
+
+            <td width="40%">
+                <select name="IDCECO" id="CecoRow" class="form-control ok">
+                    <option style="font-size:13px" value="0">-Seleccionar-</option>
+                    @foreach (var row in Model.ListaCECOsItems)
+                    {
+                        <option title="@row.Text"  style="font-size:13px;width:max-content" value="@row.Value">@row.Text</option>
+                    }
+                </select>
+            </td>
+
+
+            <td width="12%">
+                <input name="Entrada" id="Entrada" type="text" class="entrada form-control ok" />
+
+            </td>
+
+            <td width="12%">
+                <input id="Salida" name="Salida" type="text" class="salida form-control ok" />
+
+            </td>
+            <td width="5%">
+                <input id="Horas"  type="text" class="form-control" />
+
+            </td>
+            <td width="34%">
+                <textarea rows="2" id="ComentariosFila" name="Comentarios" type="text" class="form-control text-uppercase ok"></textarea>
+
+
+            </td>
+            <td width="5%" style="vertical-align:middle">
+                <input class="btn btn-danger" id="BtnInsertar" value="Insertar" type="button" />
+            </td>
+        </tr>
+
+    </table>
+
+    <div class="container-fluid">
+
+        <div class="row">
+
+            <div class="col-12">
+                <div class="float-end">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <label style="margin-right:5px" for="neto">Horas Totales:  </label>
+                            <input id="horastotales" style="width:148px" type="text" class="form-control" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+
+
+
+</div>

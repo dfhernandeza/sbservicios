@@ -1,0 +1,147 @@
+﻿@model BibliotecaDeClases.Modelos.Transacciones.RendicionModel
+
+@{
+    ViewBag.Title = "ProcesarRendicionAsync";
+}
+<h2>@Model.Empleado</h2>
+<h3>Monto a rendir: @Model.Total.ToString("C")</h3>
+
+<form id="formularioRendicion">
+ 
+    <input class="d-none" value="@Model.IDDocumento" id="IDDocumento" name="IDDocumento" />
+    <div class="row mb-3 align-items-end">
+        <div class="col-2">
+            <label class="form-label">
+                Monto rendido
+            </label>
+            <input class="d-none" id="montoARendir" value="@Model.Total" />
+            <input class="form-control" type="text" id="montorendido" name="MontoRendido" />
+            <input class="d-none" id="cuentaEmpleado" value="@Model.IDCuentaEmpleado" name="IDCuentaEmpleado" />
+        </div>
+        <div class="col-3">
+            <button type="button"  id="btnProcesar" class="btn btn-danger">Procesar</button>
+        </div>
+    </div>
+ 
+    <input type="button" disabled value="Terminar" id="btnTerminar" class="btn btn-success" />
+</form>
+<h2 class="mt-3">
+    Detalle Transferencias
+</h2>
+<table class="table">
+    <tr>
+        <th>Fecha</th>
+        <th>Monto</th>
+        <th>Descripción</th>
+    </tr>
+    @foreach (var item in Model.Transacciones)
+    {
+        <tr><td>@item.Fecha.ToString("dd-MM-yyyy")</td><td>@item.Monto.ToString("C")</td><td>@item.Descripcion</td></tr>
+    }
+
+</table>
+
+
+
+<script>
+    $(document).on('click', '#btnProcesar', function () {
+        $(this).prop('disabled', true);
+        var diferencia = 0;
+        var cuentaempleado = $('#cuentaEmpleado').val();
+        diferencia =  parseFloat($('#montoARendir').val()) - parseFloat($('#montorendido').val());
+        if (diferencia > 0) {
+            var fila = '<div class="row mb-3 align-items-end">\
+                <div class="col-2">\
+            <label class="form-label">Modo devolución</label>\
+            <select name="IDCuentaDB" class="form-control">\
+                <option value="">-Seleccionar-</option>\
+                <option value="1">Efectivo</option>\
+                <option value="10">Cuenta Corriente</option>\
+            </select>\
+            <input class="d-none" id="IDCUentaCR" name="IDCuentaCR" value="'+ cuentaempleado + '"/>\
+            </div>\
+                <div class="col-2">\
+                    <label class="form-label">\
+                        Monto Devolución </label>\
+                    <input class="form-control border border-success border-5" id="MontoDevolucion" value="'+ diferencia + '" />\
+                </div>\
+            </div>';
+            $('#formularioRendicion .row').after(fila);
+
+        }
+        else if (diferencia < 0) {
+            var fila = '<div class="row mb-3 align-items-end">\
+                <div class="col-2">\
+            <label class="form-label">Modo devolución</label>\
+            <select name="IDCuentaCR" class="form-control">\
+                <option value="">-Seleccionar-</option>\
+                <option value="1">Efectivo</option>\
+                <option value="10">Cuenta Corriente</option>\
+            </select>\
+            <input class="d-none" id="IDCUentaDB" name="IDCuentaDB" value="'+ cuentaempleado + '"/>\
+            </div>\
+                <div class="col-2">\
+                    <label class="form-label">\
+                        Monto Devolución </label>\
+                    <input class="form-control border border-danger border-5" id="MontoDevolucion" value="'+ diferencia * -1 + '" />\
+                </div>\
+            </div>';
+            $('#formularioRendicion .row').after(fila);
+           
+        }
+        $('#btnTerminar').prop('disabled','');
+    });
+    $(document).on('click', '#btnTerminar', function () {
+        $(this).prop('disabled', true);
+        if ($('#formularioRendicion .row').length = 1 ) {
+            var modelo = {
+                IDDocumento: $('#IDDocumento').val(),
+                MontoRendido: $('#montorendido').val()
+
+            };
+            $.ajax({
+                type: "POST",
+                url: "/Transaccion/ProcesarRendicionAsync/",
+                data: JSON.stringify(modelo),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    var accion = response.RouteValues.filter(x => { return x.Key === "action" })[0];
+                    var controller = response.RouteValues.filter(x => { return x.Key === "controller" })[0]
+
+                    window.location.replace(window.location.origin + "/"+ controller.Value +"/"+ accion.Value +"/")
+                }
+            });
+        }
+        else {
+            var transaccion = {
+                Item: 'Devolución',
+                Monto: $('#MontoDevolucion').val(),
+                Cantidad: 1,
+                IDCuentaCR: $('#IDCuentaCR').val(),
+                IDCUentaDB: $('#IDCUentaDB').val()
+            }
+            var modelo = {
+                IDDocumento: $('#IDDocumento').val(),
+                FechaRendicion: Date.now(),
+                MontoRendido: $('#montorendido').val(),
+                Devolucion: transaccion
+
+            };
+            $.ajax({
+                type: "POST",
+                url: "/Transaccion/ProcesarRendicionAsync/",
+                data: JSON.stringify(modelo),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    var accion = response.RouteValues.filter(x => { return x.Key === "action" })[0];
+                    var controller = response.RouteValues.filter(x => { return x.Key === "controller" })[0]
+
+                    window.location.replace(window.location.origin + "/" + controller.Value + "/" + accion.Value + "/")
+                }
+            });
+        }
+
+    });
+</script>

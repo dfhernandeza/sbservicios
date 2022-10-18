@@ -1,0 +1,135 @@
+﻿@using AppWebSantaBeatriz.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "Iniciar sesión";
+}
+
+@*@{
+    
+    if (User.IsInRole("Admin"))
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutUsuarios.cshtml";
+    }
+
+
+}*@
+
+
+
+
+
+
+<style>
+    .centered {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        /*margin-right: -50%;*/
+        transform: translate(-50%, -50%);
+    }
+
+    .centrado {
+        position: absolute;
+        top: 25%;
+        left: 50%;
+        /*margin-right: -50%;*/
+        transform: translate(-50%, -50%);
+    }
+    .centrado2 {
+        position: absolute;
+        margin-top: 35px;
+        left: 50%;
+        /*margin-right: -50%;*/
+        transform: translate(-50%, -50%);
+    }
+
+    .inp {
+        border: none;
+        border-bottom: 1px solid #1890ff;
+        padding: 5px 10px;
+        outline: none;
+    }
+
+    [placeholder]:focus::-webkit-input-placeholder {
+        transition: text-indent 0.4s 0.4s ease;
+        text-indent: -100%;
+        opacity: 1;
+    }
+
+</style>
+
+
+<div class="centered">
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="mb-5">Iniciar Sesión</h2>
+            <section id="loginForm">
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(m => m.UserName, new { @class = "inp", Placeholder = "Nombre de Usuario" })
+                            @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    @*<div class="form-group">
+
+                    <div class="col-md-12">
+                        @Html.TextBoxFor(m => m.Email, new { @class = "inp", Placeholder = "Correo electrónico" })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>*@
+                    <div class="form-group">
+
+                        <div class="col-md-12">
+                            @Html.PasswordFor(m => m.Password, new { @class = "inp", Placeholder = "Contraseña" })
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <div class="checkbox mt-3">
+                                @Html.CheckBoxFor(m => m.RememberMe)
+                                @Html.LabelFor(m => m.RememberMe)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input type="submit" value="Iniciar sesión" class="btn btn-success centrado2" />
+                        </div>
+
+
+                    </div>
+                    @*<p>
+                    @Html.ActionLink("Registrarse como usuario nuevo", "Register")
+                </p>*@
+                    @* Habilite esta opción una vez tenga la confirmación de la cuenta habilitada para la funcionalidad de restablecimiento de contraseña
+                <p>
+                    @Html.ActionLink("¿Ha olvidado su contraseña?", "ForgotPassword")
+                </p>*@
+                }
+            </section>
+        </div>
+        @*<div class="col-md-4">
+                <section id="socialLoginForm">
+                    @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+                </section>
+            </div>*@
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

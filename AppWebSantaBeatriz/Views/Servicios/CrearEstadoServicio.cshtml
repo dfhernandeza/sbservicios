@@ -1,0 +1,56 @@
+﻿@model AppWebSantaBeatriz.Models.Servicios.EstadoServicioModel
+
+@{
+    ViewBag.Title = "CrearEstadoServicio";
+}
+
+<h2 class="margenes">Nuevo Estado de Servicios</h2>
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container-fluid fondogris">
+        <form>
+            <div class="form-row align-items-end">
+
+                <div class="form-group col-md-8">
+                    <label for="Estado">Estado</label>
+                    <input id="Estado" name="Estado" style="text-transform:uppercase" class="form-control" type="text" />
+                    
+                </div>
+
+                <div class="form-group col-md-4">
+                    <input type="submit" value="Ingresar" class="btn btn-block botonrojo" />
+                </div>
+            </div>
+
+            <div class="form-row align-items-end">
+
+                <div class="form-group col-md-12">
+                    <label for="Descripcion">Descripción</label>
+                    <textarea style="text-transform:uppercase"  rows="2" class="form-control" id="Descripcion" name="Descripcion"></textarea>
+                    
+                </div>
+
+                
+            </div>
+
+
+
+
+        </form>
+
+        <a class="btn btn-success" href="@Url.Action("VerEstadoServicios")">Volver</a>
+
+    </div>
+    
+   
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

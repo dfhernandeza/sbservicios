@@ -1,0 +1,412 @@
+﻿@model BibliotecaDeClases.EmpleadoModel
+
+@{
+    ViewBag.Title = "Edit";
+}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
+<script src="~/Scripts/Funciones.js"></script>
+<h2 style="margin-top:20px" class="text-center mb-5">Editar Empleado</h2>
+
+<form id="formularioEditar" method="post" action="@Url.Action("Edit")">
+   
+        @Html.AntiForgeryToken()
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="container-fluid fondogris">
+
+            <div class="row border-dark align-items-end">
+                <div class="form-group col-md-4">
+                    <label for="Rut">Rut</label>
+                    @Html.HiddenFor(x => x.ID)
+                    @Html.EditorFor(model => model.IDEmpleado, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.IDEmpleado, "", new { @class = "text-danger" })
+
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="FechadeNacimiento">Fecha de Nacimiento</label>
+
+                    <input type="date" class="form-control" name="FechadeNacimiento" value="@Model.FechadeNacimiento.ToString("yyyy-MM-dd")" id="FechadeNacimiento" />
+                    @Html.ValidationMessageFor(model => model.FechadeNacimiento, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="FechaContratacion">Fecha Contratación</label>
+                    @{string result = "";
+                        if (Model.FechaContratacion.ToString() != "01-01-0001 0:00:00") { result = Model.FechaContratacion.ToString("dd-MM-yyyy"); }
+
+
+                    }
+
+                    <input type="text" class="form-control fecha" value="@( result)" name="FechaContratacion" id="FechaContratacion" />
+                </div>
+
+
+
+            </div>
+
+
+
+
+
+
+
+            <div class="form-group">
+                <label for="inputAddress">Nombres</label>
+                @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+
+            </div>
+            <div class="form-group">
+                <label for="inputAddress2">Apellidos</label>
+                @Html.EditorFor(model => model.Apellido, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Apellido, "", new { @class = "text-danger" })
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label">
+                        Estado Civil
+                    </label>
+                    <select class="form-control" name="IDEstadoCivil" id="IDEstadoCivil">
+                        <option value="">-Seleccionar-</option>
+                        @foreach (var item in Model.TiposEstadoCivil)
+                        {
+                            if (item.Value == Model.IDEstadoCivil)
+                            {
+                                <option selected="selected" value="@item.Value">@item.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        }
+                    </select>
+
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">
+                        Nacionalidad
+                    </label>
+                    <select class="form-control" name="IDNacionalidad" id="IDNacionalidad">
+                        <option value="">-Seleccionar-</option>
+
+
+                        @foreach (var item in Model.Paises)
+                        {
+
+                            if (item.Value == Model.IDNacionalidad)
+                            {
+                                <option selected="selected" value="@item.Value">@item.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+
+
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">
+                        Licencia de Conducir
+                    </label>
+                    <select class="form-control" name="IDTipoLicencia" id="IDTipoLicencia">
+                        <option value="">-Seleccionar-</option>
+                        @foreach (var item in Model.TiposLicenciaConducir)
+                        {
+                            if (item.Value == Model.IDTipoLicencia)
+                            {
+                                <option selected="selected" value="@item.Value">@item.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="Rut">Email</label>
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="FechadeNacimiento">Fono</label>
+                    @Html.EditorFor(model => model.Fono, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Fono, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="inputAddress2">Dirección</label>
+                @Html.EditorFor(model => model.Direccion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Direccion, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="row align-items-end">
+                <div class="col-md-4">
+                    <label for="Cargo">Cargo</label>
+                    @Html.EditorFor(model => model.Cargo, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Cargo, "", new { @class = "text-danger" })
+
+                </div>
+                <div class="col-md-3">
+                    <label for="Especialidad">Especialidad</label>
+
+                    @Html.DropDownListFor(model => model.IDEspecialidad, new SelectList(Model.ListaEspecialidades, "Value", "Text"), "-Seleccionar-", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.IDEspecialidad, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-3">
+                    <label for="inputAddress2">Supervisor</label>
+                    @Html.DropDownListFor(model => model.IDSupervisor, new SelectList(Model.ListaSupervisores, "Value", "Text"), "-Seleccionar-", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.IDSupervisor, "", new { @class = "text-danger" })
+
+                </div>
+                <div class="col-md-2">
+
+                    <div class="form-check">
+                        @if (Model.Planta)
+                        {
+                            <input class="form-check-input" type="checkbox" checked="checked" name="Planta" id="flexCheckDefault">
+                        }
+                        else
+                        {
+                            <input class="form-check-input" type="checkbox" name="Planta" id="flexCheckDefault">
+                        }
+
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Trabajador de Planta
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputAddress2">Otros Detalles</label>
+                @Html.EditorFor(model => model.OtrosDetalles, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.OtrosDetalles, "", new { @class = "text-danger" })
+            </div>
+
+
+            <div class="row">
+                <div class="form-group col-md-2">
+                    <label for="TallaZapatos">Talla Zapatos</label>
+                    @Html.DropDownListFor(model => model.TallaZapatos, new SelectList(Model.ListaTallasZapatos, "Value", "Text"), "-Seleccionar-", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.TallaZapatos, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="TallaPantalon">Talla Pantalon</label>
+                    @Html.DropDownListFor(model => model.TallaPantalon, new SelectList(Model.ListaTallaPantalones, "Value", "Text"), "-Seleccionar-", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.TallaPantalon, "", new { @class = "text-danger" })
+
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="TallaPolera">Talla Polera</label>
+                    @Html.DropDownListFor(model => model.TallaTop, new SelectList(Model.ListaTallasTop, "Value", "Text"), "-Seleccionar-", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.TallaTop, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="TallaPolera">Valor HH Día</label>
+                    <input value="@Model.ValorHH" name="ValorHH" id="ValorHH" class="form-control" />
+
+                    @Html.ValidationMessageFor(model => model.ValorHH, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="TallaPolera">Sueldo Base</label>
+                    <input name="SueldoBase" id="SueldoBase" class="form-control" value="@Model.SueldoBase" />
+                    @Html.ValidationMessageFor(model => model.SueldoBase, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label">Banco</label>
+                    <select class="form-control" name="IDBanco" id="IDBanco">
+                        <option value="">-Seleccionar-</option>
+                        @foreach (var item in Model.Bancos)
+                        {
+                            if (Model.CuentaBancaria != null)
+                            {
+                                if (Model.CuentaBancaria.IDBanco == item.Value)
+                                {
+                                    <option selected="selected" value="@item.Value">@item.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+                            else
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Tipo de Cuenta</label>
+                    <select class="form-control" name="IDTipoCuenta" id="IDTipoCuenta">
+                        <option value="">-Seleccionar-</option>
+                        @if (Model.CuentaBancaria != null)
+                        {
+                            foreach (var item in Model.TiposCuentaBancaria)
+                            {
+                              
+                                    if (Model.CuentaBancaria.IDTipoCuenta == item.Value)
+                                    {
+                                        <option selected="selected" value="@item.Value">@item.Text</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                               
+                            }
+                        }
+                        else
+                        {
+                            foreach (var item in Model.TiposCuentaBancaria)
+                            {
+                                
+                                   
+                                        <option value="@item.Value">@item.Text</option>
+                                    
+                              
+                            }
+                        }
+
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">N° Cuenta</label>
+                    @if (Model.CuentaBancaria != null)
+                    {
+                        <input class="form-control" name="NumCuenta" id="NumCuenta" value="@Model.CuentaBancaria.NumCuenta" />
+                    }
+                    else
+                    {
+                        <input class="form-control" name="NumCuenta" id="NumCuenta"  />
+                    }
+                </div>
+            </div>
+            <div style="margin-top:20px">
+                <a href="~/Empleados/VerEmpleados" class="btn btn-primary">Volver</a>
+                <button type="submit" class="btn botonrojo">Editar</button>
+            </div>
+
+
+
+        </div>
+
+
+    
+</form>
+<script>
+    $(function () {
+        $('.fecha').datepicker({ dateFormat: 'dd-mm-yy' });
+        $.datepicker.setDefaults($.datepicker.regional['es']);
+    });
+    $(function () {
+        $('#IDEmpleado').keyup(function (e) {
+
+            rut($(this))
+        });
+    });
+
+    $(document).ready(function () {
+        $("#formularioEditar").validate({
+            rules: {
+                IDEmpleado: "required",
+                FechadeNacimiento: "required",
+                FechaContratacion: "required",
+                Nombre: "required",
+                Apellido: "required",
+                IDEstadoCivil: "required",
+                IDNacionalidad: "required",
+                IDTipoLicencia: "required",
+                Email: "required",
+                Fono: "required",
+                Direccion: "required",
+                IDEspecialidad: "required",
+                IDSupervisor: "required",
+                TallaZapatos: "required",
+                TallaPantalon: "required",
+                TallaTop: "required",
+                IDBanco: "required",
+                IDTipoCuenta: "required",
+                NumCuenta: "required"
+            },
+            messages: {
+                IDEmpleado: "Debe proporcionar el rut del empleado",
+                FechadeNacimiento: "Debe proporcionar la fecha de nacimiento del empleado",
+                FechaContratacion: "Debe proporcionar la fecha de contratación",
+                Nombre: "Debe proporcionar un nombre",
+                Apellido: "Debe proporcionar un apellido",
+                IDEstadoCivil: "Debe proporcionar un estado civil",
+                IDNacionalidad: "Debe proporcionar una nacionalidad",
+                IDTipoLicencia: "Debe proporcionar un tipo de licencia",
+                Email: "Debe proporcionar un Email",
+                Fono: "Debe proporcionar un Fono",
+                Direccion: "Debe proporcionar un domicilio",
+                IDEspecialidad: "Debe proporcionar una especialidad",
+                IDSupervisor: "Debe proporcionar un supervisor",
+                TallaZapatos: "Debe proporcionar una talla de Zapatos",
+                TallaPantalon: "Debe proporcionar una talla de Pantalón",
+                TallaTop: "Debe proporcionar una talla de Polera",
+                IDBanco: "Debe proporcionar un banco",
+                IDTipoCuenta: "Debe proporcionar un tipo de cueta bancaria",
+                NumCuenta: "Debe proporcionar un numero de cuenta"
+            },
+            submitHandler: function (form) {
+                var CuentaBancaria = { IDBanco: $('#IDBanco').val(), IDTipoCuenta: $('#IDTipoCuenta').val(), NumCuenta: $('#NumCuenta').val(), IDEmpleado: $('#ID').val() };
+                var Empleado = {
+                    IDEmpleado: $('#IDEmpleado').val(),
+                    FechadeNacimiento: $('#FechadeNacimiento').val(),
+                    FechaContratacion: $('#FechaContratacion').val(),
+                    Nombre: $('#Nombre').val(),
+                    Apellido: $('#Apellido').val(),
+                    IDEstadoCivil: $('#IDEstadoCivil').val(),
+                    IDNacionalidad: $('#IDNacionalidad').val(),
+                    IDTipoLicencia: $('#IDTipoLicencia').val(),
+                    Email: $('#Email').val(),
+                    Fono: $('#Fono').val(),
+                    Direccion: $('#Direccion').val(),
+                    Cargo: $('#Cargo').val(),
+                    IDEspecialidad: $('#IDEspecialidad').val(),
+                    IDSupervisor: $('#IDSupervisor').val(),
+                    OtrosDetalles: $('#OtrosDetalles').val(),
+                    TallaZapatos: $('#TallaZapatos').val(),
+                    TallaPantalon: $('#TallaPantalon').val(),
+                    TallaTop: $('#TallaTop').val(),
+                    ValorHH: $('#ValorHH').val(),
+                    SueldoBase: $('#SueldoBase').val(),
+                    CuentaBancaria: CuentaBancaria,
+                    ID: $('#ID').val()
+                };
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify(Empleado),
+                    success: function (response) {
+                        window.location.href = "/Empleados/VerEmpleados"
+                    },
+                });
+
+            },
+
+        });
+    });
+</script>
+@**@
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

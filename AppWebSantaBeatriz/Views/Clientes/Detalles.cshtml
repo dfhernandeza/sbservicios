@@ -1,0 +1,814 @@
+﻿@model AppWebSantaBeatriz.Models.Clientes.ClienteModel
+
+@{
+    ViewBag.Title = "Detalles";
+}
+
+<head>
+ 
+    <script>
+        var IDUbicacion;
+        var InoUp;
+        var IDContacto;
+        var UbioContact
+
+        function LlenarUbicaciones() {
+            $(document).ready(function (e) {
+
+                $.ajax({
+                    url: "/Clientes/Ubicaciones/",
+                    type: 'POST',
+                    async: true,
+                    dataType: 'text',
+                    data: {
+                        idcliente: $("#ID").val()
+                    },
+                    success: function (data) {
+                        data = JSON.parse(data);
+                        $(data).each(function (i, item) {
+
+                            var row = $('<tr style= "background-color:white">\
+                     <td>' + item.Nombre + '</td >\
+                     <td>' + item.Alias + '</td>\
+                     <td>' + item.Direccion + '</td>\
+                     <td>' + item.Ciudad + '</td>\
+                     <td>\
+                        <button id="BtnEditar" type="button" data-id="'+ item.ID + '"  class="btn btn-success">\
+                        <img src = "/Content/Pictures/editar.png"/>\
+                        </button >\
+                        <button id="BtnEliminarUbicacion" type="button"  data-id="'+ item.ID + '"  class="btn btn-danger">\
+                            <img src="/Content/Pictures/delete.png" />\
+                        </button>\
+                     </td></tr>');
+                            $('#tabla2').append(row);
+                        });
+                    },
+                });
+            });
+        };
+
+        function LimpiarUbicaciones() {
+            $(document).ready(function (e) {
+                $("#tabla2").find("tr:not(:first)").remove()
+
+            });
+        };
+
+        function LimpiarContactos() {
+            $(document).ready(function (e) {
+                $("#tabla1").find("tr:not(:first)").remove()
+
+            });
+        };
+
+
+        function LlenarContactos() {
+            $(document).ready(function (e) {
+
+                $.ajax({
+                    url: "/Clientes/Contactos/",
+                    type: 'POST',
+                    async: true,
+                    dataType: 'text',
+                    data: {
+                        idcliente: $("#ID").val()
+                    },
+                    success: function (data) {
+                        data = JSON.parse(data);
+                        $(data).each(function (i, item) {
+
+                            var row = $('<tr style= "background-color:white">\
+                            <td>' + item.Nombre + ' ' + item.Apellido + '</td>\
+                            <td>' + item.Cargo + '</td>\
+                            <td>' + item.Fono + '</td>\
+                            <td>' + item.Email + '</td>\
+                            <td>\
+                                <button id="BtnEditarContacto" type="button" data-id="'+ item.ID + '"  class="btn btn-success">\
+                                   <img src = "/Content/Pictures/editar.png" />r\
+                                </button>\
+                                <button id="BtnEliminarContacto" data-id="'+ item.ID + '" type="button"  class="btn btn-danger">\
+                                   <img src = "/Content/Pictures/delete.png" />\
+                            </button >\
+                            </td></tr>');
+                            $('#tabla1').append(row);
+                        });
+                    },
+                });
+            });
+        };
+
+        //Edita una ubicación
+
+        $(function () {
+            $(document).ready(function (e) {
+                $(document).on('click', "#BtnEditar", function () {
+                    IDUbicacion = $(this).data("id");
+                    var row = $(this).closest("tr");   // Finds the closest row <tr>
+                    var tds = row.find("td");
+                    $('#ubicacionModal').find('#exampleModalLabel').text('Editar Ubicación');
+                    $("#ubicacionModal").modal('show');                   
+
+                    $("#NombreModal").val(tds[0].innerText);
+                    $("#CiudadModal").val(tds[3].innerText);
+                    $("#DireccionModal").val(tds[2].innerText);
+                    $("#AliasUbicacionModal").val(tds[1].innerText)
+                    
+                    InoUp = 'Update';
+                });
+            });
+        });
+        //Edita un contacto
+        $(function () {
+            $(document).ready(function (e) {
+                $(document).on('click', "#BtnEditarContacto", function () {
+                    IDContacto = $(this).data("id");
+                    InoUp = 'Update';
+                    $('#exampleModal').find('#exampleModalLabel').text('Editar Contacto');
+                    $("#exampleModal").modal('show');
+                    var row = $(this).closest("tr");   // Finds the closest row <tr>
+                    var tds = row.find("td");
+                  
+                    $.ajax({
+                        url: "/Clientes/VerDetalleContacto/",
+                        type: 'POST',
+                        async: true,
+                        dataType: 'text',
+                        data: {
+                            idcontacto: IDContacto
+                        },
+                        success: function (data) {
+                            data = JSON.parse(data);
+                            $("#IDContacto1").val(data.IDContacto);
+                            $("#Alias1").val(data.Alias);
+                            $("#Nombre1").val(data.Nombre);
+                            $("#Apellido1").val(data.Apellido);
+                            $("#Cargo1").val(data.Cargo);
+                            $("#Area1").val(data.Area);
+                            $("#Email1").val(data.Email);
+                            $("#Fono1").val(data.Fono);
+                            $("#Notas1").val(data.Notas);
+                            rut($('#IDContacto1'));
+                        },
+                    });
+
+
+                });
+            });
+        });
+
+       //Elimina contacto
+        //======================================================================================================
+        $(function () {
+            $(document).ready(function (e) {
+                $(document).on('click', "#BtnEliminarContacto", function () {
+                    IDContacto = $(this).data("id");
+                    var row = $(this).closest("tr");   // Finds the closest row <tr>
+                    var tds = row.find("td");
+                    $("#eliminaContactoModal").find('#exampleModalLabel').text('Eliminar Contacto');
+                    $("#eliminaContactoModal").modal('show');                   
+                   
+                    document.getElementById('ContactoEliminado').innerHTML = '¿Confirma que desea eliminar a ' + tds[0].innerText + ' de la lista de contactos?';
+                    UbioContact = 'Contacto'
+                   
+                });
+            });
+        });
+
+      
+        $(function () {
+            $(document).ready(function (e) {
+                $(document).on('click', "#EliminaContacto", function () {
+                    if (UbioContact == 'Contacto') {
+
+                        $.ajax({
+                            url: "/Clientes/AjaxEliminaContacto/",
+                            type: 'POST',
+                            async: true,
+                            dataType: 'text',
+                            data: {
+                                idcontacto: IDContacto
+                            },
+                            success: function (data) {
+                                LimpiarContactos();
+                                LlenarContactos();
+                                $("#eliminaContactoModal").modal('hide')
+                            },
+                        });
+
+
+                    }
+                    else {
+
+                        $.ajax({
+                            url: "/Clientes/AjaxEliminaUbicacion/",
+                            type: 'POST',
+                            async: true,
+                            dataType: 'text',
+                            data: {
+                                idubicacion: IDUbicacion
+                            },
+                            success: function (data) {
+                                LimpiarUbicaciones();
+                                LlenarUbicaciones();
+                                $("#eliminaContactoModal").modal('hide')
+                            },
+                        });
+
+
+                    }
+
+
+                });
+            });
+        });
+
+
+
+        //======================================================================================================
+
+        //Elimina ubicación
+
+        $(function () {
+            $(document).ready(function (e) {
+                $(document).on('click', "#BtnEliminarUbicacion", function () {
+                    $("#eliminaContactoModal").modal('show');
+                    $("#eliminaContactoModal").find('#exampleModalLabel').text('Eliminar Ubicación')
+                    var row = $(this).closest("tr");   // Finds the closest row <tr>
+                    var tds = row.find("td");
+                    IDUbicacion = $(this).data("id");
+                    document.getElementById('ContactoEliminado').innerHTML = '¿Confirma que desea eliminar a ' + tds[0].innerText + ' de la lista de ubicaciones?';
+                    UbioContact = 'Ubicacion';
+
+                });
+            });
+        });
+
+
+
+        //Maneja eventos
+
+        $(function () {
+            $(document).ready(function (e) {
+                $("#NuevaUbicacion").click(function () {
+                    $('#ubicacionModal').find('#exampleModalLabel').text('Nueva Ubicación')
+                    $("#ubicacionModal").modal('show');
+
+                });
+                $("#CerrarUbicacion").click(function () {
+                    $("#ubicacionModal").modal('hide');
+
+                });
+                $("#NuevoContacto").click(function () {
+                    $('#exampleModal').find('#exampleModalLabel').text('Nuevo Contacto')
+                    $("#exampleModal").modal('show');
+
+                });
+                $("#CerrarNContactoH").click(function () {
+                    $("#exampleModal").modal('hide');
+                    $('#exampleModal').find('input,textarea').val('');
+                });
+                $("#CerrarNContactoF").click(function () {
+                    $("#exampleModal").modal('hide');
+                    $('#exampleModal').find('input,textarea').val('');
+                });
+
+
+
+                $("#CerrarUbicacion").click(function () {
+                    Limpiar();
+                    $("#ubicacionModal").modal('hide');
+                });
+                $("#CerrarUbicacionFooter").click(function () {
+                    Limpiar();
+                    $("#ubicacionModal").modal('hide');
+                });
+                $("#NuevaUbicacion").click(function () {
+                    InoUp = 'Ingresar';
+                });
+
+
+
+              
+                $("#CerrarEliminarContacto").click(function () {
+                    Limpiar();
+                    $("#eliminaContactoModal").modal('hide');
+                });
+                $("#CerrarEliminarContactoF").click(function () {
+                    Limpiar();
+                    $("#eliminaContactoModal").modal('hide');
+                });
+              
+            });
+        });
+
+
+        function Limpiar() {
+
+            $(document).ready(function (e) {
+
+                $("#NombreModal").val('');
+                $("#CiudadModal").val('');
+                $("#DireccionModal").val('');
+                $("#AliasUbicacionModal").val('');
+
+
+            });
+
+        };
+
+        //LlenarUbicaciones();
+        //LlenarContactos();
+
+    </script>
+
+    <style>
+
+        .tr {
+            background-color: white !important
+        }
+    </style>
+</head>
+
+
+<link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+
+<div class="container-fluid" style="margin-top:10px">
+
+    <h2 style="margin-top:10px">Detalle Cliente</h2>
+
+    <div class="row" style="margin-top:20px">
+        <div class="col-xl-3">
+            <div class="card">
+                <div class="card-header botonazul">
+                    <strong>ID Cliente</strong>
+                </div>
+                <div class="card-body">
+                    <h5>@Model.IDCliente</h5>
+                    @Html.HiddenFor(x => x.IDSinFormato)
+                    @Html.HiddenFor(x=>x.ID)
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-9">
+            <div class="card">
+                <div class="card-header botonazul">
+                    <strong>Razón Social</strong>
+                </div>
+                <div class="card-body">
+                    <h5>@Model.RazonSocial</h5>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row" style="margin-top:20px">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header botonazul">
+                    <strong>Giro</strong>
+                </div>
+                <div class="card-body">
+                    <h5>@Model.Giro</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*<hr style="margin-top:50px" />*@
+
+   <div class="row" style="margin-top:20px;margin-bottom:30px">
+       <div class="col-md-8">
+           <h2 style="text-align:start">Contactos</h2>
+       </div>
+       <div class="col-md-4">
+           <div class="float-end">
+               <button type="button" class="btn btn-block botonrojo" id="NuevoContacto">Nuevo Contacto</button>
+           </div>
+          
+       </div>
+
+   </div>
+
+  <table class="tabla" id="tabla1" style="margin-bottom:20px">
+
+      <tr class="botonazul">
+        
+          <th scope="col">Nombre</th>
+          <th scope="col">Cargo</th>
+          <th scope="col">Fono</th>
+          <th scope="col">Email</th>
+          <th scope="col" style="width:15%"></th>
+      </tr>
+      <tbody>
+          @{ foreach (var item in Model.Contactos)
+              {
+                  <tr>
+                      <td>@(item.Nombre + " " +  item.Apellido)</td>
+                      <td>@item.Cargo</td>
+                      <td>@item.Fono</td>
+                      <td>@item.Email</td>
+                      <td> 
+                          <button id="BtnEditarContacto" data-id="@item.ID" type="button" class="btn btn-success">
+                              <img src="~/Content/Pictures/editar.png" />
+                          </button>
+                          <button id="BtnEliminarContacto" data-id="@item.ID" type="button" class="btn btn-danger">
+                             <img src="~/Content/Pictures/delete.png" />
+                          </button></td></tr>
+
+              }
+          }
+      </tbody>
+  </table>
+
+
+<div style="display:none" id="alerta" class="alert alert-success alert-dismissible fade" role="alert">
+    <strong>Confirmación</strong> <p id="alertap">El contacto ha sido creado satisfactoriamente.</p>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+
+<div class="modal fade" id="eliminaContactoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header botonazul">
+                <h5 class="modal-title" id="exampleModalLabel">Eliminar Contacto</h5>
+                <button type="button" class="close" id="CerrarEliminarContacto" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                <h3 id="ContactoEliminado"></h3>
+                
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="CerrarEliminarContactoF">Cerrar</button>
+                <button type="button" id="EliminaContacto" class="btn btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <!-- Modal -->
+    @Html.HiddenFor(x => x.IDCliente)
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header botonazul">
+                    <h5 class="modal-title" id="exampleModalLabel">Nuevo Contacto</h5>
+                    <button type="button" class="btn-close" id="CerrarNContactoH" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="inputEmail4">ID Contacto</label>
+                                <input type="text" class="form-control" name="IDContacto1" id="IDContacto1">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputPassword4">Alias</label>
+                                <input type="text" class="form-control" name="Alias1" id="Alias1">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="inputAddress">Nombres</label>
+                                <input type="text" class="form-control" name="Nombre1" id="Nombre1">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputAddress2">Apellidos</label>
+                                <input type="text" class="form-control" name="Apellido1" id="Apellido1">
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="inputCity">Cargo</label>
+                                <input type="text" class="form-control" name="Cargo1" id="Cargo1">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputCity">Area</label>
+                                <input type="text" class="form-control" name="Area1" id="Area1">
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="Cargo">Email</label>
+                                <input type="email" class="form-control" name="Email1" id="Email1">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="Area">Fono</label>
+                                <input type="text" class="form-control" name="Fono1" id="Fono1">
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Notas">Notas</label>
+                            <textarea class="form-control" rows="2" name="Notas1" id="Notas1"></textarea>
+
+
+                        </div>
+
+
+
+                    </form>
+
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="CerrarNContactoF">Cerrar</button>
+                    <button type="button" id="IngresarContacto" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="ubicacionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header botonrojo">
+                    <h5 class="modal-title" id="exampleModalLabel">Nueva Ubicación</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" id="CerrarUbicacion" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label for="inputEmail4">Nombre</label>
+                                <input type="text" class="form-control" style="text-transform:uppercase" name="NombreModal" id="NombreModal">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="AliasUbicacionModal">Alias</label>
+                                <input type="text" class="form-control" style="text-transform:uppercase" name="AliasUbicacionModal" id="AliasUbicacionModal">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="inputPassword4">Comuna</label>
+                                <input type="text" class="form-control" style="text-transform:uppercase" name="CiudadModal" id="CiudadModal">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputAddress">Dirección</label>
+                            <input type="text" class="form-control" style="text-transform:uppercase" name="DireccionModal" id="DireccionModal">
+                        </div>
+
+                    </form>
+
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="CerrarUbicacionFooter" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" id="IngresarUbicacion" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <div class="row" style="margin-top:20px">
+        <div class="col-md-8">
+            <h2 style="text-align:start">Ubicaciones</h2>
+        </div>
+        <div class="col-md-4">
+            <div class="float-end">
+                <button type="button" id="NuevaUbicacion" class="btn btn-block botonrojo" data-target="#ubicacionModal">Nueva Ubicacion</button>
+            </div>
+             
+
+        </div>
+
+    </div>
+
+
+    <table class="tabla" id="tabla2" style="margin-top:30px;margin-bottom:30px">
+        <tr class="botonazul"><th>Nombre</th><th>Alias</th><th>Dirección</th><th>Comuna</th><th style="width:15%"></th></tr>
+        @{ foreach (var item in Model.Ubicaciones)
+            {
+                <tr><td>@item.Nombre</td><td>@item.Alias</td><td>@item.Direccion</td><td>@item.Ciudad</td><td> 
+                    <button id="BtnEditar" type="button" data-id="@item.ID" class="btn btn-success">
+                    <img src="/Content/Pictures/editar.png" />
+                    </button>
+                    <button data-id="@item.ID" id="BtnEliminarUbicacion" type="button" class="btn btn-danger">
+                        <img src="~/Content/Pictures/delete.png" />
+                    </button></td></tr>
+            }
+
+        }
+    </table>
+
+<div id="alertaUbicacion" style="display:none" class="alert alert-success alert-dismissible fade" role="alert">
+    <strong>Confirmación</strong> <p id="alertaUbicacionP">La ubicación ha sido creado satisfactoriamente.</p>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+            }
+
+
+
+
+
+
+<p style="margin-top:20px">
+    <a class="btn btn-danger" href="@Url.Action("Edit","Clientes",new {id = Model.ID})">Editar</a>
+    <a class="btn btn-primary" href="~/Clientes/VerClientes">Volver</a>
+
+</p>
+
+<script>
+    //Contactos
+    $(function () {
+        $('#IngresarContacto').click(function (e) {
+
+            if (InoUp == 'Update') {
+
+                $.ajax({
+                    url: "/Clientes/EditarContacto/",
+                    type: 'POST',
+                    async: true,
+                    dataType: 'text',
+                    data: {
+                        id: IDContacto,
+                        idcontacto: $('#IDContacto1').val(),
+                        alias: $('#Alias1').val(),
+                        cargo: $('#Cargo1').val(),
+                        nombre: $('#Nombre1').val(),
+                        apellido: $('#Apellido1').val(),
+                        email: $('#Email1').val(),
+                        notas: $('#Notas1').val(),
+                        fono: $('#Fono1').val(),
+                        area: $('#Area1').val()
+                    },
+                    success: function (response) {
+                        LimpiarContactos();
+                        LlenarContactos();
+                        document.getElementById("alertap").innerHTML = "El Contacto ha sido editado satisfactoriamente.";
+                        $('#alerta').attr('display', 'block');
+
+                        $('#exampleModal').modal('hide');
+
+                    },
+                });
+
+
+
+
+            }
+            else {
+
+                $.ajax({
+                    url: "/Clientes/CrearContacto/",
+                    type: 'POST',
+                    async: true,
+                    dataType: 'text',
+                    data: {
+                        idcontacto: $('#IDContacto1').val(),
+                        alias: $('#Alias1').val(),
+                        cargo: $('#Cargo1').val(),
+                        nombre: $('#Nombre1').val(),
+                        apellido: $('#Apellido1').val(),
+                        email: $('#Email1').val(),
+                        notas: $('#Notas1').val(),
+                        fono: $('#Fono1').val(),
+                        idcliente: $('#ID').val(),
+                        area: $('#Area1').val()
+
+                    },
+                    success: function (response) {
+                        LimpiarContactos();
+                        LlenarContactos();
+                        $('#alerta').addClass('show');
+                        $('#exampleModal').modal('hide');
+
+                    },
+                });
+
+
+
+
+
+
+            }
+
+
+
+
+        });
+
+
+    });
+
+    //Ubicaciones
+    $(function () {
+        $('#IngresarUbicacion').click(function (e) {
+
+            if (InoUp == 'Update') {
+
+                $.ajax({
+                    url: "/Clientes/EditarUbicacion/",
+                    type: 'POST',
+                    async: true,
+                    dataType: 'text',
+                    data: {
+                        nombreubicacion: $('#NombreModal').val(),
+                        direccion: $('#DireccionModal').val(),
+                        ciudad: $('#CiudadModal').val(),
+                        alias: $('#AliasUbicacionModal').val(),
+                        id: IDUbicacion
+                    },
+                    success: function (response) {
+                        document.getElementById("alertaUbicacionP").innerHTML = "La ubicación ha sido editada satisfactoriamente.";
+
+                        $('#alertaUbicacion').addClass('show');
+
+
+                        LimpiarUbicaciones();
+                        LlenarUbicaciones();
+                        $("#ubicacionModal").modal('hide');
+                    },
+                });
+
+            }
+            else {
+
+                $.ajax({
+                    url: "/Clientes/CrearUbicacion/",
+                    type: 'POST',
+                    async: true,
+                    dataType: 'text',
+                    data: {
+                        nombreubicacion: $('#NombreModal').val(),
+                        idcliente: $('#ID').val(),
+                        direccion: $('#DireccionModal').val(),
+                        ciudad: $('#CiudadModal').val(),
+                        alias: $('#AliasUbicacionModal').val()
+
+
+                    },
+                    success: function (response) {
+                        document.getElementById("alertaUbicacionP").innerHTML = "La ubicación ha sido creada satisfactoriamente.";
+
+                        $('#alertaUbicacion').addClass('show');
+                        LimpiarUbicaciones();
+                        LlenarUbicaciones();
+                        $("#ubicacionModal").modal('hide');
+                    },
+                });
+
+
+            }
+
+        });
+    });
+
+
+    $(function () {
+        $(document).on('keyup', '#IDContacto1', function (e) {
+
+            rut($(this));
+
+        });
+
+        $(document).ready(function () {
+            $('input').css('text-transform', 'uppercase');
+            $('textarea').css('text-transform', 'uppercase');
+        });
+
+    });
+
+
+
+
+
+</script>
+

@@ -1,0 +1,43 @@
+﻿@using Microsoft.AspNet.Identity
+@using AppWebSantaBeatriz.Models;
+@using System.Data.SqlClient;
+
+@if (Request.IsAuthenticated)
+{
+    ApplicationDbContext context = new ApplicationDbContext();
+    var datos = context.Database.SqlQuery<UsuariosViewModel>(@"Select PersonalServicios.Nombre Name from PersonalServicios 
+    inner join AspNetUsers on PersonalServicios.IdUsuario = AspNetUsers.Id where AspNetUsers.Id = @ID", new SqlParameter("@ID", User.Identity.GetUserId())).FirstOrDefault();
+
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <ul class="nav navbar-nav navbar-right" style="margin-top:0px;flex-direction:row">
+            <li>
+                @*<div style="display:none" id="usuario">@User.Identity.GetUserId()</div>*@
+                @if (datos == null)
+                {
+                    @Html.ActionLink("Hola " + User.Identity.Name + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", style = "color:white", id = "blanco" })
+                }
+                else
+                {
+                    @Html.ActionLink("Hola " + datos.Name + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", style = "color:white", id = "blanco" })
+
+                }
+            </li>
+            <li><a href="javascript:document.getElementById('logoutForm').submit()" style="color:white;margin-left:20px">Cerrar sesión</a></li>
+        </ul>
+    }
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right" style="margin-top:0px">
+        @*<li>@Html.ActionLink("Registrarse", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", style = "color:white"})</li>*@
+        <li>@Html.ActionLink("Iniciar sesión", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", style = "color:white;margin-left:10px" })</li>
+    </ul>
+}
+<style>
+    .resalte:hover {
+        cursor: pointer;
+    }
+</style>

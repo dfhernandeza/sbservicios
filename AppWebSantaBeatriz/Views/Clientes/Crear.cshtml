@@ -1,0 +1,116 @@
+﻿@model AppWebSantaBeatriz.Models.Clientes.ClienteModel
+
+@{
+    ViewBag.Title = "Crear";
+}
+
+<h2 style="margin-top:25px;margin-bottom:20px">Nuevo Cliente</h2>
+<head>
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                $('#IDCliente').keyup(function (e) {
+
+                    rut($(this))
+                });
+            });
+
+            $('input,textarea').css('text-transform','uppercase');
+
+        })
+        
+        
+
+    </script>
+
+
+
+
+</head>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="container-fluid fondogris" style="margin-right:90px !important">
+        <form>
+            <div class="row align-items-end">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.IDCliente, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.IDCliente, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.IDCliente, "", new { @class = "text-danger" })
+                    </div>
+
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.RazonSocial, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.RazonSocial, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.RazonSocial, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Alias, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.Alias, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Alias, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-md-1" style="text-align:center">
+                    <div class="form-group">
+                        <div class="btn btn-success">
+                            <input id="Arauco" type="checkbox" value="true" name="Arauco" />
+                            <input type="hidden" value="false" name="Arauco" />
+                            
+                            Arauco
+                        </div>
+                      
+                        @Html.ValidationMessageFor(model => model.Alias, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <input type="submit" style="width:100%" value="Ingresar" class="btn botonazul" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Giro, htmlAttributes: new { @class = "control-label" })
+                <textarea class="form-control" rows="2" id="Giro" name="Giro">@Model.Giro</textarea>
+
+                @Html.ValidationMessageFor(model => model.Giro, "", new { @class = "text-danger" })
+
+            </div>
+
+            <div style="margin-top:20px">
+                <a href="~/Clientes/VerClientes" class="btn btn-danger">Volver</a>
+                
+            </div>
+        </form>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+ 
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }

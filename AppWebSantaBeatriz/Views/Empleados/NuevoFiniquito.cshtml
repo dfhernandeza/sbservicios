@@ -1,0 +1,29 @@
+﻿@model BibliotecaDeClases.FiniquitoModel
+
+@{
+    ViewBag.Title = "NuevoFiniquito";
+}
+
+<h2 class="text-center">Formulario Finiquito</h2>
+<div class="container-fluid">
+    <form enctype="multipart/form-data" action="@Url.Action("NuevoFiniquito")" method="post" id="nuevoFiniquitoForm">
+        <div class="row mt-5">
+            <div class="col-md-6">
+                <label class="form-label">Fecha</label>
+                <input type="text" name="IDEmpleado" class="d-none" value="@Model.IDEmpleado" />
+                <input type="text" name="Empleado" class="d-none" value="@Model.Empleado" />
+                <input type="text" class="fecha form-control" autocomplete="off"  name="Fecha" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Finiquito</label>
+                <input type="file" class="form-control" name="Finiquito" />
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <input class="btn btn-outline-success" type="submit" value="Enviar" />
+            </div>
+        </div>
+    </form>
+  
+</div>

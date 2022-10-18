@@ -1,0 +1,231 @@
+﻿@model BibliotecaDeClases.Modelos.Transacciones.HorasExtraModel
+
+@{
+    ViewBag.Title = "NuevaHoraExtra";
+}
+<head>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
+</head>
+<style>
+    .body {
+        background-color: lightgray
+    }
+
+    @@media(max-width: 576px) {
+        .sombra {
+            background-color: white;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            padding: 8px;
+            border-radius: 8px;
+            width: 100%
+        }
+    }
+
+    @@media(min-width: 576px) {
+        .sombra {
+            background-color: white;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            padding: 15px;
+            border-radius: 8px;
+            width: 100%
+        }
+    }
+
+    .copia {
+        border: solid;
+        border-width: 3px;
+        border-color: green;
+        border-radius: 8px;
+    }
+
+    .izquierda {
+        border-right: solid;
+        border-width: 3px;
+        border-color: green;
+    }
+
+    .primera {
+        border: solid;
+        border-width: 3px;
+        border-color: red;
+        border-radius: 8px;
+    }
+</style>
+
+<div class="container-fluid mt-3">
+    <form method="post" action="@Url.Action("NuevaHoraExtra")">
+        <div class="sombra">
+            <h2 class="text-center text-warning mb-4">Ingreso de Horas Extra</h2>
+            <div class="row mb-1 primera pb-3">
+                <div class="col-sm-6">
+                    <label class="form-label">Empleado</label>
+                    <select class="form-control" name="IDEmpleado" size="4">
+
+                        @foreach (var item in Model.EmpleadosSL)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-sm-6">
+                    <label class="form-label">Supervisor</label>
+                    <select class="form-control" name="IDSupervisor" size="4">
+
+                        @foreach (var item in Model.SupervisoresSL)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+
+
+            <div class="row copia mb-1">
+                <div class="col-sm-11 izquierda">
+                    <div class="row">
+                        <div class="col-sm-3 mt-3">
+                            <label class="form-label">Fecha</label>
+                            <input class="form-control fecha" name="Fecha" type="text" autocomplete="off" />
+                        </div>
+                        <div class="col-sm-7 mt-3">
+                            <label class="form-label">Centro de Costos</label>
+                            <select class="form-control" name="IDCECO">
+                                <option value="">-Seleccionar-</option>
+                                @foreach (var item in Model.CECOs)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-sm-1 mt-3">
+                            <label class="form-label">Horas</label>
+                            <input class="form-control" name="Horas" type="text" autocomplete="off" />
+                        </div>
+                        <div class="col-sm-1 mt-3">
+                            <label class="form-label">Factor</label>
+                            <input class="form-control" name="Factor" type="text" autocomplete="off" />
+                        </div>
+                        <div class="col-sm-12 mt-3 pb-3">
+                            <label class="form-label">Comentarios</label>
+                            <textarea name="Comentarios" class="form-control">
+                        
+                    </textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-1 d-flex align-items-center justify-content-around">
+
+                    <button class="btn btn-danger" type="button">-</button>
+                </div>
+
+            </div>
+            <button class="btn btn-success mt-2" type="button">+</button>
+            <div class="row">
+                <div class="col-sm-12 mt-3">
+                    <input type="button" class="btn btn-outline-success" id="btnSubmitt" value="Enviar" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<div class="row mb-1 d-none formato">
+    <div class="col-sm-11 izquierda">
+        <div class="row">
+            <div class="col-sm-3 mt-3">
+                <label class="form-label">Fecha</label>
+                <input class="form-control" name="Fecha" type="text" autocomplete="off" />
+            </div>
+            <div class="col-sm-7 mt-3">
+                <label class="form-label">Centro de Costos</label>
+                <select class="form-control" name="IDCECO">
+                    <option value="">-Seleccionar-</option>
+                    @foreach (var item in Model.CECOs)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+            </div>
+            <div class="col-sm-1 mt-3">
+                <label class="form-label">Horas</label>
+                <input class="form-control" name="Horas" type="text" autocomplete="off" />
+            </div>
+            <div class="col-sm-1 mt-3">
+                <label class="form-label">Factor</label>
+                <input class="form-control" name="Factor" type="text" autocomplete="off" />
+            </div>
+            <div class="col-sm-12 mt-3 pb-3">
+                <label class="form-label">Comentarios</label>
+                <textarea name="Comentarios" class="form-control">
+                        
+                    </textarea>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-1 d-flex align-items-center justify-content-around">
+
+        <button class="btn btn-danger" type="button">-</button>
+    </div>
+
+</div>
+
+
+
+
+
+<script>
+    $(function () {
+        $('.fecha').datepicker({ dateFormat: 'dd-mm-yy' });
+        $.datepicker.setDefaults($.datepicker.regional['es']);
+    });
+    $(document).on('click', '.btn-success', function (e) {
+        var fila = $('.formato').clone();
+       /* $(fila).find('.hasDatepicker').removeClass('hasDatepicker').val('');*/
+        /*       $(fila).find('textarea,input').val('');*/
+        
+        $(fila).find('input[name="Fecha"]').addClass('fecha');
+        $('.copia').last().after(fila);
+        $(fila).removeClass("formato d-none").addClass("copia");
+        $('.fecha').datepicker({ dateFormat: 'dd-mm-yy' });
+    });
+    $(document).on('click', '.btn-danger', function (e) {
+        if ($('.copia').length > 1) {
+            $(this).closest('.copia').remove();
+        }
+
+    });
+    $(document).on('click', '#btnSubmitt', function (e) {
+        var idempleado = $('select[name="IDEmpleado"]').val().toString();
+        var modelo = { IDSupervisor: $('select[name="IDSupervisor"]').val().toString() };
+        var HorasExtra = [];
+        $('.copia').each(function (i, item) {
+            var HoraExtra = {};
+            HoraExtra["Fecha"] = $(item).find('input[name="Fecha"]').val();
+            HoraExtra["IDEmpleado"] = idempleado;
+            HoraExtra["Horas"] = $(item).find('input[name="Horas"]').val();
+            HoraExtra["Factor"] = $(item).find('input[name="Factor"]').val();
+            HoraExtra["IDCECO"] = $(item).find('select[name="IDCECO"]').val();
+            HoraExtra["Comentarios"] = $(item).find('textarea[name="Comentarios"]').val();
+            HorasExtra.push(HoraExtra);
+        });
+        modelo["HorasExtra"] = HorasExtra;
+        $.ajax({
+            type: "POST",
+            url: "/TimeSheet/NuevaHoraExtra/",
+            data: JSON.stringify(modelo),
+            dataType: "json",
+            contentType: "application/json",
+            success: function (response) {
+                if (response == true) {
+                    window.location.href = "/TimeSheet/VerHorasExtra";
+                }
+            }
+        });
+    });
+    $()
+</script>

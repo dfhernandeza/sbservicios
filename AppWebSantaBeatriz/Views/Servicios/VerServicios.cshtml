@@ -1,0 +1,95 @@
+﻿@model IEnumerable<AppWebSantaBeatriz.Models.Servicios.ServicioModel>
+
+@{
+    ViewBag.Title = "VerServicios";
+}
+
+<link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+
+
+<style>
+  
+
+    .encabezado {
+        background: rgb(2,0,36);
+        background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(0,4,210,0.8211659663865546) 0%, rgba(0,212,255,1) 100%);
+    }
+
+   
+</style>
+
+
+
+<h1 style="text-align:center;color:white">Servicios</h1>
+
+
+
+<div class="container-fluid">
+    <table class="tabla">
+        <tr class="encabezado">
+            <th style="border-top-left-radius: 8px;width:20%">
+                Servicio
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Encargado)
+            </th>
+
+            <th>
+                Cliente
+            </th>
+            <th>
+                Fecha Incial
+            </th>
+            <th>
+                Fecha Termino
+            </th>
+            <th>
+                Estado
+            </th>
+            <th style="border-top-right-radius:8px;"><a style="margin-right: 25px" href="@Url.Action("NuevoServicioArauco")" class="btn btn-danger float-end">+</a></th>
+        </tr>
+     
+        @foreach (var item in Model)
+        {
+    <tr>
+        <td>
+
+            @Html.DisplayFor(modelItem => item.NombreServicio)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Encargado)
+        </td>
+
+        <td>
+
+            @Html.DisplayFor(modelItem => item.CLiente)
+        </td>
+        <td>@item.FechaInicio.ToString("dd-MM-yyyy")</td>
+        <td>@item.FechaTermino.ToString("dd-MM-yyyy")</td>
+        <td>
+
+            @Html.DisplayFor(modelItem => item.Estado)
+        </td>
+
+        <td>
+            <div class="d-flex justify-content-around">
+                <a class="btn btn-success"  href="@Url.Action("Edit", new {id = item.ID })">
+                    <img src="~/Content/Pictures/editar.png" />
+                </a>
+                <a class="btn btn-danger"  href="@Url.Action("Detalles", new {id = item.ID })">
+                    <img src="~/Content/Pictures/detail.png" />
+                </a>
+                <a class="btn btn-primary" href="@Url.Action("Delete", new {id = item.ID })">
+                    <img src="~/Content/Pictures/delete.png" />
+                </a>
+            </div>
+           
+
+        </td>
+    </tr>
+        }
+
+    </table>
+</div>
+

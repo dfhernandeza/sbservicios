@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>TaskJson</Title>
+			<Shortcut>tj</Shortcut>
+		</Header>
+		<Snippet>
+			<Code Language="CSharp">
+				<![CDATA[  public async Task<JsonResult> NombreMetodo (int id)
+        {
+            return Json( await Metodo(id));
+        }]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>TryCatch</Title>
+			<Shortcut>trc</Shortcut>
+		</Header>
+		<Snippet>
+			<Code Language="CSharp">
+				<![CDATA[      try
+            {
+             
+            }
+            catch(Exception e)
+            {
+                return RedirectToAction("VistaError", "Errores", FuncionError(e.Message));
+            }]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>ControllerPost</Title>
+			<Shortcut>cllp</Shortcut>
+		</Header>
+		<Snippet>
+			<Code Language="CSharp">
+				<![CDATA[        if (ModelState.IsValid)
+            {
+               
+                try
+                {
+
+                    
+                    return RedirectToAction("View");
+                }
+                catch (Exception e)
+                {
+                    return RedirectToAction("VistaError", "Errores", FuncionError(e.Message));
+                }
+            }
+            else
+            {
+                return View(modelo);
+            }]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>jquery</Title>
+			<Shortcut>jqan</Shortcut>
+		</Header>
+		<Snippet>
+			<Code Language="JavaScript">
+				<![CDATA[         $(document).on('event', 'handler', function (e) {
+									});
+						 ]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>Ajax</Title>
+			<Shortcut>ajx</Shortcut>
+		</Header>
+		<Snippet>
+			<Code Language="JavaScript">
+				<![CDATA[    $.ajax({
+            url: "url",
+            type: 'POST',
+            async: true,
+            dataType: 'text',
+            data: {
+                id: someid
+                
+            },
+            success: function (data) {
+
+             
+
+            },
+        });     
+						 ]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>Funcion</Title>
+			<Shortcut>fcn</Shortcut>
+		</Header>
+		<Snippet>
+			<Declarations>
+				<Literal>
+					<ID>Object</ID>
+					<Default>obj</Default>
+					<ToolTip>Clase</ToolTip>
+				</Literal>
+				<Literal>
+					<ID>Nombre</ID>
+					<Default>fnom</Default>
+					<ToolTip>Nombre de la función</ToolTip>
+				</Literal>
+				<Literal>
+					<ID>int</ID>
+					<Default>int</Default>
+					<ToolTip>Tipo</ToolTip>
+				</Literal>
+				<Literal>
+					<ID>param</ID>
+					<Default>par</Default>
+					<ToolTip>Parámetro</ToolTip>
+				</Literal>
+				<Literal>
+					<ID>Query</ID>
+					<Default>query</Default>
+					<ToolTip>Consulta sql</ToolTip>
+				</Literal>
+				<Literal>
+					<ID>Objeto</ID>
+					<Default>obj</Default>
+					<ToolTip>Objeto</ToolTip>
+				</Literal>
+			</Declarations>
+			<Code Language="CSharp">
+				<![CDATA[    public static Task<List<$Object$>> $Nombre$($int$ $param$)
+        {
+            return Task.Run(() =>
+            {
+                return AccesoBD.LoadDataAsync("$Query$", new $Objeto$ {  });
+
+            });
+          
+        } 			 ]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>

@@ -1,0 +1,47 @@
+﻿@model BibliotecaDeClases.Modelos.Transacciones.RegistroHorasModel
+
+@{
+    ViewBag.Title = "NuevoTimeSheetAsync";
+}
+<head>
+    @*<link href="~/Estilos/EstilosSB.css" rel="stylesheet" />*@
+    <link href="~/datetimepicker-master/jquery.datetimepicker.css" rel="stylesheet" />
+    <script src="~/datetimepicker-master/build/jquery.datetimepicker.full.min.js"></script>
+</head>
+<style>
+    .imagen {
+        height: 30px;
+        width: 30px;
+    }
+
+    input {
+        border: none
+    }
+</style>
+<div id="formulario">
+    <h4 class="mb-5">@Model.CECO</h4>
+
+    <table class="table" id="tablaHoras">
+        <tr><th>Empleado</th><th>Entrada</th><th>Salida</th><th>Total</th></tr>
+
+        @foreach (var item in Model.Empleados)
+        {
+            <tr class="resalteHH">
+
+                <td class="d-none"><input value="@item.IDEmpleado" name="IDEmpleado" /><input value="@Model.IDCECO" name="IDCECO" /></td>
+                <td> @item.Empleado </td>
+                <td><input name="Entrada" value="@(new DateTime(Model.Fecha.Year, Model.Fecha.Month,Model.Fecha.Day, 8, 30, 0).ToString("dd-MM-yyy HH:mm"))" type="text" class="date border-0 bg-transparent notfocus"  />  </td>
+                <td><input name="Salida" value="@(new DateTime(Model.Fecha.Year, Model.Fecha.Month,Model.Fecha.Day, 16, 30, 0).ToString("dd-MM-yyy HH:mm"))" type="text" class="date border-0 bg-transparent notfocus" /> </td>
+                <td>
+                    <input class="border-0 bg-transparent notfocus" name="Total" value="7.5" />
+                </td>
+            </tr>
+        }
+    </table>
+    <input type="submit" value="Enviar" id="btnEnviar" />
+</div>
+
+<script>
+   
+</script>
+

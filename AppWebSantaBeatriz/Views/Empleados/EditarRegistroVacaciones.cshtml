@@ -1,0 +1,66 @@
+﻿@model BibliotecaDeClases.Modelos.Empleados.RegistroVacacionesModel
+
+@{
+    ViewBag.Title = "EditarRegistroVacaciones";
+}
+
+
+<head>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
+</head>
+
+<h2>Editar Registro Vacaciones</h2>
+<form method="post" action="@Url.Action("EditarRegistroVacaciones")">
+    <input class="d-none" name="IDEmpleado" value="@Model.IDEmpleado" />
+    <label for="DiasDisponibles">Dias Disponibles </label>
+    <input class="form-control w-25" name="DiasDisponibles" value="@Model.DiasDisponibles" type="text" />
+    <label for="FechaInicial">Fecha Inicial</label>
+    <input type="text" autocomplete="off" class="fecha form-control w-25" value="@Model.FechaInicial" name="FechaInicial" />
+    <label for="FechaFinal">Fecha Final</label>
+    <input type="text" autocomplete="off" class="fecha form-control w-25" value="@Model.FechaFinal" name="FechaFinal" />
+    <label for="Dias">Dias Totales</label>
+    <input class="form-control w-25" autocomplete="off" value="@Model.Dias" name="Dias" />
+    <label for="Comentarios">Comentarios</label>
+    <textarea class="form-control w-50 text-uppercase" name="Comentarios">@Model.Comentarios</textarea>
+    <input type="submit" class="btn btn-outline-success mt-3" />
+</form>
+
+<h2 class="mt-4">Registro</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            Fecha Inicial
+        </th>
+        <th>
+            Fecha Final
+        </th>
+        <th>
+            Dias
+        </th>
+        <th>
+            Comentarios
+        </th>
+    </tr>
+    @foreach (var item in Model.Registro)
+    {
+        <tr>
+            <td>@item.FechaInicial.ToString("dd-MM-yyyy")</td>
+            <td>@item.FechaFinal.ToString("dd-MM-yyyy")</td>
+            <td>@item.Dias.ToString("#.##")</td>
+            <td>@item.Comentarios</td>
+        </tr>
+    }
+
+</table>
+
+
+<script>
+    $(function () {
+        $('.fecha').datepicker({ dateFormat: 'dd-mm-yy' });
+        $.datepicker.setDefaults($.datepicker.regional['es']);
+    });
+</script>
+

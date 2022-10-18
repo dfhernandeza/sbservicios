@@ -1,0 +1,83 @@
+﻿@model BibliotecaDeClases.Modelos.Transacciones.ColacionesModel
+
+@{
+    ViewBag.Title = "ingresoColaciones";
+}
+<style>
+    .form-textbox {
+        width: 100%;
+        border: none;
+        border-bottom: solid;
+        border-bottom-color: blue;
+        border-width: 2px;
+        font-size:9px;
+    }
+    .form-textbox:focus{
+        outline:none
+    }
+</style>
+<div id="contenedorform" class="contenedorform">
+    <form method="post" action="@Url.Action("ingresoColaciones")">
+        <div class="row align-items-end">
+            <div class="col-2 pe-2">
+                <label class="form-label">Proveedor</label>
+                <select class="form-textbox" name="IDProveedor">
+                    <option value="">-Seleccionar-</option>
+                    @foreach (var item in Model.Proveedores)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+            </div>
+            <div class="col-4 pe-2">
+                <label class="form-label">CECO</label>
+                <select class="form-textbox" name="IDCECO">
+                    <option value="">-Seleccionar-</option>
+                    @foreach (var item in Model.CECOs)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+            </div>
+            <div class="col-2 pe-2">
+                <label class="form-label">Fecha</label>
+                <input type="text" name="Fecha" autocomplete="off" class="date form-textbox" />
+            </div>
+            <div class="col-2 pe-2">
+                <label class="form-label">M. Pago</label>
+                <input name="IDCuentaDB" value="8" class="d-none" />
+                <select class="form-textbox" name="IDCuentaCR">
+                    <option value="">-Seleccionar-</option>
+                    @foreach (var item in Model.MPagos)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+            </div>
+            <div class="col-1 pe-2">
+                <label class="form-label">Cantidad</label>
+                <input type="text" class="form-textbox" name="Cantidad" />
+            </div>
+            <div class="col-1">
+                <label class="form-label">P. Unitario</label>
+                <input type="text" class="form-textbox" name="Monto" />
+            </div>
+          
+         
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">          
+                    <label class="form-label d-block">Comentarios</label>
+                    <input name="Descripcion" class="form-textbox align-text-bottom" /> 
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                
+                    <input type="submit" value="Ingresar" class="btn btn-danger" />
+                
+            </div>
+        </div>
+    </form>
+</div>
+

@@ -1,0 +1,47 @@
+﻿@model IEnumerable<BibliotecaDeClases.Modelos.Transacciones.MediosPagoModel>
+
+@{
+    ViewBag.Title = "VerMediosPago";
+}
+
+<h2 style="text-align:center">Listado de Medios de Pago</h2>
+
+<p>
+    <a class="btn btn-primary" href="@Url.Action("NuevoMedioPago")">Nuevo Medio de Pago</a>
+</p>
+<table class="table">
+    <tr>
+        <th>
+           Medio de Pago
+        </th>
+        <th>
+           Cuenta Contable
+        </th>    
+        <th>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.MedioPago)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CuentaContable)
+        </td>
+        
+        <td>
+            @Html.DisplayFor(modelItem => item.Descripcion)
+        </td>
+        <td>
+            <a class="btn btn-success" href="@Url.Action("EditarMedioPago")">Editar</a>
+            <a class="btn btn-danger" href="@Url.Action("VerMedioPago")">Detalles</a>
+            <a class="btn btn-dark" href="@Url.Action("EliminarMedioPago")">Eliminar</a>
+            
+        </td>
+    </tr>
+}
+
+</table>

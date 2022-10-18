@@ -1,0 +1,416 @@
+﻿@model AppWebSantaBeatriz.Models.Servicios.ServicioModel
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+@*<link rel="stylesheet" href="/resources/demos/style.css">*@
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
+<style>
+    textarea:focus, input:focus, select:focus {
+        outline: none;
+    }
+
+    .body {
+        background-color: rgb(228 223 223);
+    }
+
+    .encabezado {
+        color: rgb(0 0 0);
+        text-align: center;
+        margin-bottom: 60px;
+        font-family: sans-serif;
+        font-weight: 900
+    }
+
+    .container-fluid {
+        box-shadow: inset 0 3px 6px rgba(0,0,0,0.16), 0 4px 6px rgba(0,0,0,0.45);
+        border-radius: 8px;
+        width: 100%;
+        height: 100%;
+        background-color: white;
+        padding: 30px
+    }
+
+    .textbox {
+        width: 100%;
+        background-color: #d8d8d8;
+        border: none;
+        border-radius: 8px;
+        color: #808080;
+        padding-left: 10px
+    }
+
+    .row {
+        margin-top: 20px;
+        margin-bottom: 20px
+    }
+
+    .ppto {
+        color: #808080;
+    }
+
+        .ppto:hover {
+            cursor: pointer
+        }
+
+    .fila {
+        margin-top: 5px;
+        margin-bottom: 5px
+    }
+
+    .gradiente {
+        background: rgb(6,224,241);
+        background: linear-gradient(90deg, rgba(6,224,241,1) 14%, rgba(4,13,244,0.8939950980392157) 53%);
+        color: white;
+        border-radius: 10px
+    }
+
+    .headerdetalle {
+        background: rgb(241,6,6);
+        background: linear-gradient(90deg, rgba(241,6,6,1) 14%, rgba(4,13,244,0.8939950980392157) 53%);
+        color: white;
+        border-radius: 8px;
+        font-weight: 600;
+        text-align: center
+    }
+
+    .rowd {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    .btn {
+        background: rgb(7,255,19);
+        background: linear-gradient(90deg, rgba(7,255,19,1) 14%, rgba(2,11,255,0.8939950980392157) 53%);
+        color: white;
+        font-weight: 700;
+        border: none
+    }
+
+        .btn:hover {
+            color: white;
+            background: rgb(2,11,255);
+            background: linear-gradient(90deg, rgba(2,11,255,0.8939950980392157) 32%, rgba(7,255,19,1) 65%);
+        }
+</style>
+<script>
+    $(document).ready(function () {
+
+        $('.fecha').datepicker({ dateFormat: 'dd-mm-yy'});
+        $.datepicker.setDefaults($.datepicker.regional['es']);
+    });
+</script>
+<div class="container-fluid">
+    <h2 class="encabezado gradiente">Nuevo Servicio</h2>
+    <h4>Información General</h4>
+    <form id="ServicioForm" method="post" action="@Url.Action("Edit")">
+        <div class="row">
+            <input style="display:none" name="ID" id="ID" value="@Model.ID" />
+            <div class="col-12"> <input type="text" placeholder="Nombre del Servicio" class="textbox" value="@Model.NombreServicio" name="NombreServicio" /></div>
+
+        </div>
+        <div class="row">
+            <div class="col-2"><input id="FechaInicio" name="FechaInicio" placeholder="Fecha Inicial" value="@Model.FechaInicio.ToString("dd-MM-yyyy")" class="textbox fecha" type="text"></div>
+            <div class="col-2"><input id="FechaTermino" name="FechaTermino" placeholder="Fecha Término" class="textbox fecha" value="@Model.FechaTermino.ToString("dd-MM-yyyy")" type="text"></div>
+            <div class="col-3">
+                <select id="IDEncargado" name="IDEncargado" class="textbox">
+                    <option value="0">-Encargado-</option>
+                    @foreach (var row in Model.Empleados)
+                    {
+                        if (row.Selected == true)
+                        {
+                            <option selected="selected" value="@row.Value">@row.Text</option>
+                        }
+                        else
+                        {
+                            <option  value="@row.Value">@row.Text</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="col-3">
+                <select id="IDTipoServicio" name="IDTipoServicio" class="textbox">
+                    <option value="0">-Tipo de Servicio-</option>
+                    @foreach (var row in Model.TiposServicios)
+                    {
+                        if (row.Selected == true)
+                        {
+                            <option selected="selected" value="@row.Value">@row.Text</option>
+                        }
+                        else
+                        {
+                            <option value="@row.Value">@row.Text</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-2"><input id="NumPedido" name="NumPedido" placeholder="N° de Pedido" type="text" value="@Model.NumPedido" class="textbox" /></div>
+        </div>
+        <div class="row"><div class="col-12"><textarea id="Descripcion" name="Descripcion" placeholder="Descripción" class="textbox" rows="3">@Model.Descripcion</textarea></div></div>
+        <h4>Información Cliente</h4>
+        <div class="row">
+            <div class="col-4">
+                <select id="IDCliente" name="IDCliente" class="textbox">
+                    <option value="0">-Cliente-</option>
+                    @foreach (var row in Model.Clientes)
+                    {
+                        if (row.Selected == true)
+                        {
+                            <option selected="selected" value="@row.Value">@row.Text</option>
+                        }
+                        else
+                        {
+                            <option value="@row.Value">@row.Text</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-4">
+                <select id="IDUbicacion" name="IDUbicacion" class="textbox">
+                    <option value="0">-Ubicación-</option>
+                    @foreach (var row in Model.Ubicaciones)
+                    {
+                        if (row.Selected == true)
+                        {
+                            <option selected="selected" value="@row.Value">@row.Text</option>
+                        }
+                        else
+                        {
+                            <option value="@row.Value">@row.Text</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-4">
+                <select id="IDContacto" name="IDContacto" class="textbox">
+                    <option value="0">-Supervisor-</option>
+                    @foreach (var row in Model.Contactos)
+                    {
+                        if (row.Selected == true)
+                        {
+                            <option selected="selected" value="@row.Value">@row.Text</option>
+                        }
+                        else
+                        {
+                            <option value="@row.Value">@row.Text</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-4"> <h4>Presupuesto</h4></div><div class="col-8"><h4>Detalle</h4></div>
+        </div>
+        
+        <div class="row">
+            <div id="columna1" class="col-4">
+
+                <div class="row">
+                    <div class="col-12">
+                        <select id="IDCotizacion" name="IDCotizacion" class="textbox">
+                            <option value="0">-Cotización-</option>
+                            @foreach (var row in Model.Cotizaciones)
+                            {
+                                if (row.Selected == true)
+                                {
+                                    <option selected="selected" value="@row.Value">@row.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@row.Value">@row.Text</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="BtnpptoIM" class="col-7"><div class="ppto">Insumos y Materiales:</div></div>
+                    <div class="col-5"><input id="PPtoInsumos" name="PPtoInsumos" type="text" class="textbox" readonly="readonly" /></div>
+                </div>
+                <div class="row">
+                    <div id="BtnpptoP" class="col-7"><div class="ppto">Personal:</div></div>
+                    <div class="col-5"><input id="PPtoPersonal" name="PPtoPersonal" type="text" class="textbox" readonly="readonly" /></div>
+                </div>
+                <div class="row">
+                    <div id="BtnpptoEYS" class="col-7"><div class="ppto">Equipos y servicios externos:</div></div>
+                    <div class="col-5"><input id="PPtoEquipos" name="PPtoEquipos" type="text" class="textbox" readonly="readonly" /></div>
+                </div>
+                <div class="row">
+                    <div class="col-7"><div class="ppto">Gastos Generales:</div></div>
+                    <div class="col-5"><input id="PPtoGG" name="PPtoGG" type="text" class="textbox" readonly="readonly" /></div>
+                </div>
+            </div>
+            <div id="columna2" class="col-8">
+                <div id="detallecontainer" style="overflow-y:auto;overflow-x:hidden;padding-left:10px;padding-right:10px">
+
+                </div>
+
+            </div>
+        </div>
+   
+     
+
+       
+        <div class="row">
+            <div class="col-12">
+                <input id="BtnSubmitt" value="Ingresar" type="submit" class="btn">
+            </div>
+        </div>
+    </form>
+
+
+   
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('input,textarea').css('text-transform', 'uppercase');
+        $.ajax({
+            url: "/Servicios/ObtenerPresupuesto/",
+            type: 'POST',
+            async: false,
+            dataType: 'text',
+            data: {
+                idcot: $('#IDCotizacion').val()
+            },
+            success: function (data) {
+                data = JSON.parse(data);
+                $('#PPtoInsumos').val(FormateaPeso(data.PresupuestoMateriales));
+                $('#PPtoPersonal').val(FormateaPeso(data.PresupuestoPersonal));
+                $('#PPtoEquipos').val(FormateaPeso(data.PresupuestoEquiposServicios));
+                $('#PPtoGG').val(FormateaPeso(data.GastosGenerales / 100 * (data.PresupuestoMateriales + data.PresupuestoPersonal + data.PresupuestoEquiposServicios)));
+            },
+        });
+        $(document).on('change', '#IDCotizacion', function (e) {
+            $.ajax({
+                url: "/Servicios/ObtenerPresupuesto/",
+                type: 'POST',
+                async: false,
+                dataType: 'text',
+                data: {
+                    idcot: $(this).val()
+                },
+                success: function (data) {
+                    data = JSON.parse(data);
+                    $('#PPtoInsumos').val(FormateaPeso(data.PresupuestoMateriales));
+                    $('#PPtoPersonal').val(FormateaPeso(data.PresupuestoPersonal));
+                    $('#PPtoEquipos').val(FormateaPeso(data.PresupuestoEquiposServicios));
+                    $('#PPtoGG').val(FormateaPeso(data.GastosGenerales / 100 * (data.PresupuestoMateriales + data.PresupuestoPersonal + data.PresupuestoEquiposServicios)));
+                },
+            });
+        });
+        $(document).on('change', '#IDCliente', function (e) {
+            $.ajax({
+                url: "/Servicios/GetContactos/",
+                type: 'POST',
+                async: false,
+                dataType: 'text',
+                data: {
+                    id: $("#IDCliente").val()
+                },
+                success: function (data) {
+                    $("#IDContacto").empty();
+                    data = JSON.parse(data);
+                    $(data).each(function (i, item) {
+
+                        $('#IDContacto').append(
+                            $('<option></option>').val(item.Value).html(item.Text)
+                        );
+                    });
+                },
+
+            });
+
+
+
+        });
+        $(document).on('click', '#BtnpptoIM', function (e) {
+            $.ajax({
+                url: "/CotizacionArauco/MaterialesySubcot/",
+                type: 'POST',
+                async: false,
+                dataType: 'text',
+                data: {
+                    id: $('#IDCotizacion').val()
+                },
+                success: function (data) {
+                    data = JSON.parse(data);
+                    $('#detallecontainer').css('height', $('#columna1').height().toString() + 'px');
+                    var tablars = '<div class="row headerdetalle"><div class="col-7" style="text-align:left">Detalle compra de materiales, repuestos y/o equipos</div><div class="col-1">Unidad</div><div class="col-1">Cantidad</div><div class="col-1 ordenable" id="ordenpreciomateriales">PU</div><div class="col-1">Total</div></div>';
+                    $.each(data, function (i, item) {
+                        tablars = tablars + '<div id="materialdiv" class="row rowd"><div name="item" id="itemcell" class="col-7 materiales">' + data[i].Item + '</div><div name="unidad" id="unidadcell" class="col-1 materiales">' + data[i].Unidad + '</div><div name="cantidad" id="cantidadcell" style="text-align:center" class="col-1">' + data[i].Cantidad + '</div><div name="punitario" id="punitariocell" class="col-1 materiales">' + FormateaPeso(data[i].PUnitario) + '</div><div name="total" id="totalcell" class="col-1 materiales">' + FormateaPeso(data[i].Cantidad * data[i].PUnitario) + '</div></div>';
+                    });
+                    $('#detallecontainer').html(tablars);
+                },
+            });
+
+
+        });
+        $(document).on('click', '#BtnpptoP', function (e) {
+            $.ajax({
+                url: "/CotizacionArauco/PptoPersonal/",
+                type: 'POST',
+                async: false,
+                dataType: 'text',
+                data: {
+                    id: $('#IDCotizacion').val()
+                },
+                success: function (data) {
+                    data = JSON.parse(data);
+                    $('#detallecontainer').css('height', $('#columna1').height().toString() + 'px');
+                    var tablars = '<div class="row headerdetalle"><div class="col-4" style="text-align:left"> Detalle personal</div ><div class="col-1">Cant.</div><div class="col-1">H.H.</div><div class="col-2">Total H.H.</div><div class="col-2">Valor Unit.H.H.</div><div class="col-2">Total ($)</div></div>';
+                    $.each(data, function (i, item) {
+                        tablars = tablars + ' <div class="row rowd"><div class="col-4">' + data[i].Especialidad + ' </div><div style="text-align:center" class="col-1">' + data[i].Cantidad + '</div><div style="text-align:center" class="col-1 materiales">' + data[i].HH + '</div><div class="col-2 materiales" style="text-align:center">' + data[i].Cantidad * data[i].HH + '</div><div class="col-2 materiales">' + FormateaPeso(data[i].ValorHH) + '</div><div name="totalplata" id="totalcell" class="col-2 materiales">' + FormateaPeso(data[i].Cantidad * data[i].HH * data[i].ValorHH) + '</div></div>';
+                    });
+                    $('#detallecontainer').html(tablars);
+                },
+            });
+
+
+        });
+        $(document).on('click', '#BtnpptoEYS', function (e) {
+            $.ajax({
+                url: "/CotizacionArauco/PptoEYS/",
+                type: 'POST',
+                async: false,
+                dataType: 'text',
+                data: {
+                    id: $('#IDCotizacion').val()
+                },
+                success: function (data) {
+                    data = JSON.parse(data);
+                    $('#detallecontainer').css('height', $('#columna1').height().toString() + 'px');
+                    var tablars = '<div class="row headerdetalle"><div class="col-7" style="text-align:left">Equipos de apoyo y Servicios Profesionales Externos</div><div class="col-1">Unidad</div><div class="col-1">Cantidad</div><div class="col-1 ordenable" id="ordenpreciomateriales">PU</div><div class="col-1">Total</div></div>';
+                    $.each(data, function (i, item) {
+                        tablars = tablars + '<div id="materialdiv" class="row rowd"><div name="item" id="itemcell" class="col-7 materiales">' + data[i].Item + '</div><div name="unidad" id="unidadcell" class="col-1 materiales">' + data[i].Unidad + '</div><div name="cantidad" id="cantidadcell" style="text-align:center" class="col-1">' + data[i].Cantidad + '</div><div name="punitario" id="punitariocell" class="col-1 materiales">' + FormateaPeso(data[i].PUnitario) + '</div><div name="total" id="totalcell" class="col-1 materiales">' + FormateaPeso(data[i].Cantidad * data[i].PUnitario) + '</div></div>';
+                    });
+                    $('#detallecontainer').html(tablars);
+                },
+            });
+
+
+        });
+     
+
+
+
+
+
+
+
+
+
+
+    });
+</script>
+
+
+
+
+

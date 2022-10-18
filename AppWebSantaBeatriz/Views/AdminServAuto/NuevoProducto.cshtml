@@ -1,0 +1,332 @@
+﻿@model BibliotecaDeClases.Modelos.ServicioAutomotriz.ProductoModel
+
+@{
+    ViewBag.Title = "Nuevo Producto";
+}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+@*<link rel="stylesheet" href="/resources/demos/style.css">*@
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<style>
+    .zoomFoto:hover{
+        cursor:pointer;
+    }
+</style>
+<div class="container-fluid">
+    <form id="nuevoProductoForm">
+
+
+        <div class="row">
+            <div class="col-sm-9">
+                <input name="IDItem" value="@Model.IDItem" class="d-none" />
+                <label class="form-label">Producto</label>
+                <input name="Nombre" class="form-control" value="@Model.Nombre" />
+            </div>
+            <div class="col-sm-3">
+                <label class="form-label">Marca</label>
+                <select name="IDMarca" class="form-control">
+                    <option value="">-Seleccionar-</option>
+                    @foreach (var item in Model.Marcas)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <label class="form-label">Descripción</label>
+                <textarea class="form-control" rows="3" name="Descripcion"></textarea>
+
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-2">
+           
+                <input id="btnCrear" type="submit" class="btn btn-outline-success" value="Crear" />             
+            </div>
+        </div>
+    </form>
+    <div id="nofotoDiv" class="row d-none">
+        <div class="col-md-12">
+            <h6 style="color:red">Debe escoger al menos una foto </h6>
+        </div>
+    </div>
+    <h2 class="mt-5 mb-5 text-center">Fotos</h2>
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    Categoria
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    @foreach (var item in Model.CatsFotos)
+                    {
+                        <li><a class="dropdown-item" data-idcat="@item.Value">@item.Text</a></li>
+                    }
+
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="fotosDiv">
+        @{ var arreglo = Model.Fotos.ToArray();
+            int i = 0;
+
+            while (i < arreglo.Length)
+            {
+                <div class="row mb-3">
+
+
+                    @{ int j = 0;
+                        while (j < 6 && i < arreglo.Length)
+                        {
+                            <div class="col-md-2">
+                                <div class="row" style="height:48px">
+                                    <div class="col-md-12 text-center">
+                                        @arreglo[i].Nombre
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="d-flex justify-content-end foto" style="background-image:url(@arreglo[i].URL);background-size:200px 228px;height:228px;width:200px;background-repeat:no-repeat">
+                                            <div>
+                                                <img class="zoomFoto" data-url="@arreglo[i].URL" src="~/Content/Pictures/lupa.png" style="background-color:white;border-radius:25px;margin-right:2px"/>
+                                            </div>
+                                        </div>
+                                        @*<img class="foto" src="@arreglo[i].URL" height="228" width="200" id="@("foto" + i)" />*@
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 mt-1">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" data-idfoto="@arreglo[i].ID">
+                                            <label class="form-check-label" for="flexCheckDefault">
+                                                Seleccionar
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            i++;
+                            j++;
+                        }
+                    }
+
+                </div>
+
+            }
+
+
+
+
+
+
+        }
+    </div>
+</div>
+<div id="fotoDiv" class="d-none">
+    <img id="fotoZoom" />
+</div>
+
+<script>
+    $(document).ready(function () {
+      
+        $('#nuevoProductoForm').validate({
+            rules: {
+                Nombre: "required",
+                IDMarca: "required",
+                Descripcion: "required"
+            },
+            message: {
+                Nombre: "Debe proporcionar un nombre",
+                IDMarca: "Debe escoger una marca",
+                Descripcion: "Debe describir el producto"
+            },
+            submitHandler: function (form) {
+                if (ids.length == 0) {
+                    $('#nofotoDiv').removeClass('d-none');
+                }
+                else {
+                    var fotoprod = [];
+                    for (var i = 0; i < ids.length; i++) {
+                        var item = { IDFoto: ids[i] }
+                        fotoprod.push(item);
+                    }
+                    var model = { IDItem: $('input[name="IDItem"]').val(), Nombre: $('input[name="Nombre"]').val(), IDMarca: $('select[name="IDMarca"]').val(), Descripcion: $('textarea[name="Descripcion"]').val(), FotoProductoList: fotoprod };
+                    $.ajax({
+                        type: "POST",
+                        url: "/AdminServAuto/NuevoProducto",
+                        data: JSON.stringify(model),
+                        dataType: "json",
+                        contentType: "application/json",
+                        success: function (response) {
+                            if (response == "OK") {
+                                window.location.replace("/AdminServAuto/VerProductos");
+                            }
+                            else {
+                                window.location.replace(`/Errores/VistaError?Mensaje=${response}`);
+                            }
+                        }
+                    });
+                }
+               
+            },
+        });
+
+    });
+  
+    function checked() {
+
+        if (ids.length > 0) {
+            $('.form-check-input').each(function (i, item) {
+                
+                var id = $(item).data('idfoto');
+                var index = ids.indexOf(id);
+                if (index > -1) {
+                    $(item).prop('checked', true);
+                }
+            });
+        }
+    }
+    var hoverTimer;
+    var evt;
+    $(document).on('click', '.zoomFoto', function (e) {
+
+        var $this = $(this);
+        evt = e.target;
+        hoverTimer = setTimeout(function () {
+            var url = $this.data('url');
+            var w = window.innerWidth;
+            var h = window.innerHeight;
+            $('#fotoZoom').attr('src', url);
+            var img = document.querySelector('#fotoZoom');
+            var realWith = img.naturalWidth;
+            var realHeight = img.naturalHeight;
+            if (realHeight > h) {
+                var altura = h * 0.7;
+                $('#fotoZoom').height(altura)
+            }
+            if (realWith > w) {
+                var ancho = w * 0.7;
+                $('#fotoZoom').width(ancho);
+            }
+            $('#fotoDiv').removeClass('d-none').dialog({height:'auto',width:'auto', modal:true});
+            $(".ui-dialog-titlebar").hide();
+        },10);
+
+    });
+    $(document).on('mouseleave', '.ui-dialog', function () {
+        if ($('#fotoDiv').dialog('isOpen')===true) {
+            clearTimeout(hoverTimer);
+            $('#fotoDiv').addClass('d-none').dialog('close');
+            $('#fotoZoom').removeAttr('style');
+        }
+
+    });
+    $('body').click(function (e) {
+        if (e.target != evt && ( $('#fotoDiv').dialog('isOpen') === true)) {
+            $('#fotoDiv').addClass('d-none').dialog('close');
+            $('#fotoZoom').removeAttr('style');
+        }
+    });
+    //$(document).on('click', '.foto', functio n () {
+    //    clearTimeout(hoverTimer);
+       
+    //});
+    var ids = [];
+    $(document).on('change', '.form-check-input', function () {
+
+        var $this = $(this);
+
+        if (ids.length == 0) {
+
+            var newid = $this.data('idfoto');
+            ids.push(newid);
+            $('#nofotoDiv').addClass('d-none');
+        }
+        else {
+
+
+            if ($this.prop('checked')) {
+
+                var newid = $this.data('idfoto');
+                ids.push(newid);
+                $('#nofotoDiv').addClass('d-none');
+            }
+            else {
+                var id = $this.data('idfoto');
+                var index = ids.indexOf(id);
+                if (index > -1) {
+                    ids.splice(index, 1);
+
+                }
+
+            }
+        }
+
+    });
+    $(document).on('click','.dropdown-item', function () {
+        var idcat = $(this).data('idcat');
+        filtrocat(idcat);
+    });
+    function filtrocat(id) {
+        $.ajax({
+            type: "POST",
+            url: "/AdminServAuto/filtrarFotosCatAsync/",
+            data: { id: id },
+            dataType: "json",
+            success: function (response) {
+                var arreglo = response;
+                var exterior = '';
+               
+                $('#fotosDiv').empty();
+                var i = 0;
+                while (i < arreglo.length) {
+                    var j = 0;
+                    var interior = '';
+                    while (j < 6 && i < arreglo.length) {
+                        
+                        interior = interior + '<div class="col-md-2">\
+                                            <div class="row" style = "height:48px">\
+                                                <div class="col-md-12 text-center">' +
+                                                     arreglo[i].Nombre +
+                                                '</div>\
+                                            </div>\
+                                        <div class="row">\
+                                        <div class="col-md-12">\
+                                        <div class="d-flex justify-content-end foto" style="background-image:url(' + arreglo[i].URL + ');background-size:200px 228px;height:228px;width:200px;background-repeat:no-repeat">\
+                                        <div>\
+                                                <img class="zoomFoto" data-url="' + arreglo[i].URL + '" src="/Content/Pictures/lupa.png" style="background-color:white;border-radius:25px;margin-right:2px"/>\
+                                            </div>\
+                                        </div></div>\
+                                        </div>\
+                                <div class="row">\
+                                    <div class="col-md-12 mt-1">\
+                                        <div class="form-check">\
+                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" data-idfoto="' + arreglo[i].ID+'">\
+                                            <label class="form-check-label" for="flexCheckDefault">\
+                                                Seleccionar\
+                                            </label>\
+                                        </div>\
+                                    </div>\
+                                </div>\
+                            </div>';
+                        
+                        j++;
+                        i++;
+                    }
+                    exterior = exterior + '<div class="row mb-3">' + interior + '</div>';
+                }
+                $('#fotosDiv').html(exterior);
+                checked();
+            }
+        });
+    }
+</script>
+
+
+

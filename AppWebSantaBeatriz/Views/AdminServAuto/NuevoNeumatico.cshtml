@@ -1,0 +1,376 @@
+﻿@model BibliotecaDeClases.Modelos.ServicioAutomotriz.NeumaticosModel
+
+@{
+    ViewBag.Title = "NuevoNeumatico";
+}
+<head>
+    <link href="~/Estilos/SBSACss.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    @*<link rel="stylesheet" href="/resources/demos/style.css">*@
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <style>
+        .error{
+            color:red;
+        }
+        .errorDiv {
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px red;
+            border: solid;
+            border-color: red;
+        }
+        .info{
+            color:red;
+        }
+    </style>
+</head>
+
+<h2 class="ms-5 mb-5 text-center">Nuevo Neumatico</h2>
+<div class="container-fluid">
+    <div class="row info">
+        <div class="col-md-12">
+            <h4>Item: @Model.Item.Nombre</h4>
+            <h4>Precio Venta: @Model.Item.Precio.ToString("C")</h4>
+            <h4>Precio Compra: @Model.Item.PrecioCompra.ToString("C")</h4>
+            <h4>Stock: @Model.Item.Stock.ToString("0.#")</h4>
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6">
+            
+
+            <form id="nuevoNeumaticoForm" enctype="multipart/form-data" method="post" action="@Url.Action("NuevoNeumatico")">
+
+                <input type="text" class="d-none" name="IDItem" value="@Model.Item.IDItem" />
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label class="form-label">Marca</label>
+                        <select class="form-control" name="IDMarca">
+                            <option value="">
+                                -Seleccionar-
+                            </option>
+                            @foreach (var item in Model.Marcas)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label">Modelo</label>
+                        <select class="form-control" name="IDModelo">
+                            <option value="">
+                                -Seleccionar-
+                            </option>
+
+                        </select>
+
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-sm-4">
+                        <label class="form-label">Aro</label>
+                        <select class="form-control" name="IDAro">
+                            <option value="">
+                                -Seleccionar-
+                            </option>
+                            @foreach (var item in Model.Aros)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+
+                        </select>
+
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label">Ancho</label>
+                        <select class="form-control" name="IDAncho">
+                            <option value="">
+                                -Seleccionar-
+                            </option>
+                            @foreach (var item in Model.Anchos)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+
+                        </select>
+
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label">Perfil</label>
+                        <select class="form-control" name="IDPerfil">
+                            <option value="">
+                                -Seleccionar-
+                            </option>
+                            @foreach (var item in Model.Perfiles)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+
+                        </select>
+
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-sm-2">
+                        <label class="form-label">Índice V.</label>
+                        <input type="text" class="form-control" name="IndiceV" />
+
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="form-label">V. Máx</label>
+                        <input class="form-control" name="VMax" />
+
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="form-label">Carga Máx.</label>
+                        <input class="form-control" name="Carga" />
+
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="form-label">Origen</label>
+                        <input type="text" class="form-control" name="Origen" />
+
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="form-label">P. Aire</label>
+                        <input type="text" class="form-control" name="PAire" />
+
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-sm-12">
+                        <label class="form-label">Descripción</label>
+                        <textarea class="form-control" name="Descripcion"></textarea>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-sm-12">
+                        <input type="submit" class="btn btn-outline-success" />
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-6">
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <h3 class="text-center">Imágenes</h3>
+                </div>
+                <div class="col-md-8">
+                    <div id="nofotoDiv" class="row d-none">
+                        <div class="col-md-12">
+                            <h3 style="color:red">Debe escoger al menos una foto </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="fotosDiv">
+                        @{ var arreglo = Model.Fotos.ToArray();
+                            int i = 0;
+
+                            while (i < arreglo.Length)
+                            {
+                                <div class="row mb-3">
+
+
+                                    @{ int j = 0;
+                                        while (j < 3 && i < arreglo.Length)
+                                        {
+                                            <div class="col-md-4">
+                                                <div class="row" style="height:48px">
+                                                    <div class="col-md-12 text-center">
+                                                        @arreglo[i].Nombre
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="d-flex justify-content-end foto" style="background-image:url(@arreglo[i].URL);background-size:200px 228px;height:228px;width:200px;background-repeat:no-repeat">
+                                                            <div>
+                                                                <img class="zoomFoto" data-url="@arreglo[i].URL" src="~/Content/Pictures/lupa.png" style="background-color:white;border-radius:25px;margin-right:2px" />
+                                                            </div>
+                                                        </div>
+                                                        @*<img class="foto" src="@arreglo[i].URL" height="228" width="200" id="@("foto" + i)" />*@
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12 mt-1 d-flex justify-content-center ">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" data-idfoto="@arreglo[i].ID">
+                                                            <label class="form-check-label" for="flexCheckDefault">
+                                                                Seleccionar
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            i++;
+                                            j++;
+                                        }
+                                    }
+
+                                </div>
+
+                            }
+
+
+
+
+
+
+                        }
+                    </div>
+                </div>
+            </div>
+            
+           
+        </div>
+    </div>
+    
+
+</div>
+
+
+
+<script>
+    $(document).on('change','select[name="IDMarca"]', function (e) {
+        var idm = $(this).val();
+        $.ajax({
+            type: "POST",
+            url: "/AdminServAuto/getModelsAsync/",
+            data: { idmarca:idm },
+            dataType: "json",
+            success: function (data) {
+                var select = $('select[name="IDModelo"]');
+                select.find('option').not(':first').remove();
+                $(data).each(function (i, item) {                   
+                    select.append('<option value='+ item.Value +'>'+ item.Text +'</option>')
+                })
+                
+            }
+        });
+
+    });
+  
+    $(document).on('change', '.form-check-input', function (e) {
+        var data = $(this).data('idfoto');
+        $('input[name="IDFoto"]').val(data);
+    });
+
+    $(document).ready(function () {
+        $('#nuevoNeumaticoForm').validate({
+            rules: {
+                IDMarca: "required",
+                IDModelo: "required",
+                IDAro: "required",
+                IDAncho: "required",
+                IDPerfil: "required"
+
+            },
+            messages: {
+                IDMarca: "Debe escoger una marca",
+                IDModelo: "Debe escoger un modelo",
+                IDAro: "Debe escoger aro",
+                IDAncho: "Debe escoger ancho",
+                IDPerfil: "Debe escoger perfil"
+            },
+            submitHandler: function (form) {
+                if (ids.length == 0) {
+                    $('#nofotoDiv').removeClass('d-none');
+                    $('#fotosDiv').addClass('errorDiv');
+                }
+                else {
+                    var fotoprod = [];
+                    for (var i = 0; i < ids.length; i++) {
+                        var item = { IDFoto: ids[i] }
+                        fotoprod.push(item);
+                    }
+                    var model = {
+                        IDItem: $('input[name="IDItem"]').val(),
+                        IDMarca: $('select[name="IDMarca"]').val(),
+                        IDModelo: $('select[name="IDModelo"]').val(),
+                        IDAro: $('select[name="IDAro"]').val(),
+                        IDAncho: $('select[name="IDAncho"]').val(),
+                        IDPerfil: $('select[name="IDPerfil"]').val(),
+                        IndiceV: $('input[name="IndiceV"]').val(),
+                        VMax: $('input[name="VMax"]').val(),
+                        Carga: $('input[name="Carga"]').val(),
+                        Origen: $('input[name="Origen"]').val(),
+                        PAire: $('input[name="PAire"]').val(),
+                        Descripcion: $('textarea[name="Descripcion"]').val(),
+                        NeumaticoFotoList: fotoprod
+                    };
+                    $.ajax({
+                        type: "POST",
+                        url: "/AdminServAuto/NuevoNeumatico",
+                        data: JSON.stringify(model),
+                        dataType: "json",
+                        contentType: "application/json",
+                        success: function (response) {
+                            if (response == "OK") {
+                                window.location.replace("/AdminServAuto/ListaNeumaticos");
+                            }
+                            else {
+                                window.location.replace(`/Errores/VistaError?Mensaje=${response}`);
+                            }
+                        }
+                    });
+                }
+
+            },
+
+
+        });
+    })
+    function checked() {
+
+        if (ids.length > 0) {
+            $('.form-check-input').each(function (i, item) {
+
+                var id = $(item).data('idfoto');
+                var index = ids.indexOf(id);
+                if (index > -1) {
+                    $(item).prop('checked', true);
+                }
+            });
+        }
+    }
+    var ids = [];
+    $(document).on('change', '.form-check-input', function () {
+
+        var $this = $(this);
+
+        if (ids.length == 0) {
+
+            var newid = $this.data('idfoto');
+            ids.push(newid);
+            $('#nofotoDiv').addClass('d-none');
+            $('#fotosDiv').removeClass('errorDiv');
+        }
+        else {
+
+
+            if ($this.prop('checked')) {
+
+                var newid = $this.data('idfoto');
+                ids.push(newid);
+                $('#nofotoDiv').addClass('d-none');
+            }
+            else {
+                var id = $this.data('idfoto');
+                var index = ids.indexOf(id);
+                if (index > -1) {
+                    ids.splice(index, 1);
+
+                }
+
+            }
+        }
+
+    });
+</script>

@@ -1,0 +1,131 @@
+﻿@model BibliotecaDeClases.Modelos.ServicioAutomotriz.ContactoCorreoModel
+
+@{
+    ViewBag.Title = "Contacto";
+    Layout = "/Views/Shared/_LayoutAlternativo.cshtml";
+
+}
+<style>
+
+    .error{
+        color:red;
+    }
+    .form-control-transparente {
+        width: 100%;
+        background-color: transparent;
+        border: none;
+        border-bottom: solid;
+        border-width: 1px;
+        border-color: #a5a5a5;
+        color: white!important;
+    }
+        .form-control-transparente:focus{
+            outline:none;
+        }
+        @@media (max-width: 768px) {
+            .fondoContacto {
+            padding: 0px 3rem 0px 3rem;
+            margin-bottom: 350px!important;
+        }
+        main {
+            margin-bottom: 0px !important;
+        }
+        main {
+            background-image: url(../Content/FotoSA/fondocontactoServicios.png);
+            background-repeat: no-repeat;
+            background-size:100% 100%;
+        }
+    }
+    @@media (min-width: 768px)
+    {
+        body {
+            background-image: url(../Content/FotoSA/fondocontactoServicios.png);
+        }
+    }
+
+    .fondogristransparente {
+        background-color: rgba(78,79,79,.7);
+    }
+    ::placeholder{
+        color:white;
+    }
+</style>
+
+
+<div class="fondoContacto">
+
+    <div class="row justify-content-center">
+        <div class="col-md-4 text-center mb-5 mt-5 fondogristransparente text-white">
+            <h2 style="opacity:1" class="heading-section mt-5 mb-5">Fomulario de Contacto</h2>
+            <form action="Contacto" method="post" id="formularioContacto">
+
+                <div class="row justify-content-center mt-5">
+                    <div class="col-md-10">
+                        <input class="form-control-transparente" name="Nombre" id="Nombre" placeholder="Nombre" type="text" autocomplete="off" />
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-3">
+                    <div class="col-md-10">
+                        <input class="form-control-transparente" name="Apellido" id="Apellido" placeholder="Apellido" type="text" autocomplete="off" />
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-3">
+                    <div class="col-md-10">
+                        <input class="form-control-transparente" name="Email" id="Email" placeholder="Correo Electrónico" type="email" autocomplete="off" />
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-3">
+                    <div class="col-md-10">
+                        <input class="form-control-transparente" name="Fono" id="Fono" placeholder="Fono" type="tel" autocomplete="off" />
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-3">
+                    <div class="col-md-10">
+                        <textarea class="form-control-transparente" rows="3" name="Mensaje" id="Mensaje" placeholder="Mensaje" type="text"></textarea>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center mt-3 mb-3">
+                    <div class="col-md-10">
+                        <input class="btn btn-light" type="submit" value="Enviar" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#formularioContacto').validate({
+            rules: {
+                Nombre: "required",
+                Apellido: "required",
+                Email: {required:true,email:true },
+                Fono: "required",
+                Mensaje: "required"
+            },
+            messages: {
+                Nombre: "Debe proporcionar su nombre",
+                Apellido: "Debe proporcionar su apellido",
+                Email: { required: "Debe proporcionar un correo electrónico", email: "Debe proporcionar un correo electrónico válido" },
+                Fono: "Debe proporcionar un fono",
+                Mensaje: "Debe describir su requerimiento"
+            }
+        });
+    });
+  
+</script>
+

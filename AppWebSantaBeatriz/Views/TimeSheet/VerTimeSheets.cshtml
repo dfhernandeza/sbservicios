@@ -1,0 +1,153 @@
+﻿@model IEnumerable<BibliotecaDeClases.Modelos.Transacciones.TimeSheetModel>
+
+@{
+    ViewBag.Title = "VerTimeSheets";
+}
+
+<h2 style="color:white;text-align:center">Registro de Horas Hombre</h2>
+
+<style>
+    /*.body {
+        background: #606c88;
+    }*/
+    /* .resaltada:hover{
+        background-color:goldenrod;
+        color:white;
+    }*/
+    /*tr:not(:first-child){
+        font-size:13px;
+        background:white
+    }*/
+    .nuevo{
+        text-decoration:none!important;
+        padding:6px 15px 6px 15px;
+        background-color:#3ac87a;
+        color:white;
+        border-radius:8px;
+        
+    }
+    img {
+        height: 15px
+    }
+
+    .body {
+        width: 100%;
+        height: 100%;
+        font-family: sans-serif;
+        background: #606c88; /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #3f4c6b, #606c88); /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+
+    .tabla {
+        margin-top:15px;
+        box-shadow: inset 0 3px 6px rgba(0,0,0,0.16), 0 4px 6px rgba(0,0,0,0.45);
+        border-radius: 8px;
+        width: 100%;
+        /*width: 100%*/
+    }
+
+    .encabezado {
+        background: rgb(0,249,158);
+        background: linear-gradient(90deg, rgba(0,249,158,1) 19%, rgba(212,241,8,1) 73%);
+    }
+
+        .encabezado:hover {
+            cursor: pointer;
+        }
+
+    th {
+        padding: 10px !important;
+        color: white;
+    }
+
+
+
+    td {
+        background-color: white;
+        padding: 15px;
+        text-align: left;
+        vertical-align: middle;
+        font-weight: 300;
+        font-size: 12px;
+    }
+
+    tr:last-child > td:first-child {
+        border-bottom-left-radius: 8px
+    }
+
+    tr:last-child > td:last-child {
+        border-bottom-right-radius: 8px
+    }
+
+    th:first-child {
+        border-top-left-radius: 8px;
+    }
+
+    th:last-child {
+        border-top-right-radius: 8px;
+    }
+</style>
+
+
+<table class="tabla">
+    <tr class="encabezado">
+
+        <th>
+            Empleado
+        </th>
+        <th>
+            Fecha
+        </th>
+        <th>
+            Centro de Costos
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Entrada)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Salida)
+        </th>
+        <th>Horas</th>
+        <th>
+            @Html.DisplayNameFor(model => model.Comentarios)
+        </th>
+
+        <th style="text-align:center"><a class="nuevo" href="@Url.Action("Nuevo")">+</a></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+<tr>
+
+    <td>
+        @Html.DisplayFor(modelItem => item.Empleado)
+
+    </td>
+    <td>
+        @item.FechaDocumento.ToString("D")
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.CECO)
+    </td>
+    <td>
+
+        @Html.DisplayFor(modelItem => item.Entrada)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Salida)
+    </td>
+    <td>@((item.Salida - item.Entrada).TotalHours)</td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Comentarios)
+    </td>
+
+    <td>
+        @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+        @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+        @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+    </td>
+</tr>
+    }
+
+</table>

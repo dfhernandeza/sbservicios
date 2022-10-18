@@ -1,0 +1,79 @@
+﻿@model IEnumerable<BibliotecaDeClases.Modelos.ServicioAutomotriz.ProductoModel>
+
+@{
+    ViewBag.Title = "VerProductos";
+}
+<head>
+    <link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+    <style>
+        .encabezado {
+            background: rgb(241,0,82);
+            background: linear-gradient(94deg, rgba(241,0,82,1) 18%, rgba(218,139,0,1) 45%, rgba(255,132,0,1) 76%);
+        }
+    </style>
+</head>
+<h2>Listado de Productos</h2>
+
+<p>
+    <a class="btn btn-light" href="@Url.Action("VerInventarioAsync")">Nuevo Producto</a>
+</p>
+<table class="tabla">
+    <tr class="encabezado">
+       
+        <th>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </th>
+      
+        <th>
+            @Html.DisplayNameFor(model => model.Marca)
+        </th>
+        <th>
+            Stock
+        </th>
+        <th>
+            Precio
+        </th>
+        <th>
+            Fotos
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+       
+        <td>
+            @Html.DisplayFor(modelItem => item.Nombre)
+        </td>
+         <td>
+            @Html.DisplayFor(modelItem => item.Marca)
+        </td>
+        <td>
+            @item.Stock
+        </td>
+        <td>
+            @item.Precio.ToString("C")
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CantidadFotos)
+        </td>
+        <td>
+            <div class="d-flex justify-content-around">
+                <a class="btn btn-dark" href="@Url.Action("EditarProducto",new {id = item.ID })" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Producto">
+                    <img src="~/Content/Pictures/editar.png" />
+                </a>
+                <a class="btn btn-primary" href="@Url.Action("VerProducto",new {id = item.ID })" data-bs-toggle="tooltip" data-bs-placement="top" title="Detalles">
+                    <img src="~/Content/Pictures/detail.png" />
+                </a>
+            </div>
+            
+        </td>
+    </tr>
+}
+
+</table>
+<script>
+    $(document).ready(function () {
+        $('[data-bs-toggle="tooltip"]').tooltip();
+    });
+</script>

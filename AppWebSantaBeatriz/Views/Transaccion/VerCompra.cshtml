@@ -1,0 +1,290 @@
+﻿@model BibliotecaDeClases.Modelos.Transacciones.DocumentoModel
+
+@{
+    ViewBag.Title = "VerCompra";
+}
+<style>
+    h2{
+        color:red;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $('input,textarea').attr('readonly', 'readonly');
+    });
+    
+</script>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+    <h1 style="text-align:center;margin-bottom:30px">Detalle Compra</h1>
+
+
+
+
+
+    <div class="container-fluid fondogris">
+        <div class="row">
+            <div class="col-6">
+                <h2 style="margin-bottom:20px">Documento</h2>
+            </div>
+
+
+        </div>
+        <form class="border-dark" style="margin-top:30px;padding-left:10px;padding-right:40px;background-color:aquamarine !important">
+
+
+            <div class="row border-dark">
+                <div class="form-group col-md-3">
+                    <label for="IDDocumento">ID Documento</label>
+                    <input type="text" id="IDDocumento" value="@Model.IDDocumento" class="form-control" readonly="readonly" />
+                    <input type="text" id="ID" style="display:none" value="@Model.ID" />
+
+
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="FechadeNacimiento">Fecha de Emisión</label>
+
+                    <input type="date" class="form-control" name="Fecha de Emisión" readonly="readonly" id="FechaDocumento" value="@(Model.FechaDocumento.ToString("yyyy/MM/dd"))" />
+
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="IDEmisor">Emisor</label>
+                    <input type="text" name="Emisor" id="Emisor" readonly="readonly" value="@Model.Emisor" class="form-control" />
+                    @Html.HiddenFor(model => model.IDEmisor, new { htmlAttributes = new { @class = "form-control" } })
+
+
+                </div>
+
+
+
+            </div>
+
+            <div class="row">
+
+                <div class="form-group col-6">
+                    <label for="descripcion">Descripción</label>
+                    <textarea class="form-control" id="Descripcion" rows="2" style="text-transform:uppercase" readonly="readonly">@Model.Descripcion</textarea>
+
+
+                </div>
+
+                <div class="form-group col 6">
+                    <label for="descripcion">Comentarios</label>
+                    <textarea class="form-control" id="Comentarios" rows="2" style="text-transform:uppercase" readonly="readonly">@Model.Comentarios</textarea>
+
+                </div>
+
+            </div>
+
+
+
+
+
+
+            <input type="text" id="IDTipo" name="IDTipo" value="@ViewBag.Tipo" style="display:none" />
+
+
+
+
+
+
+            @*<button type="button" id="BtnNuevoItem" class="btn btn-primary">Nuevo Item</button>*@
+
+        </form>
+
+        <h2 style="margin-top:15px">Detalle</h2>
+
+        <table id="TablaDetalle" style="margin-top:15px;margin-bottom:15px" class="table">
+            <tr><th style="display:none"></th><th style="display:none"></th><th style="border:none">Centro Costos</th><th style="border:none">Cuenta Destino</th><th style="border:none">Item</th><th style="border:none">Cantidad</th><th style="border:none">Precio</th><th style="border:none">Total</th></tr>
+            @foreach (var item in Model.Transacciones)
+            {
+                <tr class="resalte" style="background-color: #e9ecef;">
+                    <td style="display:none"></td>
+                    <td style="display:none"></td>
+                    <td width="30%">
+                        @item.CECO
+                    </td>
+
+                    <td width="15%">
+                        @item.CuentaDB
+                    </td>
+                    <td>
+                        @item.Item
+
+                    </td>
+
+                    <td width="7%">
+                        @item.Cantidad
+
+                    </td>
+                    <td width="10%">
+                        @item.Monto.ToString("C")
+                    </td>
+
+                    <td width="10%">
+                        @((item.Cantidad * item.Monto).ToString("C"))
+
+                    </td>
+                </tr>
+            }
+
+
+
+        </table>
+        <div class="row" style="border-bottom:solid;border-width:1px;border-color:#dee2e6;padding-bottom:10px;margin-left:2px;margin-right:2px">
+            <div class="col-4">
+                <div class="d-flex justify-content-center">
+                    <label style="margin-right:5px" for="neto">Neto:  </label>
+                    <input id="neto" style="width:148px" name="Neto" type="text" value="@Model.Total.ToString("C")" class="form-control" />
+                </div>
+
+            </div>
+            <div class="col-4">
+                <div class="d-flex justify-content-center">
+                    <label style="margin-right:5px" for="neto">IVA:  </label>
+                    <input id="iva" value="@((Model.Total * 0.19).ToString("C"))" style="width:148px" type="text" class="form-control" />
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="d-flex justify-content-center">
+                    <label style="margin-right:5px" for="totaltotal">Total:  </label>
+                    <input id="totaltotal" style="width:148px" type="text" value="@((Model.Total * 1.19).ToString("C"))" class="form-control" />
+                </div>
+            </div>
+        </div>
+
+
+        <h2 style="margin-top:15px">Medios de Pago</h2>
+        <div class="container-fluid" style="margin-top:25px">
+            <div class="row">
+                <div class="col-10" id="contenedorPM">
+                    @{ if (Model.Efectivos.Count > 0)
+                        {
+
+                            foreach (var item in Model.Efectivos)
+                            {
+                                <div class="row resalte" style="padding-bottom:10px" id="filaNewPM">
+                                    <div class="form-group col-md-8">
+                                        <label style="margin-bottom:5px" for="IDCuentaCR">Medio de Pago</label>
+                                        <input name="CuentaCR" readonly="readonly" value="' EFECTIVO'" class="form-control" />
+
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label style="margin-bottom:5px" for="monto">Monto</label>
+                                        <input class="form-control d-none" name="Cantidad" type="text" value="1" />
+                                        <input class="form-control" autocomplete="off" name="Monto" value="@item.Monto.ToString("C");" type="text" id="monto" />
+                                    </div>
+                                </div>
+                            }
+
+                        }
+                        else if (Model.TDebitos.Count > 0)
+                        {
+                            foreach (var item in Model.TDebitos)
+                            {
+                                <div class="row resalte" style="padding-bottom:10px" id="filaNewPM">
+
+                                    <div class="form-group col-md-6">
+
+                                        <label style="margin-bottom:5px" for="IDCuentaCR">Medio de Pago</label>
+                                        <input name="CuentaCR" readonly="readonly" class="form-control" value="TARJETA DE DÉBITO" />
+
+                                    </div>
+                                    <div class="form-group col-md-3">
+
+                                        <label style="margin-bottom:5px" for="Voucher">Voucher</label>
+                                        <input class="form-control" name="Voucher" type="text" value="@item.Voucher" />
+                                    </div>
+                                    <div class="form-group col-md-3">
+
+                                        <label style="margin-bottom:5px" for="monto">Monto</label>
+
+                                        <input class="form-control" autocomplete="off" value="@item.Monto.ToString("C")" name="Monto" type="text" id="monto" />
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else if (Model.TCreditos.Count > 0)
+                        {
+                            foreach (var item in Model.TCreditos)
+                            {
+                                <div class="row resalte" style="padding-bottom:10px" id="filaNewPM">
+                                    <div class="form-group col-md-3">
+                                        <label style="margin-bottom:5px" for="IDCuentaCR">Medio de Pago</label>
+                                        <input name="CuentaCR" readonly="readonly" class="form-control" value="TARJETA DE CRÉDITO" />
+
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label style="margin-bottom:5px" for="Voucher">Voucher</label>
+                                        <input class="form-control" name="Voucher" value="@item.Voucher" type="text" />
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label style="margin-bottom:5px" for="monto">Cuotas</label>
+                                        <input class="form-control" name="Cuotas" value="@item.Cuotas" type="text" />
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label style="margin-bottom:5px" for="monto">Monto</label>
+                                        <input class="form-control d-none" name="Cantidad" type="text" value="1" />
+                                        <input class="form-control" autocomplete="off" value="@item.Monto.ToString("C")" name="Monto" type="text" id="monto" />
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else if (Model.Cheques.Count > 0)
+                        {
+                            foreach (var item in Model.Cheques)
+                            {
+                                <div class="row resalte" style="padding-bottom:10px" id="filaNewPM">
+
+                                    <div class="form-group col-md-3">
+                                        <label style="margin-bottom:5px" for="IDCuentaCR">Medio de Pago</label>
+                                        <input name="CuentaCR" readonly="readonly" class="form-control" value="Cheque" />
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label style="margin-bottom:5px" for="monto">Serie</label>
+                                        <input class="form-control" type="text" value="@item.Serie" name="Serie" />
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label style="margin-bottom:5px" for="monto">Fecha</label>
+                                        <input class="form-control" value="@item.Fecha.ToString("dd-MM-YYYY")" type="date" name="Fecha" />
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label style="margin-bottom:5px" for="monto">Monto</label>
+                                        <input class="form-control" value="@item.Monto.ToString("C")" autocomplete="off" name="Monto" type="text" id="monto" />
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else if (Model.OpTElectronicas.Count > 0)
+                        {
+                            foreach (var item in Model.OpTElectronicas)
+                            {
+                                <div class="row resalte" style="padding-bottom:10px" id="filaNewPM">                                  
+                                    <div class="form-group col-md-6">                                        
+                                        <label style="margin-bottom:5px" for="IDCuentaCR">Medio de Pago</label>
+                                        <input name="CuentaCR" readonly="readonly" class="form-control" value="TRANSFERENCIA ELECTRÓNICA" />                                        
+                                    </div>
+                                    <div class="form-group col-md-3">                                        
+                                        <label style="margin-bottom:5px" for="IDOperacion">ID Operación</label>
+                                        <input class="form-control" name="IDOperacion" value="@item.IDOperacion" type="text" />
+                                    </div>
+                                    <div class="form-group col-md-3">                                        
+                                        <label style="margin-bottom:5px" for="monto">Monto</label>                                        
+                                        <input class="form-control" autocomplete="off" name="Monto" value="@item.Monto.ToString("C")" type="text" id="monto" />
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

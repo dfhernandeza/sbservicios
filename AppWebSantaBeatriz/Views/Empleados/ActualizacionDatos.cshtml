@@ -1,0 +1,501 @@
+﻿@model BibliotecaDeClases.EmpleadoModel
+
+@{
+    ViewBag.Title = "Actualización de Datos Personales";
+    Layout = null;
+}
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Actualización de Datos Personales</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    
+    <link href="~/Estilos/LayoutPrincipal.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+
+</head>
+<body style="margin:20px">
+
+    @Scripts.Render("~/bundles/jquery")
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
+    <script src="~/Scripts/Funciones.js"></script>
+
+    <script>
+
+        $(function () {
+            $('#IDEmpleado').keyup(function (e) {
+
+                rut($(this))
+            });
+        });
+
+
+
+
+
+    </script>
+    <style>
+        .form-group, .row {
+            margin-bottom: 5px
+        }
+
+        label.error {
+            color: red
+        }
+        /* input.error {
+            out
+            outline-style: solid;
+            outline-color: red;
+        }*/
+
+
+    </style>
+    <style>
+        .btn-block {
+            /* background-color: white;*/ /* Blue background */
+            border: none; /* Remove borders */
+            color: black; /* White text */
+            /* Some padding */
+            font-size: 16px; /* Set a font size */
+            cursor: pointer; /* Mouse pointer on hover */
+            margin-left: 1px;
+            margin-right: 3px;
+        }
+
+            /* Darker background on mouse-over */
+            .btn-block:hover {
+                background-color: darkgrey;
+                color: white;
+            }
+
+
+
+        .margenes {
+            margin-top: 20px;
+            margin-bottom: 20px
+        }
+
+        .fondogris {
+            background-color: #f7f7f7;
+            padding: 20px;
+            border-radius: 25px
+        }
+
+        .botonazul {
+            background-color: #007bff;
+            color: #fff;
+            border-color: #0062cc
+        }
+
+        .botonrojo {
+            color: #fff;
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .botonnaranjo {
+            color: #fff;
+            background-color: #ff6a00;
+            border-color: #ff6a00;
+        }
+
+        .list-group-item {
+            background-color: black;
+        }
+    </style>
+    <h2 style="margin-top:20px;text-align:center ">Actualizar Datos Personales</h2>
+    <div class="container-fluid fondogris">
+
+        <form id="formularioNuevoEmpleado" method="post" action="@Url.Action("ActualizarDatosAsync","Empleados")">
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <label for="Rut" class="form-label">Rut</label>
+                    <input type="text" class="d-none" name="ID" id="ID" value="@Model.ID" />
+                    <input type="text" class="form-control" id="IDEmpleado" name="IDEmpleado" readonly="readonly" value="@Model.IDEmpleado" />
+
+                </div>
+                <div class="col-sm-5">
+                    <label for="inputAddress" class="form-label">Nombres</label>
+                    <input type="text" class="form-control" name="Nombre" readonly="readonly" id="Nombre" value="@Model.Nombre" />
+
+                </div>
+                <div class="col-sm-5">
+                    <label for="inputAddress2" class="form-label">Apellidos</label>
+                    <input type="text" class="form-control" name="Apellido" readonly="readonly" id="Apellido" value="@Model.Apellido" />
+
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-3">
+
+                    <label for="FechadeNacimiento" class="form-label">Fecha de Nacimiento</label>
+
+                    <input autocomplete="off" type="text" class="form-control fecha" name="FechadeNacimiento" id="FechadeNacimiento" value="@Model.FechadeNacimiento.ToString("dd-MM-yyyy")" />
+
+
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Estado Civil
+                    </label>
+                    <select class="form-control" name="IDEstadoCivil" id="IDEstadoCivil">
+                        <option value="">-Seleccionar-</option>
+                        @foreach (var item in Model.TiposEstadoCivil)
+                        {
+                            if (item.Value == Model.IDEstadoCivil)
+                            {
+                                <option selected="selected" value="@item.Value">@item.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+
+                        }
+                    </select>
+
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Nacionalidad
+                    </label>
+                    <select class="form-control" name="IDNacionalidad" id="IDNacionalidad">
+                        <option value="">-Seleccionar-</option>
+
+
+                        @foreach (var item in Model.Paises)
+                        {
+
+                            if (item.Value == Model.IDNacionalidad)
+                            {
+                                <option selected="selected" value="@item.Value">@item.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+
+
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">
+                        Licencia de Conducir
+                    </label>
+                    <select class="form-control" name="IDTipoLicencia" id="IDTipoLicencia">
+                        <option value="">-Seleccionar-</option>
+                        @foreach (var item in Model.TiposLicenciaConducir)
+                        {
+                            if (item.Value == Model.IDTipoLicencia)
+                            {
+                                <option selected="selected" value="@item.Value">@item.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="Rut">Email</label>
+                    <input type="text" name="Email" id="Email" class="form-control" value="@Model.Email" />
+
+
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="Fono">Fono</label>
+
+                    <input type="text" name="Fono" id="Fono" class="form-control" value="@Model.Fono" />
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="inputAddress2">Domicilio</label>
+
+                <input type="text" name="Direccion" id="Direccion" class="form-control" value="@Model.Direccion" />
+
+
+            </div>
+
+
+
+
+
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label for="TallaZapatos">Talla Zapatos</label>
+
+                    <select class="form-control" name="TallaZapatos" id="TallaZapatos">
+                        <option value="">-Seleccionar-</option>
+                        @foreach (var item in Model.ListaTallasZapatos)
+                        {
+                            if (item.Value == Model.TallaZapatos)
+                            {
+                                <option selected="selected" value="@item.Value">@item.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="TallaPantalon">Talla Pantalon</label>
+                    <select class="form-control" name="TallaPantalon" id="TallaPantalon">
+                        <option value="">-Seleccionar-</option>
+                        @foreach (var item in Model.ListaTallaPantalones)
+                        {
+                            if (item.Value == Model.TallaPantalon)
+                            {
+                                <option selected="selected" value="@item.Value">@item.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        }
+                    </select>
+
+
+
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="TallaPolera">Talla Polera</label>
+                    <select class="form-control" name="TallaTop" id="TallaTop">
+                        <option value="">-Seleccionar-</option>
+                        @foreach (var item in Model.ListaTallasTop)
+                        {
+                            if (item.Value == Model.TallaTop)
+                            {
+                                <option selected="selected" value="@item.Value">@item.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        }
+
+
+
+                    </select>
+
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label">Banco</label>
+                    <select class="form-control" name="IDBanco" id="IDBanco">
+                        <option value="">-Seleccionar-</option>
+                        @if (Model.CuentaBancaria != null)
+                        {
+                            foreach (var item in Model.Bancos)
+                            {
+
+                                if (item.Value == Model.CuentaBancaria.IDBanco)
+                                {
+                                    <option selected="selected" value="@item.Value">@item.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+
+
+
+                            }
+                        }
+                        else
+                        {
+                            foreach (var item in Model.Bancos)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Tipo de Cuenta</label>
+                    <select class="form-control" name="IDTipoCuenta" id="IDTipoCuenta">
+                        <option value="">-Seleccionar-</option>
+                        @if (Model.CuentaBancaria != null)
+                        {
+                            foreach (var item in Model.TiposCuentaBancaria)
+                            {
+
+                                if (item.Value == Model.CuentaBancaria.IDTipoCuenta)
+                                {
+                                    <option selected="selected" value="@item.Value">@item.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+
+
+
+                            }
+                        }
+                        else
+                        {
+                            foreach (var item in Model.TiposCuentaBancaria)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">N° Cuenta</label>
+                    @if (Model.CuentaBancaria != null)
+                    {
+                        <input class="form-control" name="NumCuenta" id="NumCuenta" value="@Model.CuentaBancaria.NumCuenta" />
+                    }
+                    else
+                    {
+                        <input class="form-control" name="NumCuenta" id="NumCuenta" value="" />
+                    }
+                </div>
+            </div>
+            <div style="margin-top:20px">
+                @*<a href="~/Empleados/VerEmpleados" class="btn btn-primary">Volver</a>*@
+                <input id="btnsubmit" type="submit" class="btn btn-danger" value="Terminar">
+            </div>
+        </form>
+
+
+    </div>
+
+
+
+
+    <script>
+        $(document).ready(function () {
+            $("#formularioNuevoEmpleado").validate({
+                rules: {
+
+                    FechadeNacimiento: "required",
+                    IDEstadoCivil: "required",
+                    IDNacionalidad: "required",
+                    IDTipoLicencia: "required",
+                    Email: "required",
+                    Fono: "required",
+                    Direccion: "required",
+                    TallaZapatos: "required",
+                    TallaPantalon: "required",
+                    TallaTop: "required",
+                    IDBanco: "required",
+                    IDTipoCuenta: "required",
+                    NumCuenta: "required"
+                },
+                messages: {
+
+                    FechadeNacimiento: "Debe proporcionar la fecha de nacimiento del empleado",
+                    FechaContratacion: "Debe proporcionar la fecha de contratación",
+                    IDEstadoCivil: "Debe proporcionar un estado civil",
+                    IDNacionalidad: "Debe proporcionar una nacionalidad",
+                    IDTipoLicencia: "Debe proporcionar un tipo de licencia",
+                    Email: "Debe proporcionar un Email",
+                    Fono: "Debe proporcionar un Fono",
+                    Direccion: "Debe proporcionar un domicilio",
+                    TallaZapatos: "Debe proporcionar una talla de Zapatos",
+                    TallaPantalon: "Debe proporcionar una talla de Pantalón",
+                    TallaTop: "Debe proporcionar una talla de Polera",
+                    IDBanco: "Debe proporcionar un banco",
+                    IDTipoCuenta: "Debe proporcionar un tipo de cueta bancaria",
+                    NumCuenta: "Debe proporcionar un numero de cuenta"
+                },
+                submitHandler: function (form) {
+                    var CuentaBancaria = { IDBanco: $('#IDBanco').val(), IDTipoCuenta: $('#IDTipoCuenta').val(), NumCuenta: $('#NumCuenta').val(), IDEmpleado: $('#ID').val() };
+                    var Empleado = {
+                        ID: $('#ID').val(),
+                        FechadeNacimiento: $('#FechadeNacimiento').val(),
+                        IDEstadoCivil: $('#IDEstadoCivil').val(),
+                        IDNacionalidad: $('#IDNacionalidad').val(),
+                        IDTipoLicencia: $('#IDTipoLicencia').val(),
+                        Email: $('#Email').val(),
+                        Fono: $('#Fono').val(),
+                        Direccion: $('#Direccion').val(),
+                        TallaZapatos: $('#TallaZapatos').val(),
+                        TallaPantalon: $('#TallaPantalon').val(),
+                        TallaTop: $('#TallaTop').val(),
+                        CuentaBancaria: CuentaBancaria
+                    };
+                    $.ajax({
+                        url: form.action,
+                        type: form.method,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        data: JSON.stringify(Empleado),
+                        success: function (response) {
+                            if (response=="Correcto") {
+                                window.location.href = "/Empleados/PaginaExito";
+                            }
+                            else {
+                               
+                                window.location.href = "/Errores/VistaError?Mensaje=" + response;
+                            }
+                           
+                        },
+                    });
+
+                },
+
+            });
+        });
+
+        $(function () {
+            $('.fecha').datepicker({ dateFormat: 'dd-mm-yy' });
+            $.datepicker.setDefaults($.datepicker.regional['es']);
+        });
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+    @section Scripts {
+        @Styles.Render("~/Content/themes/base/css")
+        @Scripts.Render("~/bundles/jqueryval")
+
+    }
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+

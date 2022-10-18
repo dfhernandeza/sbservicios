@@ -1,0 +1,38 @@
+﻿@model IEnumerable<BibliotecaDeClases.Modelos.Transacciones.HorasExtraModel>
+
+@{
+    ViewBag.Title = "VerHorasExtra";
+}
+<link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+<style>
+    .encabezado {
+        background: rgb(241,0,82);
+        background: linear-gradient(94deg, rgba(241,0,82,1) 18%, rgba(136,143,235,1) 45%, rgba(201,16,200,1) 76%);
+    }
+</style>
+<h2 class="text-center mb-5">Horas Extra</h2>
+<table class="tabla">
+    <tr class="encabezado">
+        <th>Empleado</th>
+        <th>Mes</th>
+        <th>Horas</th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.Empleado
+            </td>
+            <td>
+                @item.MesText - @item.Año  
+            </td>
+            <td>
+                @item.Horas.ToString("0.##")
+            </td>
+            <td>
+                <a class="btn btn-danger" href="@Url.Action("VerDocumentoHHExtra",new {id = item.ID })">Detalles</a>
+            </td>
+        </tr>
+    }
+</table>

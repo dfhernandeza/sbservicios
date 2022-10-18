@@ -1,0 +1,241 @@
+﻿@model AppWebSantaBeatriz.Models.Transacciones.DocumentoModel
+
+@{
+    ViewBag.Title = "EliminaCompra";
+}
+
+<script>
+
+    $(function () {
+        $(document).on('click', '#BtnEliminar', function () {
+
+            $.ajax({
+                url: "/Transaccion/SuprCompra/",
+                type: 'POST',
+                async: false,
+                dataType: 'text',
+                data: {
+                    iddocumento: $('#ID').val()
+                 
+                },
+                success: function (e) {
+
+                    window.location.href = "/Transaccion/VerDocumentos/";
+
+                }
+
+            });
+
+        });
+
+    });
+
+
+
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+    <h1 style="text-align:center;margin-bottom:30px">Eliminar Compra</h1>
+
+    <div class="float-end">
+
+        @*<button style="margin-right:20px" type="button" class="btn btn-primary">Ingresar</button>*@
+
+
+    </div>
+
+
+
+
+    <div class="container-fluid fondogris">
+        <div class="row">
+            <div class="col-6">
+                <h2 style="margin-bottom:20px">Documento</h2>
+            </div>
+
+            <div class="col-6">
+                <div class="float-end">
+                    <input type="button" class="btn btn-danger" id="BtnEliminar" value="Confirmar" />
+                </div>
+
+            </div>
+        </div>
+        <form class="border-dark" style="margin-top:30px;padding-left:10px;padding-right:40px;background-color:aquamarine !important">
+
+
+            <div class="form-row border-dark">
+                <div class="form-group col-md-3">
+                    <label for="IDDocumento">ID Documento</label>
+                    <input type="text" id="IDDocumento" value="@Model.IDDocumento" class="form-control" readonly="readonly" />
+                <input type="text" id="ID" style="display:none" value="@Model.ID" />
+                
+
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="FechadeNacimiento">Fecha de Emisión</label>
+
+                    <input type="date" class="form-control" name="Fecha de Emisión" readonly="readonly" id="FechaDocumento" value="@(Model.FechaDocumento?.ToString("yyyy/MM/dd"))" />
+                
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label for="IDEmisor">Emisor</label>
+                    <input type="text" name="Emisor" id="Emisor" readonly="readonly"  value="@Model.Emisor" class="form-control" />
+                    @Html.HiddenFor(model => model.IDEmisor, new { htmlAttributes = new { @class = "form-control" } })
+                   
+
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label for="IDCuentaCR">Medio de Pago</label>
+                <input type="text" value="@Model.MedioPago" class="form-control" readonly="readonly" />
+
+
+
+                </div>
+
+            </div>
+
+            <div class="form-row">
+
+                <div class="form-group col-6">
+                    <label for="descripcion">Descripción</label>
+                    <textarea class="form-control" id="Descripcion" rows="2" style="text-transform:uppercase" readonly="readonly">@Model.Descripcion</textarea>
+                    
+
+                </div>
+
+                <div class="form-group col 6">
+                    <label for="descripcion">Comentarios</label>
+                    <textarea class="form-control" id="Comentarios" rows="2" style="text-transform:uppercase" readonly="readonly">@Model.Comentarios</textarea>
+                   
+                </div>
+
+            </div>
+
+
+
+
+
+
+            <input type="text" id="IDTipo" name="IDTipo" value="@ViewBag.Tipo" style="display:none" />
+
+
+
+
+
+
+            @*<button type="button" id="BtnNuevoItem" class="btn btn-primary">Nuevo Item</button>*@
+
+        </form>
+
+        <h2>Detalle</h2>
+
+        <table id="TablaDetalle" style="margin-top:15px" class="table">
+            <tr><th style="display:none"></th><th style="display:none"></th><th style="border:none">Centro Costos</th><th style="border:none">Cuenta Destino</th><th style="border:none">Item</th><th style="border:none">Cantidad</th><th style="border:none">Precio</th><th style="border:none">Total</th></tr>
+
+            @foreach (var item in Model.ListaItems)
+            {
+
+                <tr class="resalte">
+                    <td style="display:none"></td>
+                    <td style="display:none"></td>
+                    <td width="30%">
+                        @item.CECO
+                    </td>
+
+                    <td width="15%">
+                     @item.CuentaDB
+                    </td>
+                    <td>
+                        @item.Item
+
+                    </td>
+
+                    <td width="7%">
+                       @item.Cantidad
+
+                    </td>
+                    <td width="10%">
+                       @item.Monto.ToString("C")
+                    </td>
+
+                    <td width="10%">
+                        @((item.Cantidad*item.Monto).ToString("C"))
+
+                    </td>
+                </tr>
+
+
+            }
+
+
+        </table>
+        <div class="container-fluid">
+
+            <div class="row">
+
+                <div class="col-12">
+                    <div class="float-end">
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <label style="margin-right:5px" for="neto">Neto:  </label>
+                                <input id="neto" style="width:148px" type="text" value="@Model.Total.ToString("C")" class="form-control" readonly="readonly" />
+                                
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row" style="margin-top:10px">
+                <div class="col-12">
+                    <div class="float-end">
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <label style="margin-right:5px" for="neto">IVA:  </label>
+                                <input id="iva" style="width:148px" type="text" value="@((Model.Total*0.19).ToString("C"))" class="form-control" readonly="readonly"/>
+                                
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top:10px">
+                <div class="col-12">
+                    <div class="float-end">
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <label style="margin-right:5px" for="totaltotal">Total:  </label>
+                                <input id="totaltotal" style="width:148px" type="text" value="@((Model.Total*1.19).ToString("C"))" class="form-control" readonly="readonly" />
+                               
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            @*<div class="float-end"><form class="form-inline"><div class="form-group"><label style="margin-right:5px" for="iva">IVA:  </label> <input id="neto" style="width:148px" type="text" class="form-control" /></div></form></div>*@
+
+
+        </div>
+
+
+
+
+    </div>
+
+
+
+
+
+}
+

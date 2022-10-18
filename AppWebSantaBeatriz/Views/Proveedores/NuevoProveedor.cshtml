@@ -1,0 +1,130 @@
+﻿@model AppWebSantaBeatriz.Models.Proveedores.ProveedorModel
+
+@{
+    ViewBag.Title = "NuevoProveedor";
+}
+<script src="~/Scripts/Funciones.js"></script>
+
+    <h1 style="text-align:center">Nuevo Proveedor</h1>
+    <script>
+        $(document).on('keyup', '#IDProveedor', function (e) {
+           
+            rut($('#IDProveedor'));
+           
+        });
+       
+    </script>
+    <div id="formulario">
+
+        @Html.AntiForgeryToken()
+
+        <div class="container-fluid fondogris">
+            <form method="post" action="@Url.Action("NuevoProveedor")">
+                <div class="row align-items-end">
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label for="IDProveedor">Rut</label>
+                            @Html.EditorFor(model => model.IDProveedor, new { htmlAttributes = new { @class = "form-control" } })
+
+                            @Html.ValidationMessageFor(model => model.IDProveedor, "", new { @class = "text-danger" })
+                        </div>
+
+                    </div>
+                    <div class="col-5">
+                        <div class="form-group">
+                            <label for="NombreFantasia">Nombre de Fantasía</label>
+                            <input type="text" class="form-control" id="NombreFantasia" name="NombreFantasia" style="text-transform:uppercase" />
+                            @Html.ValidationMessageFor(model => model.NombreFantasia, "", new { @class = "text-danger" })
+                        </div>
+
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <input type="submit" id="btnIngresarProveedor" style="color:white" class="btn btn-block btn-success" value="Ingresar" />
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="row align-items-end">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="NombreProveedor">Razón Social</label>
+                            @Html.EditorFor(model => model.NombreProveedor, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                            @Html.ValidationMessageFor(model => model.NombreProveedor, "", new { @class = "text-danger" })
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="row align-items-end">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="EmailProveedor">Correo Electrónico</label>
+                            @Html.EditorFor(model => model.EmailProveedor, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                            @Html.ValidationMessageFor(model => model.EmailProveedor, "", new { @class = "text-danger" })
+                        </div>
+
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="FonoProveedor">Fono</label>
+                            @Html.EditorFor(model => model.FonoProveedor, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.FonoProveedor, "", new { @class = "text-danger" })
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="row align-items-end">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="OtrosDetalles">Otros Detalles</label>
+                            <textarea style="text-transform:uppercase" name="OtrosDetalles" id="OtrosDetalles" class="form-control" rows="2"></textarea>
+                            @Html.ValidationMessageFor(model => model.OtrosDetalles, "", new { @class = "text-danger" })
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+
+
+                <a style="margin-top:10px" class="btn btn-danger" href="@Url.Action("VerProveedores")">Volver</a>
+
+
+
+
+            </form>
+
+
+
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+
+  
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,42 @@
+﻿@model IEnumerable<AppWebSantaBeatriz.Models.Servicios.TipoTareaModel>
+
+@{
+    ViewBag.Title = "VerTiposTareas";
+}
+
+<h2 style="text-align:center">Tipos de Tareas</h2>
+
+<p>
+   <a href="@Url.Action("CreaTipoTarea")" class="btn btn-primary">Nueva</a>
+</p>
+<table class="table">
+    <tr>
+        <th width="20%">
+            Tipo de Tarea
+        </th>
+        <th width="60%">
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </th>
+    
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.TipoTarea)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descripcion)
+        </td>
+ 
+        <td>
+            <a href="@Url.Action("EditarTipoTarea", new { id = item.ID })" class="btn btn-danger">Editar</a>
+            <a href="@Url.Action("DetalleTipoTarea", new { id = item.ID })" class="btn btn-success">Detalles</a>
+            <a href="@Url.Action("EliminarTipoTarea", new { id = item.ID })" class="btn btn-primary">Eliminar</a>
+       
+        </td>
+    </tr>
+}
+
+</table>

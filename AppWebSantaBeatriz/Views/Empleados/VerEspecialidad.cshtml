@@ -1,0 +1,126 @@
+﻿@model BibliotecaDeClases.Modelos.EspecialidadModel
+
+@{
+    ViewBag.Title = "VerEspecialidad";
+}
+
+<style>
+    .fondo{
+        background-color:#d0e5dc
+    }
+</style>
+<script>
+    $(document).ready(function () {
+
+        $(".card-header").addClass("botonazul");
+    });
+
+
+</script>
+
+
+
+<h2 style="margin-top:20px;margin-bottom:20px">Detalle Especialidad</h2>
+
+<div class="container-fluid fondogris">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <strong>ID Especialidad</strong> 
+                </div>
+                <div class="card-body">
+                    @Model.ID
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Especialidad</strong> 
+                </div>
+                <div class="card-body">
+                    @Model.Especialidad
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Valor HH</strong>
+                </div>
+                <div class="card-body">
+                    @Model.ValorHH.ToString("C")
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top:20px;margin-bottom:20px">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Descripción</strong> 
+                </div>
+                <div class="card-body">
+                    @Model.Descripcion
+                </div>
+            </div>
+        </div>
+     </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Creado Por</strong> 
+                </div>
+                <div class="card-body">
+                    @Model.CreadoPor
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Creado En</strong>  
+                </div>
+                <div class="card-body">
+                    @Model.CreadoEn
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top:20px;margin-bottom:20px" class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Editado Por</strong>  
+                </div>
+                <div class="card-body">
+                    @Model.EditadoPor
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Editado En</strong>     
+                </div>
+                <div class="card-body">
+                    @Model.EditadoEn
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p>
+        <a class="btn btn-danger" href="@Url.Action("EditarEspecialidad",new { idespecialidad = Model.ID })">Editar</a>
+        <a class="btn btn-success" href="@Url.Action("VerEspecialidades")">Volver</a>
+
+      
+    </p>
+
+</div>
+
+

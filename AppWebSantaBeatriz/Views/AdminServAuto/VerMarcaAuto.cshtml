@@ -1,0 +1,38 @@
+﻿@model BibliotecaDeClases.Modelos.ServicioAutomotriz.PaginaModelosAuto
+
+@{
+    ViewBag.Title = "VerMarcaAuto";
+}
+<head>
+    <link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+    <style>
+        .header_ {
+            background: rgb(243,60,0);
+            background: linear-gradient(180deg, rgba(243,60,0,1) 35%, rgba(218,10,0,1) 66%);
+        }
+    </style>
+</head>
+
+<h2 class="text-center mb-5 mt-3">@Model.MarcaAuto</h2>
+<table class="tabla">
+    <tr class="header_">
+        <th>
+            Modelo
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model.Modelos)
+    {
+        <tr>
+           
+            <td>
+                @item.ModeloAuto
+            </td>
+            <td>
+                <a class="btn btn-success" href="@Url.Action("VerModeloAuto", new {id = item.ID })"><img src="~/Content/Pictures/detail.png" /></a>
+               
+            </td>
+        </tr>
+    }
+</table>
+

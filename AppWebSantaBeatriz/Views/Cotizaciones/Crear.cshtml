@@ -1,0 +1,438 @@
+﻿@model AppWebSantaBeatriz.Models.CotizacionModel
+
+@{
+    ViewBag.Title = "Nueva Cotización";
+}
+<head>
+    <style>
+        .border-class {
+            border: thin black solid;
+            margin: 20px;
+            padding: 20px;
+        }
+        .body {
+            background: #606c88; /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #3f4c6b, #606c88); /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        }
+    </style>
+    <script>
+        //Muestra los contactos al cambiar de cliente
+        //===========================================================================================================================================================
+        $(document).ready(function () {
+            $(document).on('change', '#IDCliente', function () {
+                $.ajax({
+                    url: "/Clientes/Contactos/",
+                    type: 'POST',
+                    async: false,
+                    dataType: 'text',
+                    data: {
+                        idcliente: $("#IDCliente").val()
+                    },
+                    success: function (data) {
+                        $("#IDSupervisor").empty();
+                        data = JSON.parse(data);
+                        $(data).each(function (i, item) {
+
+                            $('#IDSupervisor').append(
+                                $('<option></option>').val(item.ID).html(item.Nombre + ' ' + item.Apellido)
+                            );
+                        });
+                    },
+                });
+            });
+        });
+       //============================================================================================================================================================
+       //Ingresa un nuevo Cliente y añade la opción a la lista
+
+        $(function () {
+            $('#IngresarCliente').click(function (e) {
+
+                $.ajax({
+                    url: "/Clientes/CreaCliente/",
+                    type: 'POST',
+                    async: false,
+                    dataType: 'text',
+                    data: {
+                        idcliente: $("#IDClienteM").val(),
+                        razonsocial: $("#RSocialM").val(),
+                        giro: $("#GiroM").val(),
+                        arauco: false
+
+                    },
+                    success: function (data) {
+                        data = JSON.parse(data);
+
+                        $('#IDCliente').append(
+                            $('<option></option>').val(data.ID).html(data.RazonSocial)
+                        );
+                        $('#IDCliente').val(data.ID);
+                        $('#nuevoClienteModal').modal('hide');
+                    },
+                });
+
+
+            });
+        });
+       //============================================================================================================================================================
+       //Formatea el rut  
+        $(function () {
+            $('#IDClienteM').keyup(function (e) {
+
+                rut($(this))
+
+            });
+            $('#IDContacto1').keyup(function (e) {
+
+                rut($(this))
+
+            });
+
+        });
+       //============================================================================================================================================================
+
+       //Ingresa un nuevo Contacto y añade la opción a la lista
+        $(function () {
+
+            $('#IngresarSupervisor').click(function (e) {
+
+                $.ajax({
+                    url: "/Clientes/CrearContacto/",
+                    type: 'POST',
+                    async: false,
+                    dataType: 'text',
+                    data: {
+                        idcontacto: $('#IDContacto1').val(),
+                        alias: $('#Alias1').val(),
+                        cargo: $('#Cargo1').val(),
+                        nombre: $('#Nombre1').val(),
+                        apellido: $('#Apellido1').val(),
+                        email: $('#Email1').val(),
+                        notas: $('#Notas1').val(),
+                        fono: $('#Fono1').val(),
+                        idcliente: $('#IDCliente').val(),
+                        area: $('#Area1').val()
+                    },
+                    success: function (data) {
+                        data = JSON.parse(data);
+                        $('#IDSupervisor').append($('<option></option>').val(data.ID).html(data.Nombre + ' ' + data.Apellido)
+                        );
+                        $('#IDSupervisor').val(data.ID);
+                        $("#NuevoSupervisorModal").modal('hide');
+
+                    },
+                });
+
+
+            });
+
+
+
+
+        });
+        //============================================================================================================================================================
+        //Eventos
+        $(function () {
+            $('#NClienteBtn').click(function (e) {
+
+                $('#nuevoClienteModal').modal('show');
+
+            });
+
+            $('#CerrarNClienteH').click(function (e) {
+
+                $('#nuevoClienteModal').modal('hide');
+
+            });
+            $('#CerrarNClienteF').click(function (e) {
+
+                $('#nuevoClienteModal').modal('hide');
+
+            });
+
+            $('#NSupervisorBtn').click(function (e) {
+
+                if ($('#Cliente').val() == '' ) {
+
+                    window.alert("Dele elegir un cliente");
+                }
+                else {
+                    $('#NuevoSupervisorModal').modal('show');
+
+                }
+          
+
+            });
+
+            $("#CerrarNContactoH").click(function () {
+                $("#NuevoSupervisorModal").modal('hide');
+            });
+            $("#CerrarNContactoF").click(function () {
+                $("#NuevoSupervisorModal").modal('hide');
+            });
+
+        });
+
+
+    </script>
+</head>
+
+<h2 style="margin-bottom: 35px;margin-top:50px;color:white;text-align:center">Nueva Cotización</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="container-fluid fondogris">
+       
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+            <div class="row align-items-end">
+                <div class="col-md-3">
+
+                    <div class="form-group">
+                        <label for="Fecha">Fecha</label>
+                        <input type="date" class="form-control" name="Fecha" id="Fecha" style="border-radius:25px" />
+                        @Html.ValidationMessageFor(model => model.Fecha, "", new { @class = "text-danger" })
+
+                    </div>
+
+                </div>
+                <div class="col-md-3">
+
+                    <div class="form-group">
+                        <label for="ID">ID Cotización</label>
+                        <input type="text" class="form-control" id="IDCotizacion" placeholder="ID Cotización" name="IDCotizacion" style="border-radius:25px">
+                        @Html.ValidationMessageFor(model => model.IDCotizacion, "", new { @class = "text-danger" })
+                    </div>
+
+                </div>
+                <div class="col-md-3">
+
+                    <div class="form-group">
+                        <label for="SolicitudPedido">SP</label>
+                        <input type="text" class="form-control" id="SolicitudPedido" placeholder="SP" name="SolicitudPedido" style="border-radius:25px">
+                        @Html.ValidationMessageFor(model => model.SolicitudPedido, "", new { @class = "text-danger" })
+                    </div>
+
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+
+                        <input type="submit" value="Ingresar" style="width:100%" class="btn btn-block botonrojo" />
+
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-end">
+                <div class="col-md-5">
+
+                    <div class="form-group">
+                        <label for="Cliente">Cliente</label>
+                        @Html.DropDownListFor(model => model.IDCliente, new SelectList(Model.Clientes, "Value", "Text"), "-Seleccionar-", new { @class = "form-control" })
+
+
+                        @Html.ValidationMessageFor(model => model.IDCliente, "", new { @class = "text-danger" })
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-1">
+
+                    <div class="form-group">
+
+                        <button id="NClienteBtn" type="button" class="btn btn-success">Nuevo</button>
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-5">
+
+                    <div class="form-group">
+                        <label for="IDSupervisor">Supervisor</label>
+                        <select id="IDSupervisor" name="IDSupervisor" class="form-control"></select>
+
+                        @Html.ValidationMessageFor(model => model.IDSupervisor, "", new { @class = "text-danger" })
+
+                    </div>
+
+                </div>
+                <div class="col-md-1">
+
+                    <div class="form-group">
+
+                        <button id="NSupervisorBtn" type="button" class="btn botonnaranjo">Nuevo</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col-md-10">
+
+                    <div class="form-group">
+                        <label for="Servicio">Servicio</label>
+                        <input type="text" class="form-control" id="Servcio" placeholder="Servicio" name="Servicio">
+                        @Html.ValidationMessageFor(model => model.Servicio, "", new { @class = "text-danger" })
+                    </div>
+
+                </div>
+                <div class="col-md-2">
+
+                    <div class="form-group">
+                        <label for="TiempoEjecucion">Tiempo de Ejecucion</label>
+                        <input type="text" class="form-control" id="TiempoEjecucion" placeholder="3 días ..." name="TiempoEjecucion">
+                        @Html.ValidationMessageFor(model => model.TiempoEjecucion, "", new { @class = "text-danger" })
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+                <label for="Detalles">Detalles</label>
+                <textarea class="form-control" id="Detalles" placeholder="El servicio consiste en..." name="Detalles" rows="4"></textarea>
+
+                @Html.ValidationMessageFor(model => model.Detalles, "", new { @class = "text-danger" })
+            </div>
+
+            <div style="margin-top:15px">
+                <a href="~/Cotizaciones/VerCotizaciones" class="btn btn-success">Volver</a>
+
+            </div>
+
+
+        
+    </div>
+}
+
+<div class="modal fade" id="nuevoClienteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header botonazul">
+                <h5 class="modal-title" id="exampleModalLabel">Nuevo Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="CerrarNClienteH"></button>
+              
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="inputEmail4">ID Cliente</label>
+                            <input type="text" class="form-control"  name="IDClienteM" id="IDClienteM">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputPassword4">Razón Social</label>
+                            <input type="text" class="form-control" style="text-transform:uppercase" name="RSocialM" id="RSocialM">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="inputAddress">Giro</label>
+                            <input type="text" class="form-control" style="text-transform:uppercase" name="GiroM" id="GiroM">
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="CerrarNClienteF">Cerrar</button>
+                <button type="button" id="IngresarCliente" class="btn btn-primary">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="NuevoSupervisorModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header botonazul">
+                <h5 class="modal-title" id="exampleModalLabel">Nuevo Supervisor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"  id="CerrarNContactoH"></button>
+                @*<button type="button" class="close" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>*@
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="inputEmail4">ID Contacto</label>
+                            <input type="text" class="form-control" name="IDContacto1" id="IDContacto1">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputPassword4">Alias</label>
+                            <input type="text" class="form-control" style="text-transform:uppercase" name="Alias1" id="Alias1">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="inputAddress">Nombres</label>
+                            <input type="text" class="form-control" style="text-transform:uppercase" name="Nombre1" id="Nombre1">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputAddress2">Apellidos</label>
+                            <input type="text" class="form-control" style="text-transform:uppercase" name="Apellido1" id="Apellido1">
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="inputCity">Cargo</label>
+                            <input type="text" class="form-control" style="text-transform:uppercase" name="Cargo1" id="Cargo1">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputCity">Area</label>
+                            <input type="text" class="form-control" style="text-transform:uppercase" name="Area1" id="Area1">
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="Cargo">Email</label>
+                            <input type="email" class="form-control" style="text-transform:uppercase" name="Email1" id="Email1">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="Area">Fono</label>
+                            <input type="text" class="form-control" style="text-transform:uppercase" name="Fono1" id="Fono1">
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6"></div>
+                        <label for="Notas">Notas</label>
+                        <textarea class="form-control" rows="2" style="text-transform:uppercase" name="Notas1" id="Notas1"></textarea>
+
+
+                    </div>
+
+
+
+                </form>
+
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="CerrarNContactoF">Cerrar</button>
+                <button type="button" id="IngresarSupervisor" class="btn btn-primary">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

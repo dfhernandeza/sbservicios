@@ -1,0 +1,53 @@
+﻿@model BibliotecaDeClases.Modelos.ServicioAutomotriz.AñadirAñosPaginaModel
+
+@{
+    ViewBag.Title = "VerModeloAuto";
+}
+
+<h2 class="text-center">@Model.ModeloAuto</h2>
+<label class="form-label">
+    Seleccionar años
+</label>
+<input class="d-none" id="idmodelo" value="@Model.IDModeloAuto" />
+<select class="form-select" multiple aria-label="multiple select example" size="10" id="yearSelect">
+
+ 
+    @foreach (var item in Model.Años)
+    {
+        if (item.Selected)
+        {
+            <option selected="selected" value="@item.ID">@item.AñoAutos</option>
+        }
+        else
+        {
+            <option value="@item.ID">@item.AñoAutos</option>
+        }
+    }
+
+</select>
+
+<button class="btn btn-success mt-3" id="btnIngresar">Ingresar</button>
+<script>
+    $(document).on('click','#btnIngresar', function () {
+        var modelo = [];
+        var data = $('#yearSelect').val();
+        $(data).each(function (i, item) {
+            var idModelo = $('#idmodelo').val();
+            var fila = { IDModelo: idModelo, IDAño: item }
+            modelo.push(fila);
+        });
+        $.ajax({
+            type: "POST",
+            url: "/AdminServAuto/AñadirAñosAsync/",
+            data: JSON.stringify(modelo),
+            dataType: "json",
+            contentType:"application/json",
+            success: function (response) {
+                window.location.replace("/AdminServAuto/VerMarcasAutos/")
+            }
+        });
+    });
+   
+</script>
+
+

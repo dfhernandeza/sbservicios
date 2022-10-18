@@ -1,0 +1,79 @@
+﻿@model IEnumerable<BibliotecaDeClases.Modelos.ServicioAutomotriz.MarcaProductoModel>
+
+@{
+    ViewBag.Title = "VerMarcaProductos";
+}
+<link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+<h2>Lista de marcas</h2>
+<style>
+    .encabezado {
+        background: rgb(241,0,82);
+        background: linear-gradient(94deg, rgba(241,0,82,1) 18%, rgba(218,139,0,1) 45%, rgba(255,132,0,1) 76%);
+    }
+    .borde{
+        border-bottom:dashed;
+        border-color:black;
+        
+    }
+</style>
+<p>
+   <a class="btn btn-outline-danger" href="@Url.Action("NuevaMarcaProducto")">Nueva</a>
+</p>
+@{ 
+    var arreglo = Model.ToArray();
+}
+<table class="tabla">
+    <tr class="encabezado">
+        <th>
+            @Html.DisplayNameFor(model => model.Marca)
+        </th>
+        <th>
+            Categoría
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </th>
+        <th width="10%"></th>
+    </tr>
+@{ int i = 0;
+    string clase = "";
+    }
+@foreach (var item in Model) {
+    if (i + 1 < arreglo.Length)
+    {
+        if (arreglo[i].Categoria != arreglo[i + 1].Categoria)
+        {
+            clase = "borde";
+        }
+        else
+        {
+            clase = "";
+        }
+        i++;
+    }
+
+    <tr class="@clase">
+        <td>
+            @Html.DisplayFor(modelItem => item.Marca)
+        </td>
+        <td>
+            @item.Categoria
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descripcion)
+        </td>
+        <td>
+            <div class="d-flex justify-content-around">
+                <a class="btn btn-success" href="@Url.Action("VerMarca",new {id = item.ID})">
+                    <img src="~/Content/Pictures/detail.png" />
+                </a>
+                <a class="btn btn-primary" href="@Url.Action("EditarMarcaProducto",new {id = item.ID})">
+                    <img src="~/Content/Pictures/editar.png" />
+                </a>
+            </div>
+           
+        </td>
+    </tr>
+}
+
+</table>

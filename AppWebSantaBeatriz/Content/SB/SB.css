@@ -1,0 +1,20 @@
+﻿.btnNaranjo {
+    background-color: orangered;
+    color: white;
+    border: none;
+    padding: 7px 16px;
+    text-decoration: none;
+}
+.btnNaranjo:hover{
+    color:blue
+}
+.btnAzul {
+    background-color: blue;
+    color: white;
+    border: none;
+    padding: 7px 16px;
+    text-decoration:none;
+}
+.btnAzul:hover{
+    color:gray
+}

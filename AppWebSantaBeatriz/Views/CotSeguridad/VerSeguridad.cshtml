@@ -1,0 +1,339 @@
+﻿@model IEnumerable<AppWebSantaBeatriz.Models.CotizacionSeguridadModel>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+
+@{
+    ViewBag.Title = "Detalle de Seguridad";
+}
+@{double suma = 0;
+    foreach (var row in Model)
+    {
+        suma = suma + (double)row.Total;
+    }
+}
+
+
+<h1 style="text-align:center">Detalle de Seguridad</h1>
+
+
+<div class="row">
+    <div class="col-md-9">
+        <h3 class="margenes">Cotización: @ViewBag.id </h3>
+    </div>
+    <div class="col-md-3">
+        <h3 id="Total" class="margenes">Total : @suma.ToString("C") </h3>
+    </div>
+
+</div>
+
+
+
+<p>
+    <button type="button" class="btn btn-primary" id="boton" style="margin-top:10px">Nuevo</button>
+
+</p>
+
+
+
+<table class="table">
+    <tr>
+        <th style="display:none">
+
+        </th>
+       
+        <th>
+            @Html.DisplayNameFor(model => model.Item)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Cantidad)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PUnitario)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Total)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td style="display:none">
+                @item.ID
+            </td>
+          
+            <td>
+                @Html.DisplayFor(modelItem => item.Item)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cantidad)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PUnitario)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Total)
+            </td>
+            <td>
+                <input type="button" value="Editar" id="abrireditar" class="btn btn-danger">
+                <input type="button" value="Eliminar" id="abrireliminar" class="btn btn-primary">
+
+            </td>
+        </tr>
+    }
+
+
+</table>
+
+<div>
+    <a class="btn btn-danger" href="@Url.Action("VerCotizacion","Cotizaciones", new {id = ViewBag.id})">Volver</a>
+</div>
+
+<div class="modal fade" id="nuevoEPPModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header botonrojo">
+                <h5 class="modal-title" id="exampleModalLabel">Nuevo Elemento de Segruidad</h5>
+                <button type="button" class="close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body align-content-center">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group form-inline">
+
+                            <input id="ItemModal" placeholder="Item" style="width:200px;text-transform:uppercase" type="text" class="form-control" />
+                            <input id="CantidadModal" style="width:95px;margin-left:5px" placeholder="Cantidad" type="text" class="form-control" />
+                            <input id="PrecioModal" placeholder="Precio" style="width:95px;margin-left:5px" type="text" class="form-control" />
+                            <input id="VTotalModal" style="width:95px;margin-left:5px" placeholder="Total" type="text" class="form-control" />
+                            <input type="button" id="IngresarModal" value="Ingresar" class="btn btn-primary" style="margin-left:10px" />
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="eliminaEPPModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header botonazul">
+                <h5 class="modal-title" id="exampleModalLabel">Eliminar EPP</h5>
+                <button type="button" class="close" id="CerrarEliminarEPP" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                <h2 id="EPPEliminado"></h2>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="CerrarEliminarEPPF">Cerrar</button>
+                <button type="button" id="EliminaEPP" class="btn btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script>
+  var Origen;
+    var ID;
+    //Abre modal
+   //===============================================================================================================================================================================
+    $(function () {
+        $(document).on('click', '#boton', function () {
+
+            $('#nuevoEPPModal').modal('show');
+            Origen = "Nuevo"
+        });
+        $(document).on('click', '#abrireditar', function () {
+            var row = $(this).closest("tr");   // Finds the closest row <tr>
+            var tds = row.find("td");
+            ID = tds[0].innerText;
+            $("#ItemModal").val(tds[1].innerText);
+            $("#CantidadModal").val(tds[2].innerText);
+            $("#PrecioModal").val(tds[3].innerText.replace(/[^0-9,-]+/g, ""));
+            $("#VTotalModal").val(tds[4].innerText.replace(/[^0-9,-]+/g, ""));
+            $('#nuevoEPPModal').modal('show');
+            Origen = "Editar"
+        });
+
+
+
+
+    });
+
+    //Ingresa un nuevo EPP o Edita
+    //===============================================================================================================================================================================
+
+    $(function () {
+        $(document).on('click', '#IngresarModal', function () {
+            if (Origen == 'Nuevo') {
+
+                $.ajax({
+                    url: "/CotSeguridad/CotiSeguridad/",
+                    type: 'POST',
+                    async: false,
+                    dataType: 'text',
+                    data: {
+                        idcot: '@ViewBag.id',
+                        item: $('#ItemModal').val(),
+                        cantidad: $('#CantidadModal').val(),
+                        punitario: $('#PrecioModal').val()
+                    },
+                    success: function (data) {
+
+                        $("#nuevoEPPModal").modal('hide');
+                        location.reload();
+                    },
+                });
+
+
+
+            }
+
+            else {
+
+
+                  $.ajax({
+                      url: "/CotSeguridad/EditarSeguridad/",
+                    type: 'POST',
+                    async: false,
+                    dataType: 'text',
+                    data: {
+                        id: ID,
+                        item: $('#ItemModal').val(),
+                        cantidad: $('#CantidadModal').val(),
+                        punitario: $('#PrecioModal').val()
+                    },
+                    success: function (data) {
+
+                        $("#nuevoEPPModal").modal('hide');
+                        location.reload();
+                    },
+                });
+
+
+
+
+
+            }
+
+
+
+        });
+
+    });
+   //===============================================================================================================================================================================
+    //Calcula el total automáticamente
+    $(function () {
+
+        $("#CantidadModal,#PrecioModal").keyup(function (e) {
+
+            var q = $("#CantidadModal").val();
+            var p = $("#PrecioModal").val();
+            var result = "";
+
+            if (q !== "" && p !== "" && $.isNumeric(q) && $.isNumeric(p)) {
+                result = parseFloat(q) * parseFloat(p);
+            }
+            $("#VTotalModal").val(result);
+
+        });
+
+    });
+  //===============================================================================================================================================================================
+
+    //Cierra modal
+    $(function () {
+
+        $(document).on('click', '#CerrarModal', function () {
+
+            LimpiarModal();
+            $("#nuevoEPPModal").modal('hide');
+
+
+        });
+
+
+
+    });
+    //===============================================================================================================================================================================
+
+    //Limpiar
+    function LimpiarModal() {
+        $("#ItemModal").val('');
+        $("#CantidadModal").val('');
+        $("#PrecioModal").val('');
+        $("#VTotalModal").val('');
+    };
+   //===============================================================================================================================================================================
+    //Abre elemento a eliminar
+    $(function () {
+        $(document).on('click', "#abrireliminar", function () {
+            var row = $(this).closest("tr");   // Finds the closest row <tr>
+            var tds = row.find("td");
+            ID = tds[0].innerText;
+
+            $("#eliminaEPPModal").modal('show');
+            document.getElementById("EPPEliminado").innerHTML = '¿Confirma que desea eliminar  ' + tds[1].innerText + ' de la lista de Elementos de seguridad?';
+        });
+    });
+
+    //Elimina elemento seleccionado
+    $(function () {
+        $(document).on('click', "#EliminaEPP", function () {
+
+            $.ajax({
+                url: "/CotSeguridad/BorrarSeguridad/",
+                type: 'POST',
+                async: false,
+                dataType: 'text',
+                data: {
+                    id: ID,
+                },
+                success: function (data) {
+
+                    $("#eliminaEPPModal").modal('hide');
+                    location.reload();
+                },
+            });
+
+
+        });
+
+    });
+
+
+
+
+</script>
+
+
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval", "~/bundles/jquery", "~/bundles/bootstrap", "~/Content/css")
+
+}

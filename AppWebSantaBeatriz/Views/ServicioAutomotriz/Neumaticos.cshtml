@@ -1,0 +1,487 @@
+﻿@model BibliotecaDeClases.Modelos.ServicioAutomotriz.PagNeumaticosModel
+
+@{
+    ViewBag.Title = "Neumaticos";
+    Layout = "/Views/Shared/_LayoutServAuto.cshtml";
+}
+
+<head>
+   
+    <style>
+        body {
+            background-color: #edeaea;
+        }
+        .contenedor-opcion {
+            height: 100%;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+            border-radius: 8px;
+            color: grey;
+            background-color: white;
+            padding: 5px;
+        }
+            .contenedor-opcion:hover {
+                filter: brightness(85%);
+                cursor:pointer;
+            }
+            .aro{
+                font-size:11vw;
+            }
+        .arom {
+            font-size: 4vh;
+        }
+        .titulo{
+            color:grey;
+        }
+        .ancho {
+            font-size: 3.0vw;
+        }
+        .anchom {
+            font-size: 4vh;
+        }
+        .perfil{
+            font-size:6vw;
+        }
+        .perfilm {
+            font-size: 4vh;
+        }
+        .carousel-control-next-icon, .carousel-control-prev-icon {
+            background-color: black;
+        }
+        .fila-cont-neu {
+            height: 24rem;
+        }
+        .fila-cont-neum {
+            height: 20rem;
+        }
+        .cont-neuma {
+            padding: 15px;
+            background-color: white;
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+            border-radius: 8px;
+            height: 100%;
+            color: grey;
+            font-size: 2vw;
+            font-weight:bold;
+        }
+        .cont-neumam {
+            padding: 15px;
+            background-color: white;
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+            border-radius: 8px;
+            height: 100%;
+            color: grey;
+            font-size: 4vw;
+            font-weight: bold;
+        }
+        .filadetalle{
+            height:16.6666666667%;
+            padding-left:10%;
+            
+        }
+        .filadetalleM {
+            height: 16.6666666667%;
+            padding-left: 5%;
+            font-size: 3.5vw;
+        }
+        .precio {
+            background-color: red;
+            border-radius: 8px;
+            width: min-content;
+            color: white;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        .cesta {
+            background-color: orangered;
+            border-radius: 8px;
+            width: max-content;
+            color: white;
+            padding-left: 1rem;
+            padding-right: 1rem;
+
+        }
+            .cesta:hover {
+                cursor: pointer;
+                filter: brightness(85%);
+                color:white;
+            }
+            
+    </style>
+</head>
+
+  
+    <div class="container-fluid d-flex align-items-center" id="contenedorOpciones" style="display:none">
+
+
+    </div>
+
+
+<script>
+//Variables Globales
+    var dataNeumaticos = @Html.Raw(Json.Encode(Model.Neumaticos));
+    var aros = @Html.Raw(Json.Encode(Model.Aros));
+    var anchos = @Html.Raw(Json.Encode(Model.Anchos));
+    var perfiles = @Html.Raw(Json.Encode(Model.Perfiles));
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    var htop = $('.encabezadoRow').height();
+    var aro = '';
+    var ancho = '';
+    var perfil = '';
+    var carrito = [];
+    if (localStorage.getItem("carrito") != null) {
+        carrito = JSON.parse(localStorage.getItem("carrito"));
+    }
+//Funciones
+    $(document).ready(function () {
+        if (w > 475) {
+            var altura = h - 110;
+            var cols = '';
+            $(aros).each(function (i, item) {
+                cols = cols + `<div class="col-2 h-50"><div class="contenedor-opcion opcionaro" data-aro="${item.Value}"><div class="text-center aro">${item.Text}</div></div></div>`;
+            });
+            var fila = `<div class="row mt-3"><div class="col-12 d-flex justify-content-center mb-3"><h1 class="text-center titulo">Escoja Aro</h1></div>${cols}<div class="col-12 d-flex justify-content-center mt-3"><div id="todos" class="contenedor-opcion w-25"><h1 class="text-center">Ver todos</h1></div></div></div>`;
+            $('#contenedorOpciones').css('height', altura.toString() + 'px').html(fila).fadeIn(1000);
+        }
+        else {
+            var altura = (h - htop) * 0.9;
+            var cols = '';
+            $(aros).each(function (i, item) {
+                cols = cols + `<div class="col-6 mb-3"><div class="contenedor-opcion opcionaro" data-aro="${item.Value}"><div class="text-center arom">${item.Text}</div></div></div>`;
+            });
+            var fila = `<div class="row"><div class="col-12 d-flex justify-content-center mb-3"><h1 class="text-center titulo">Escoja Aro</h1></div>${cols}<div class="col-12 d-flex justify-content-center mt-3"><div id="todos" class="contenedor-opcion w-50"><h1 class="text-center">Ver todos</h1></div></div></div>`;
+            $('#contenedorOpciones').css('height', altura.toString() + 'px').html(fila).fadeIn(1000);
+        }
+       
+    });
+    $(document).on('click', '.opcionaro', function () {
+        var $this = $(this);
+        aro = $this.data('aro');
+        if (w > 475) {
+
+            var cols = '';
+            $(anchos).each(function (i, item) {
+                cols = cols + `<div class="col-3 h-50 mb-3"><div class="contenedor-opcion opcionancho" data-ancho="${item.Value}"><div class="text-center ancho">${item.Text}</div></div></div>`;
+            });
+            var fila = `<div class="row mt-3"><div class="col-12 d-flex justify-content-center mb-3"><h1 class="text-center titulo">Escoja Ancho</h1></div>${cols}<div class="col-12 d-flex justify-content-center mt-3"><div id="todosAro" class="contenedor-opcion w-25"><h1 class="text-center">Ver todos</h1></div></div></div>`;
+            $('#contenedorOpciones').fadeOut(1000, function () {
+                $('#contenedorOpciones').css({ "height": "auto", "margin-top":"10px", "margin-bottom":"10px"}).html(fila).fadeIn(1000);
+            });
+
+        }
+        else {
+
+            var cols = '';
+            $(anchos).each(function (i, item) {
+                cols = cols + `<div class="col-6 mb-3"><div class="contenedor-opcion opcionancho" data-ancho="${item.Value}"><div class="text-center anchom">${item.Text}</div></div></div>`;
+            });
+            var fila = `<div class="row"><div class="col-12 d-flex justify-content-center mb-3"><h1 class="text-center titulo">Escoja Ancho</h1></div>${cols}<div class="col-12 d-flex justify-content-center mt-3"><div id="todosAro" class="contenedor-opcion w-50"><h1 class="text-center">Ver todos</h1></div></div></div>`;
+            $('#contenedorOpciones').fadeOut(1000, function () {
+                $('#contenedorOpciones').css({ "height": "auto", "margin-top": "10px", "margin-bottom": "10px" }).html(fila).fadeIn(1000);
+            });
+
+        }
+    });
+    $(document).on('click', '#todos', function () {
+        
+        llenar(dataNeumaticos);
+    });
+    $(document).on('click','#todosAro', function () {
+        dataNeumaticos = dataNeumaticos.filter(x => x.IDAro == aro);
+        llenar(dataNeumaticos);
+    });
+    $(document).on('click', '#todosAncho', function () {
+        dataNeumaticos = dataNeumaticos.filter(x => x.IDAro == aro && x.IDAncho == ancho);
+        llenar(dataNeumaticos);
+    });
+    $(document).on('click', '.opcionancho', function () {
+        var $this = $(this);
+        ancho = $this.data('ancho');
+       
+        if (w > 475) {
+
+            var cols = '';
+            $(perfiles).each(function (i, item) {
+                cols = cols + `<div class="col-3 h-50 mb-3"><div class="contenedor-opcion opcionperfil" data-perfil="${item.Value}"><div class="text-center perfil">${item.Text}</div></div></div>`;
+            });
+            var fila = `<div class="row mt-3"><div class="col-12 d-flex justify-content-center mb-3"><h1 class="text-center titulo">Escoja Perfil</h1></div>${cols}<div class="col-12 d-flex justify-content-center mt-3"><div id="todosAncho" class="contenedor-opcion w-25"><h1 class="text-center">Ver todos</h1></div></div></div>`;
+            $('#contenedorOpciones').fadeOut(1000, function () {
+                $('#contenedorOpciones').css({ "height": "auto", "margin-top": "10px", "margin-bottom": "10px" }).html(fila).fadeIn(1000);
+            });
+
+        }
+        else {
+
+            var cols = '';
+            $(perfiles).each(function (i, item) {
+                cols = cols + `<div class="col-6 mb-3"><div class="contenedor-opcion opcionperfil" data-perfil="${item.Value}"><div class="text-center perfilm">${item.Text}</div></div></div>`;
+            });
+            var fila = `<div class="row"><div class="col-12 d-flex justify-content-center mb-3"><h1 class="text-center titulo">Escoja Perfil</h1></div>${cols}<div class="col-12 d-flex justify-content-center mt-3"><div id="todosAncho" class="contenedor-opcion w-50"><h1 class="text-center">Ver todos</h1></div></div></div>`;
+            $('#contenedorOpciones').fadeOut(1000, function () {
+                $('#contenedorOpciones').css({ "height": "auto", "margin-top": "10px", "margin-bottom": "10px" }).html(fila).fadeIn(1000);
+            });
+
+        }
+    });        
+    $(document).on('click', '.opcionperfil', function () {
+        var $this = $(this);
+        perfil = $this.data('perfil');
+        dataNeumaticos = dataNeumaticos.filter(x => x.IDAro == aro && x.IDAncho == ancho && x.IDPerfil == perfil );
+        llenar(dataNeumaticos);
+       
+    });
+    function llenar(dataNeumaticos) {
+        if (w > 475) {
+            var neumaticos = '';
+            
+
+            $(dataNeumaticos).each(function (i, item) {
+                var añadido = ' Añadir';
+                if (carrito.some(x => x.ID == item.ID)) {
+                    añadido = ' Añadido';
+                }
+                var fotos = '';
+                $(item.Fotos).each(function (j, foto) {
+                    if (j == 0) {
+                        fotos = fotos + `<div class="carousel-item active h-100"><img src="${foto.URL}"  class="d-block h-100 w-100"></div>`;
+                    }
+                    else {
+                        fotos = fotos + `<div class="carousel-item h-100"><img src="${foto.URL}"  class="d-block h-100 w-100"></div>`;
+                    }
+                });
+                var carousel = `<div id="carouselExampleControls${i}" class="carousel slide h-100" data-bs-ride="carousel">
+                                <div class="carousel-inner h-100">
+                                   ${fotos}
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls${i}" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls${i}" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>`;
+
+                neumaticos = neumaticos + ` <div class="row fila-cont-neu">
+                                  <div class="col-12 p-2 h-100 d-flex justify-content-center">
+                                      <div class="cont-neuma w-75">
+                                          <div class="row h-100">
+                                            <div class="col-5 h-100">
+                                        <div class="row" style="height:85%">
+                                            <div class="col-12 h-100">${carousel}</div>
+                                        </div>
+                                        <div class="row" style="height:15%">
+                                            <div class="col-12"><div class="h-100 d-flex align-items-center justify-content-center"><button type="button" data-id="${item.ID}" class="btn cesta"><div class="h-100 d-flex align-items-center justif-content-around contenidoBtnCesta"><img height="16" width="16" class="me-1" src="/Content/FotoSA/shopping-cart.png">${añadido}</div></button></div></div>
+                                        </div>
+
+                                      </div>
+                                              <div class="col-7">
+                                                  <div class="row filadetalle"><div class="col-12"><img height="40" width="150" src="${item.URLLogo}" /></div></div>
+                                                  <div class="row filadetalle"><div class="col-12">${item.Ancho}/${item.Perfil}R${item.Aro} ${item.IndiceV}</div></div>
+                                                  <div class="row filadetalle"><div class="col-12">Modelo ${item.Modelo}</div></div>
+                                                  <div class="row filadetalle"><div class="col-12"> V. Máx. ${item.VMax} km/h</div></div>
+                                                  <div class="row filadetalle"><div class="col-12"> Origen  ${item.Origen}</div></div>
+                                                  <div class="row filadetalle"><div class="col-12"><div class="precio">${FormateaPeso(item.Precio)}</div></div></div>                      
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>        
+                          </div>`;
+
+            });
+
+
+            $('#contenedorOpciones').fadeOut(1000, function () {
+                $('#mainDiv').css('margin-top', '180px');
+                $('#contenedorOpciones').removeClass('d-flex align-items-center').html(neumaticos).css('height', 'auto').fadeIn(1000);
+                $('#contenedorFiltros').fadeIn(1000).addClass('d-flex');
+            });
+        }
+        else {
+            var neumaticos = '';
+            $(dataNeumaticos).each(function (i, item) {
+                var añadido = ' Añadir';
+                if (carrito.some(x => x.ID == item.ID)) {
+                    añadido = ' Añadido';
+                }
+                var fotos = '';
+                $(item.Fotos).each(function (j, foto) {
+                    if (j == 0) {
+                        fotos = fotos + `<div class="carousel-item active h-100"><img src="${foto.URL}"  class="d-block h-100 w-100"></div>`;
+                    }
+                    else {
+                        fotos = fotos + `<div class="carousel-item h-100"><img src="${foto.URL}"  class="d-block h-100 w-100"></div>`;
+                    }
+                });
+                var carousel = `<div id="carouselExampleControls${i}" class="carousel slide h-100" data-bs-ride="carousel">
+                                <div class="carousel-inner h-100">
+                                   ${fotos}
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls${i}" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls${i}" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>`;
+
+                neumaticos = neumaticos + ` <div class="row fila-cont-neum">
+                          <div class="col-12 p-2 h-100 d-flex justify-content-center">
+                              <div class="cont-neumam">
+                                  <div class="row h-100">
+                                      <div class="col-7 h-100">
+                                        <div class="row" style="height:85%">
+                                            <div class="col-12">${carousel}</div>
+                                        </div>
+                                        <div class="row" style="height:15%">
+                                            <div class="col-12"><div class="h-100 d-flex align-items-center justify-content-center"><button type="button" data-id="${item.ID}" class="btn cesta"><div class="h-100 d-flex align-items-center justif-content-around contenidoBtnCesta"><img height="16" width="16" class="me-1" src="/Content/FotoSA/shopping-cart.png">${añadido}</div></button></div></div>
+                                        </div>
+                                         
+                                      </div>
+                                      <div class="col-5">
+                                          <div class="row filadetalleM"><div class="col-12"><div class="h-100 d-flex align-items-center"><img height="40" style="width:100%" src="${item.URLLogo}" /></div></div></div>
+                                          <div class="row filadetalleM"><div class="col-12"><div class="h-100 d-flex align-items-center">${item.Ancho}/${item.Perfil}R${item.Aro} ${item.IndiceV}</div></div></div>
+                                          <div class="row filadetalleM"><div class="col-12"><div class="h-100 d-flex align-items-center">Modelo ${item.Modelo}</div></div></div>
+                                          <div class="row filadetalleM"><div class="col-12"><div class="h-100 d-flex align-items-center"> V. Máx. ${item.VMax} km/h</div></div></div>
+                                          <div class="row filadetalleM"><div class="col-12"><div class="h-100 d-flex align-items-center"> Origen  ${item.Origen}</div></div></div>
+                                          <div class="row filadetalleM"><div class="col-12"><div class="h-100 d-flex align-items-center"><div class="precio">${FormateaPeso(item.Precio)}</div></div></div></div>
+                                        
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>        
+                  </div>`;
+
+            });
+
+
+            $('#contenedorOpciones').fadeOut(1000, function () {
+                $('#mainDiv').css('margin-top', '180px');
+                $('#contenedorOpciones').removeClass('d-flex align-items-center').html(neumaticos).css('height', 'auto').fadeIn(1000);
+                $('#contenedorFiltros').fadeIn(1000).addClass('d-flex');
+            });
+        }
+    }
+//Carro
+    $(document).on('click', '.cesta', function () {
+        var $this = $(this);
+        if (carrito != null) {
+            carrito = JSON.parse(localStorage.getItem("carrito"));
+        }
+               
+        $this.find('.contenidoBtnCesta').slideUp("slow",function () {
+            $this.find('.contenidoBtnCesta').html('<img height="16" width="16" class="me-1" src="/Content/FotoSA/shopping-cart.png"> Añadido').slideDown();
+        });
+        var id = $this.data('id');
+        if (carrito.some(x => x.ID == id)) {
+            carrito.find(x => x.ID == id).Cantidad = carrito.find(x => x.ID == id).Cantidad + 1;
+        }
+        else {
+            var fila = dataNeumaticos.find(x => x.ID == id);
+            var item = {
+                ID: fila.ID,
+                Cantidad: 1,
+                Item: fila.Ancho + "/" + fila.Perfil + "R" + fila.Aro,
+                Marca: fila.Marca,
+                Foto: fila.Fotos[0].URL,
+                Precio: fila.Precio,
+                Logo: fila.URLLogo,
+                Modelo: fila.Modelo
+            };
+            carrito.push(item);
+        }
+        localStorage.setItem('carrito', JSON.stringify(carrito));
+        actualizarCarro(carrito);
+        //$('.cantidadCarrito').each(function (i, item) { $(item).text(carrito.length.toString()) });
+        //var rows = '';
+        //$(carrito).each(function (i, item) {
+        //    rows = rows + `<div class="row mb-3">
+        //                             <div class="col-3">
+        //                               <img style="height:80px" src="${item.Foto}"/>
+        //                             </div>
+        //                             <div class="col-3">
+                                      
+        //                                 <div class="row h-25">
+        //                                    <div class="col-12">
+        //                                             <img class="w-100" src="${item.Logo}"/>
+        //                                    </div>
+        //                                 </div>
+        //                                 <div class="row h-25">
+        //                                    <div class="col-12 carroText">
+        //                                        ${item.Item}
+        //                                    </div>
+        //                                 </div>
+        //                                 <div class="row h-25">
+        //                                    <div class="col-12 carroText">
+        //                                        ${item.Modelo}
+        //                                    </div>
+        //                                 </div>
+        //                                  <div class="row h-25">
+        //                                    <div class="col-12 carroText">
+        //                                        ${FormateaPeso(item.Precio)}
+        //                                    </div>
+        //                                 </div>
+                                     
+        //                             </div>
+        //                           <div class="col-3 d-flex align-items-center justify-content-around"><div class="btn btn-light btnMenos" data-id="${item.ID}">-</div><div class="w-25 ms-2 me-2 cantidad text-center">${item.Cantidad}</div><div class="btn btn-light btnMas" data-id="${item.ID}">+</div></div>
+        //                           <div class="col-3 d-flex align-items-center"><div class="total carroText">${FormateaPeso(item.Precio * item.Cantidad)}</div></div>
+        //                           <div class="col-12"><hr style="margin-left:10px;margin-right:10px"></div>
+        //                            </div>`;
+
+
+        //});
+
+        //var suma = totalCarrito();
+        //$('.carroDD').each(function (i, item) {
+        //    $(item).html(`<div class="row" style="height:40px;margin-bottom:10px;position:fixed;z-index:9999;">
+        //                            <div class="col-12" style="padding-right: 1.5rem;"><a style="text-decoration:none;padding:5px;width:100%" href="/ServicioAutomotriz/Carrito""><img style="width:100%" src="/Content/FotoSA/alcarro.gif"></a></div>
+        //                          </div>
+        //                            <div class="row" style="margin-top:3rem;"><div class="col-6"><div class="carroText fw-bold" style="margin-left:10px">Item</div></div><div class="col-3 carroText fw-bold">Cantidad</div><div class="col-3 carroText fw-bold">Total</div></div>
+                                 
+        //                          <hr style="margin-left:10px;margin-right:10px;margin-top:0px!important">` + rows +
+        //        `<div class="row">
+        //                           <div class="col-6"></div>
+        //                           <div class="col-3 carroText">Subtotal</div>
+        //                           <div class="col-3 carroText cartSubTotal fw-bold" id="cartSubTotal">${FormateaPeso(suma / 1.19)}</div>
+        //                          </div>
+        //                          <div class="row">
+        //                           <div class="col-6"></div>
+        //                           <div class="col-3 carroText">IVA</div>
+        //                           <div class="col-3 carroText cartIVA fw-bold" id="cartIVA">${FormateaPeso(suma / 1.19 * 0.19)}</div>
+        //                          </div>
+        //                           <div class="row" style="margin-bottom:3rem;">
+        //                           <div class="col-6"></div>
+        //                           <div class="col-3 carroText">Total</div>
+        //                           <div class="col-3 carroText cartTotal fw-bold" id="cartTotal">${FormateaPeso(suma)}</div>
+        //                          </div>
+        //                          <div class="row" style="height:40px;position:fixed;z-index:9999;bottom:5px">
+        //                            <div class="col-12" style="padding-right: 1.5rem;"><a style="text-decoration:none;padding:5px;width:100%" href="/ServicioAutomotriz/Carrito""><img style="width:100%" src="/Content/FotoSA/terminarcompra.gif"></a></div>
+        //                          </div>              `);
+        //});
+
+    });
+    $(document).on('click', '#btnOrdenarPrecioAsc', function () {
+        dataNeumaticos.sort(GetSortOrder('Precio', 'asc'));
+        $('.fila-cont-neu').remove();
+        llenar(dataNeumaticos);
+    });
+    $(document).on('click', '#btnOrdenarPrecioDesc', function () {
+        dataNeumaticos.sort(GetSortOrder('Precio', 'desc'));
+        $('.fila-cont-neu').remove();
+        llenar(dataNeumaticos);
+    });
+    $(document).on('click', '#btnOrdenarAroAsc', function () {
+        dataNeumaticos.sort(GetSortOrder('Aro', 'asc'));
+        $('.fila-cont-neu').remove();
+        llenar(dataNeumaticos);
+    });
+    $(document).on('click', '#btnOrdenarAroDesc', function () {
+        dataNeumaticos.sort(GetSortOrder('Aro', 'desc'));
+        $('.fila-cont-neu').remove();
+        llenar(dataNeumaticos);
+    });
+</script>
+

@@ -1,0 +1,32 @@
+﻿    
+  <form action="/Tareas/editaStEyS/">
+              
+        <input data-val="true" data-val-number="El campo ID debe ser un número." data-val-required="El campo ID es obligatorio." id="ID" name="ID" type="hidden" class="d-none">
+
+        <div class="row">
+            <div class="col-4" >
+                <label class="control-label" for="Item">Item</label>          
+                <input class="form-control" readonly="readonly" id="Item" name="Item" type="text" value="">
+                <span class="field-validation-valid text-danger" data-valmsg-for="Item" data-valmsg-replace="true"></span>
+            </div>
+            <div class="col-2" >
+           <label class="control-label" for="Cantidad">Cantidad</label>
+           <input class="form-control" data-val="true" data-val-number="El campo Cantidad debe ser un número." data-val-required="El campo Cantidad es obligatorio." id="Cantidad" name="Cantidad" type="text" value="">
+            <span class="field-validation-valid text-danger" data-valmsg-for="Cantidad" data-valmsg-replace="true"></span>
+         
+            </div>
+            <div class="col-6" >
+            <label class="control-label" for="Comentarios">Comentarios</label>
+            <textarea class="form-control" id="Comentarios" name="Comentarios" type="text" value=""></textarea>
+            <span class="field-validation-valid text-danger" data-valmsg-for="Comentarios" data-valmsg-replace="true"></span>
+            </div>
+       
+        </div>  
+             <div class="modal-footer gris">
+                <input type="submit" id="btnIngresarEditarEyS" class="btn btn-success" value="Ingresar" />
+            </div>
+     
+    </form>
+
+
+

@@ -1,0 +1,296 @@
+﻿@model AppWebSantaBeatriz.Models.CotizacionModel
+
+@{
+    ViewBag.Title = "EliminaCotizacion";
+}
+
+<h2>EliminaCotizacion</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>CotizacionModel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.IDCotizacion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IDCotizacion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Servicio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Servicio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Fecha)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Fecha)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IDCliente)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IDCliente)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IDSupervisor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IDSupervisor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Detalles)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Detalles)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TiempoEjecucion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TiempoEjecucion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SolicitudPedido)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SolicitudPedido)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NLicitacion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NLicitacion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IDEstado)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IDEstado)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Tasa)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tasa)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IDTipoCotizacion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IDTipoCotizacion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ValidezOferta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ValidezOferta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IDCotizacionPrincipal)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IDCotizacionPrincipal)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CotizacionPrincipal)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CotizacionPrincipal)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalMateriales)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalMateriales)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalPersonal)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalPersonal)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalSeguridad)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalSeguridad)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalEquipos)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalEquipos)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Total)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Total)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalSubCotizaciones)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalSubCotizaciones)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalSubMateriales)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalSubMateriales)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalSubPersonal)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalSubPersonal)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalSubSeguridad)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalSubSeguridad)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalSubEquipos)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalSubEquipos)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Cliente)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Cliente)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Supervisor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Supervisor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Estado)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Estado)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Cantidad)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Cantidad)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Unidad)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Unidad)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreadoPor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreadoPor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreadoEn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreadoEn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EditadoPor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EditadoPor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EditadoEn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EditadoEn)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

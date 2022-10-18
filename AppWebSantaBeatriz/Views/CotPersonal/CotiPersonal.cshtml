@@ -1,0 +1,156 @@
+﻿@model AppWebSantaBeatriz.Models.CotizacionPersonalModel
+
+@{
+    ViewBag.Title = "CotiMaterial";
+}
+
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+</head>
+
+
+<div class="modal fade" id="ModalPersonal" style="margin-left:-10px;padding-left:0px">
+    <div class="modal-dialog" style="margin-left:250px">
+        <div class="modal-content" id="modal-content" style="width:800px;margin-left:0px;padding-left:0px">
+            <div class="modal-header" style="background-color:blue">
+                <h4 class="modal-title expander_style text-white">Personal</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick=""><span aria-hidden="true">&times;</span></button>
+
+            </div>
+            <div class="modal-body">
+
+
+
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <form id="myform">
+
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group form-inline">
+                                    @Html.HiddenFor(model => model.IDCot, new { htmlAttributes = new { @class = "form-control", @style = "width:200px", placeholder = "Item" } })
+
+                                    @Html.LabelFor(model => model.Especialidad, htmlAttributes: new { @class = "sr-only" })
+                                    @Html.DropDownListFor(model => model.Especialidad, new SelectList(Model.ListaEspecialidades, "Value", "Text"), "Especialidad", new { @class = "form-control", @style = "margin-left:5px", @ID = "Esp" })
+                                    @Html.ValidationMessageFor(model => model.Especialidad, "", new { @class = "text-danger" })
+
+                                    @Html.LabelFor(model => model.ValorHH, htmlAttributes: new { @class = "sr-only" })
+                                    @Html.EditorFor(model => model.ValorHH, new { htmlAttributes = new { @class = "form-control", @style = "width:100px;margin-left:5px", placeholder = "Valor HH" } })
+                                    @Html.ValidationMessageFor(model => model.ValorHH, "", new { @class = "text-danger" })
+
+                                    @Html.LabelFor(model => model.Cantidad, htmlAttributes: new { @class = "sr-only" })
+                                    @Html.EditorFor(model => model.Cantidad, new { htmlAttributes = new { @class = "form-control", @style = "width:110px;margin-left:5px", placeholder = "Cantidad" } })
+                                    @Html.ValidationMessageFor(model => model.Cantidad, "", new { @class = "text-danger" })
+
+                                    @Html.LabelFor(model => model.HH, htmlAttributes: new { @class = "sr-only" })
+                                    @Html.EditorFor(model => model.HH, new { htmlAttributes = new { @class = "form-control", @style = "width:75px;margin-left:5px", placeholder = "HH" } })
+                                    @Html.ValidationMessageFor(model => model.HH, "", new { @class = "text-danger" })
+
+                                    @Html.LabelFor(model => model.TotalHH, htmlAttributes: new { @class = "sr-only" })
+                                    @Html.EditorFor(model => model.TotalHH, new { htmlAttributes = new { @class = "form-control", @style = "width:100px;margin-left:5px", placeholder = "TotalHH" } })
+                                    @Html.ValidationMessageFor(model => model.TotalHH, "", new { @class = "text-danger" })
+
+
+
+                                    @Html.LabelFor(model => model.Total, htmlAttributes: new { @class = "sr-only" })
+                                    @Html.EditorFor(model => model.Total, new { htmlAttributes = new { @class = "form-control", @style = "width:75px;margin-left:5px", placeholder = "Total" } })
+                                    @Html.ValidationMessageFor(model => model.Total, "", new { @class = "text-danger" })
+
+
+
+                                    <input type="submit" value="Ingresar" class="btn btn-primary" style="margin-left:10px" />
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </form>
+
+
+                }
+
+            </div>
+            
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<script>
+    $('#Esp').on('change', function (e) {
+        $.post("/CotPersonal/GetValorHH", { id: $("#Esp").val() }, function (data) {
+            $("#ValorHH").val(data.ValorHH);
+        });
+    });
+
+    $(function () {
+
+        $("#Cantidad,#HH").keyup(function (e) {
+
+            var q = $("#Cantidad").val();
+            var p = $("#HH").val();
+            var result = "";
+
+            if (q !== "" && p !== "" && $.isNumeric(q) && $.isNumeric(p)) {
+                result = parseFloat(q) * parseFloat(p);
+            }
+            $("#TotalHH").val(result);
+
+        });
+
+    });
+
+    $('#ModalPersonal').on('hidden.bs.modal', function () {
+        location.reload();
+    })
+
+
+    $(function () {
+
+        $("#HH,#TotalHH").keyup(function (e) {
+
+            var q = $("#TotalHH").val();
+            var p = $("#ValorHH").val();
+            var result = "";
+
+            if (q !== "" && p !== "" && $.isNumeric(q) && $.isNumeric(p)) {
+                result = parseFloat(q) * parseFloat(p);
+            }
+            $("#Total").val(result);
+
+        });
+
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval", "~/bundles/jquery", "~/bundles/bootstrap", "~/Content/css", "~/bundles/ajax")
+
+}
+

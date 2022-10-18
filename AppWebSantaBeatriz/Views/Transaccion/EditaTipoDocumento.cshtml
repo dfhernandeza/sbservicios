@@ -1,0 +1,71 @@
+﻿@model AppWebSantaBeatriz.Models.Transacciones.TipoDocumentoModel
+
+@{
+    ViewBag.Title = "EditaTipoDocumento";
+}
+
+<h2>Editar Tipo de Documento</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="container-fluid fondogris">
+        <form>
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-row align-items-end">
+                <div class="col-md-8">
+                    <div class="form-group">
+
+                        @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="submit" value="Confirmar" class="btn btn-block botonrojo" />
+
+
+                    </div>
+
+                </div>
+
+
+
+            </div>
+
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "control-label" })
+                <textarea id="Descripcion" name="Descripcion" class="form-control" rows="2">@Model.Descripcion</textarea>
+
+                @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+
+            </div>
+
+
+
+
+
+            <div>
+                <a class="btn btn-primary" href="@Url.Action("VerTiposDocumentos")">Volver</a>
+            </div>
+
+
+
+        </form>
+
+
+    </div>
+
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

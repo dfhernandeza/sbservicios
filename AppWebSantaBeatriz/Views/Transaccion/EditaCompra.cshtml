@@ -1,0 +1,1036 @@
+﻿@model BibliotecaDeClases.Modelos.Transacciones.DocumentoModel
+
+@{
+    ViewBag.Title = "NuevaCompra";
+}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+@*<link rel="stylesheet" href="/resources/demos/style.css">*@
+@*<script src="https://code.jquery.com/jquery-1.12.4.js"></script>*@
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $.datepicker.regional['es'] = {
+            closeText: 'Cerrar',
+            prevText: '< Ant',
+            nextText: 'Sig >',
+            currentText: 'Hoy',
+            monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+            dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+            dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
+            dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+            weekHeader: 'Sm',
+            dateFormat: 'dd-mm-yy',
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: ''
+        };
+        $.datepicker.setDefaults($.datepicker.regional['es']);
+        $('.fecha').datepicker();
+
+    });
+</script>
+
+<head>
+    <style>
+        .resaltado:hover {
+            background-color: gold;
+            color: white;
+            cursor: pointer
+        }
+
+        .resalte:hover {
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            cursor: pointer;
+        }
+    </style>
+    @*<script src="~/Scripts/Funciones.js"></script>*@
+
+    <script>
+        var filaseleccionada;
+        var rowseleccionada;
+        var selected = {};
+        $(document).ready(function () {
+            document.getElementById('IDDocumento').focus();
+        });
+        //Suma totales
+        function sumar() {
+            var resultado = 0;
+            $('#TablaDetalle > tbody > tr').not(':first').not(':last').each(function (i, row) {
+                resultado = resultado + parseFloat($(row).find('#Totalrow').val());
+            });
+            return resultado;
+        }
+        function sumarMP() {
+            var resultado = 0;
+            if ($('#contenedorPM input[name="Monto"]').length > 0) {
+                $('#contenedorPM input[name="Monto"]').each(function (i, item) {
+                    if ($(item).val() !== "") {
+                        resultado = resultado + parseFloat($(item).val());
+                    }
+
+                });
+
+            }
+            return resultado;
+        }
+        //Resalta fila seleccionada
+        $(document).on('click', '#TablaDetalle', function (e) {
+            let fila = $(e.target).closest('tr');
+            if ($(e.target).is('tr,td')) {
+                fila.addClass('resalt').css('background-color', 'gold');
+                $('#TablaDetalle').find('tr').not('.resalt').css('background-color', '');
+                fila.removeClass('resalt');
+                filaseleccionada = $(e.target).closest('tr');
+                selected["Origen"] = "Detalle";
+                selected["Selector"] = filaseleccionada;
+
+            }
+
+
+        });
+        $(document).on('click', '#contenedorPM', function (e) {
+            var fila = $(e.target).closest('.row');
+            if (fila.index() !== 0 && !$(e.target).is('input')) {
+                fila.addClass('resalt').css('background-color', 'gold').find('label').css("color", "white");
+                $('#contenedorPM').find('.row').not('.resalt').css('background-color', '').find('label').css("color", "black");
+                fila.removeClass('resalt');
+                rowseleccionada = fila;
+                selected["Origen"] = "MP";
+                selected["Selector"] = rowseleccionada;
+
+            }
+
+        });
+        $(document).click(function (e) {
+
+            if (!$(e.target).attr('id') == "TablaDetalle" || !$(e.target).parents("#TablaDetalle").length) {
+                $('#TablaDetalle tr').css('background-color', '');
+                if (selected.Origen !== "MP") {
+                    selected.Origen = "";
+                    selected.Selector = "";
+                }
+            }
+
+            if (!$(e.target).attr('id') == "contenedorPM" || !$(e.target).parents("#contenedorPM").length) {
+                $('#contenedorPM .row').css('background-color', '').find('label').css('color', 'black');
+                if (selected.Origen !== "Detalle") {
+                    selected.Origen = "";
+                    selected.Selector = "";
+                }
+            }
+
+
+        });
+        //Cantidad * Monto
+        $(function () {
+
+            $("#Cantidadrow,#Preciorow").keyup(function (e) {
+                var row = $(this).closest("tr");
+                var q = parseFloat(row.find("#Cantidadrow").val().replace(",", "."));
+                //var q = $("#Cantidadrow").val();
+                var p = parseFloat(row.find("#Preciorow").val().replace(",", "."));
+                var result = "";
+
+                if (q !== "" && p !== "" && $.isNumeric(q) && $.isNumeric(p)) {
+                    result = parseFloat(q) * parseFloat(p);
+                }
+                row.find("#Totalrow").val(result);
+
+            });
+
+        });
+        //Maneja eventos modal proveedores
+        $(function () {
+
+            $(document).ready(function (e) {
+                $(document).on('click', '#Emisor', function (e) {
+                    e.preventDefault();
+                    $('#ModalProveedores').modal('show');
+
+
+
+                });
+            });
+
+            $('#ModalProveedores').on('shown.bs.modal', function () {
+                $('#buscador').focus();
+            })
+
+
+
+            $(document).on('click', '#CerrarModal', function (e) {
+                $('#ModalProveedores').modal('hide');
+                $('#ModalDetalleCompra').modal('hide');
+            });
+
+
+        });
+        //Obtiene proveedores
+        $(document).ready(function (e) {
+
+            $.ajax({
+                url: "/Proveedores/TopProveedores/",
+                type: 'POST',
+                async: false,
+                dataType: 'text',
+                data: {
+
+                },
+                success: function (data) {
+
+                    data = JSON.parse(data)
+                    $("#TablaProveedores").find("tr:not(:first)").remove();
+                    $(data).each(function (i, item) {
+
+                        var row = $('<tr id="FilaProveedor" class="resaltado"><td style="display:none">' + item.ID + '</td><td style="padding:10px">' + formatrut(item.IDProveedor) + '</td><td style="padding:10px">' + item.NombreFantasia + '</td><td style="padding:10px">' + item.NombreProveedor + '</td></tr>');
+                        $('#TablaProveedores').append(row);
+
+                    });
+
+
+                },
+            });
+
+
+
+        });
+        //Filtra proveedores
+        $(function () {
+
+            $('#buscador').keyup(function (e) {
+
+                $.ajax({
+                    url: "/Proveedores/FiltrarProveedores/",
+                    type: 'POST',
+                    async: false,
+                    dataType: 'text',
+                    data: {
+                        texto: $(this).val()
+                    },
+                    success: function (data) {
+
+                        data = JSON.parse(data)
+                        $("#TablaProveedores").find("tr:not(:first)").remove();
+                        $(data).each(function (i, item) {
+
+                            var row = $('<tr id="FilaProveedor" class="resaltado"><td style="display:none">' + item.IDProveedor + '</td><td style="padding:10px">' + formatrut(item.IDProveedor) + '</td><td style="padding:10px">' + item.NombreFantasia + '</td><td style="padding:10px">' + item.NombreProveedor + '</td></tr>');
+                            $('#TablaProveedores').append(row);
+
+                        });
+
+
+                    },
+                });
+
+
+
+            });
+
+
+        });
+        //Selecciona proveedor
+        $(function () {
+            $(document).on('click', '#FilaProveedor', function (e) {
+                var row = $(this).closest("tr");   // Finds the closest row <tr>
+                var tds = row.find("td");
+                $('#Emisor').val(tds[3].innerText);
+                $('#IDEmisor').val(tds[0].innerText);
+                $('#ModalProveedores').modal('hide');
+            });
+        });
+        //Genera nueva fila
+        var map = { 13: false, 16: false };
+        $(document).on("keyup", "#Preciorow", function (e) {
+            if (e.keyCode in map) {
+                map[e.keyCode] = false;
+            }
+
+        });
+        $(document).on("keydown", "#Preciorow", function (e) {
+            if (e.keyCode in map) {
+                map[e.keyCode] = true;
+                if (map[13] && map[16]) {
+                    var row = $(this).closest('tr');
+                    var fila = row.clone(true);
+                    fila.find('#CecoRow').val(row.find('#CecoRow').val());
+                    fila.find('#CuentaRow').val(row.find('#CuentaRow').val());
+                    fila.find('input').val('');
+                    fila.css('background-color', '');
+                    $("#TablaDetalle").append(fila);
+                    $('#neto').val(FormateaPeso(sumar()));
+                    $('#iva').val(FormateaPeso(sumar() * 0.19));
+                    $('#totaltotal').val(FormateaPeso(sumar() * 1.19));
+                    fila.find('#ItemRow').focus();
+                }
+                else if (map[13]) {
+                    var fila = $(this).closest('tr').clone(true);
+                    fila.find('select').val(0);
+                    fila.find('input').val('');
+                    fila.css('background-color', '');
+                    $("#TablaDetalle").append(fila);
+                    $('#neto').val(FormateaPeso(sumar()));
+                    $('#iva').val(FormateaPeso(sumar() * 0.19));
+                    $('#totaltotal').val(FormateaPeso(sumar() * 1.19));
+                    fila.find('#CecoRow').focus();
+                }
+            }
+        });
+
+        //Elimina fila
+        $(function () {
+            $(document).keyup(function (e) {
+
+                if (e.keyCode == 46 && selected !== undefined) {
+                    var seleccionado = selected.Origen
+                    switch (seleccionado) {
+
+                        case "Detalle":
+                            if ($(selected.Selector).index() !== $("#TablaDetalle tr:last").index() && $('#TablaDetalle tr').length > 2) {
+                                $(selected.Selector).remove();
+                                $('#neto').val(FormateaPeso(sumar()));
+                                $('#iva').val(FormateaPeso(sumar() * 0.19));
+                                $('#totaltotal').val(FormateaPeso(sumar() * 1.19));
+                            }
+
+                            break;
+                        case "MP":
+                            $(selected.Selector).remove();
+                            $('#TotalMP').val(sumarMP());
+                            break;
+                    }
+
+
+
+                }
+
+
+
+
+
+
+            });
+        });
+        //ingresar
+        $(function () {
+            $(document).on('click', '#BtnIngresar', function (e) {
+                // Objeto Documento
+                var documento = {};
+                $('#formDoc .form-control').each(function (i, item) {
+                    var key = $(item).attr('name');
+                    documento[key] = $(item).val();
+                });
+                // Lista de transacciones al débito
+                var transacciones = [];
+                $('#TablaDetalle tr:not(:first)').each(function (i, fila) {
+                    var transaccion = {};
+                    if ($(fila).find('#CecoRow').attr("selectedIndex") !== 0 && $(fila).find('#CuentaRow').attr("selectedIndex") !== 0 && $(fila).find('#Itemrow').val() && $(fila).find('#Cantidadrow').val() && $(fila).find('#Preciorow').val()) {
+                        $(fila).find('.vale').each(function (i, item) {
+                            var key = $(item).attr('name');
+                            transaccion[key] = $(item).val();
+                        });
+                        transacciones.push(transaccion);
+                    }
+
+
+                });
+                //Transacciones al crédito
+                $('#contenedorPM .row:not(:first)').each(function (i, fila) {
+                    var transaccion = {};
+                    $(fila).find('input[name="IDCuentaCR"],input[name="Cantidad"],input[name="Monto"],input[name="CuentaCR"]').each(function (i, item) {
+                        var key = $(item).attr('name');
+                        transaccion[key] = $(item).val();
+                    });
+                    if ($(fila).find('input[name="CuentaCR"]').val() == "CHEQUE") {
+                        var cheque = {};
+                        cheque["Serie"] = $(fila).find('input[name="Serie"').val();
+                        cheque["Fecha"] = $(fila).find('input[name="Fecha"').val();
+                        cheque["IDReceptor"] = $('#IDEmisor').val();
+                        transaccion["Cheque"] = cheque;
+                    }
+                    else if ($(fila).find('input[name="CuentaCR"]').val().substr(0, 18) == "TARJETA DE CRÉDITO") {
+                        var tcredito = {};
+                        tcredito["Cuotas"] = $(fila).find('input[name="Cuotas"').val();
+                        tcredito["Voucher"] = $(fila).find('input[name="Voucher"').val();
+                        transaccion["OperacionTC"] = tcredito;
+                    }
+                    else if ($(fila).find('input[name="CuentaCR"]').val() == "TARJETA DE DÉBITO") {
+                        var tdebito = {};
+                        tdebito["Voucher"] = $(fila).find('input[name="Voucher"').val();
+                        transaccion["OperacionTD"] = tdebito;
+                    }
+                    else if ($(fila).find('input[name="CuentaCR"]').val() == "TRANSFERENCIA ELECTRÓNICA") {
+                        var telectronica = {};
+                        telectronica["IDOperacion"] = $(fila).find('input[name="IDOperacion"').val();
+                        transaccion["OperacionTE"] = telectronica;
+                    }
+                    transacciones.push(transaccion);
+
+                });
+
+                documento["Transacciones"] = transacciones;
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Transaccion/EditarCompra/",
+                    data: JSON.stringify(documento),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        window.location.href = "/Transaccion/VerCompras";
+                    }
+                });
+
+
+
+
+
+            });
+        });
+        //Nueva Fila medio de pago
+        $(document).on('click', '.dropdown-item', function (e) {
+            var newFila;
+            var id = $(e.target).attr('id');
+            var texto = $(e.target).text();
+            if (texto == "EFECTIVO" || texto == "CUENTA CORRIENTE") {
+                newFila =
+                    '<div class="row resalte" style="padding-bottom:10px" id="filaNewPM">\
+                                    <div class="form-group col-md-8">\
+                                        <label style="margin-bottom:5px" for="IDCuentaCR">Medio de Pago</label>\
+                                        <input name="CuentaCR" readonly="readonly" value="' + texto + '" class="form-control"/>\
+                                        <input name="IDCuentaCR" class="form-control d-none" value="' + id + '"/>\
+                                    </div>\
+                                    <div class="form-group col-md-4">\
+                                        <label style="margin-bottom:5px" for="monto">Monto</label>\
+                                        <input class="form-control d-none" name="Cantidad" type="text" value="1" />\
+                                        <input class="form-control foc" autocomplete="off" name="Monto"  type="text" id="monto" />\
+                                    </div>\
+                                     </div>';
+            }
+            else if (texto == "CHEQUE") {
+                newFila =
+                    '<div class="row resalte" style="padding-bottom:10px" id="filaNewPM">\
+                                    <div class="form-group col-md-3">\
+                                        <label style="margin-bottom:5px" for="IDCuentaCR">Medio de Pago</label>\
+                                         <input name="CuentaCR" readonly="readonly" class="form-control" value="' + texto + '" />\
+                                          <input name="IDCuentaCR" class="form-control d-none" value="' + id + '"/>\
+                                    </div>\
+                                     <div class="form-group col-md-3">\
+                                        <label style="margin-bottom:5px" for="monto">Serie</label>\
+                                        <input class="form-control foc" type="text" name="Serie"  />\
+                                    </div>\
+                                     <div class="form-group col-md-3">\
+                                        <label style="margin-bottom:5px" for="monto">Fecha</label>\
+                                        <input class="form-control" type="date" name="Fecha"  />\
+                                    </div>\
+                                    <div class="form-group col-md-3">\
+                                        <label style="margin-bottom:5px" for="monto">Monto</label>\
+                                        <input class="form-control d-none" name="Cantidad" type="text" value="1" />\
+                                        <input class="form-control" autocomplete="off" name="Monto" type="text" id="monto" />\
+                                    </div>\
+                                </div>';
+            }
+            else if (texto.substr(0, 18) == "TARJETA DE CRÉDITO") {
+                newFila =
+                    '<div class="row resalte" style="padding-bottom:10px" id="filaNewPM">\
+                                    <div class="form-group col-md-3">\
+                                        <label style="margin-bottom:5px" for="IDCuentaCR">Medio de Pago</label>\
+                                         <input name="CuentaCR" readonly="readonly" class="form-control" value="' + texto + '" />\
+                                          <input name="IDCuentaCR" class="form-control d-none" value="' + id + '"/>\
+                                    </div>\
+                                      <div class="form-group col-md-3">\
+                                        <label style="margin-bottom:5px" for="Voucher">Voucher</label>\
+                                        <input class="form-control foc" name="Voucher" type="text"  />\
+                                    </div>\
+                                     <div class="form-group col-md-3">\
+                                        <label style="margin-bottom:5px" for="monto">Cuotas</label>\
+                                        <input class="form-control"  name="Cuotas" type="text"  />\
+                                    </div>\
+                                    <div class="form-group col-md-3">\
+                                        <label style="margin-bottom:5px" for="monto">Monto</label>\
+                                        <input class="form-control d-none" name="Cantidad" type="text" value="1" />\
+                                        <input class="form-control" autocomplete="off" name="Monto" type="text" id="monto" />\
+                                    </div>\
+                                </div>';
+            }
+            else if (texto == "TARJETA DE DÉBITO") {
+                newFila =
+                    '<div class="row resalte" style="padding-bottom:10px" id="filaNewPM">\
+                                    <div class="form-group col-md-6">\
+                                        <label style="margin-bottom:5px" for="IDCuentaCR">Medio de Pago</label>\
+                                         <input name="CuentaCR" readonly="readonly" class="form-control" value="' + texto + '" />\
+                                          <input name="IDCuentaCR" class="form-control d-none" value="' + id + '"/>\
+                                    </div>\
+                                      <div class="form-group col-md-3">\
+                                        <label style="margin-bottom:5px" for="Voucher">Voucher</label>\
+                                        <input class="form-control foc" name="Voucher" type="text"  />\
+                                    </div>\
+                                    <div class="form-group col-md-3">\
+                                        <label style="margin-bottom:5px" for="monto">Monto</label>\
+                                        <input class="form-control d-none" name="Cantidad" type="text" value="1" />\
+                                        <input class="form-control" autocomplete="off" name="Monto" type="text" id="monto" />\
+                                    </div>\
+                                </div>';
+            }
+            else if (texto == "TRANSFERENCIA ELECTRÓNICA") {
+                newFila =
+                    '<div class="row resalte" style="padding-bottom:10px" id="filaNewPM">\
+                                    <div class="form-group col-md-6">\
+                                        <label style="margin-bottom:5px" for="IDCuentaCR">Medio de Pago</label>\
+                                         <input name="CuentaCR" readonly="readonly" class="form-control" value="' + texto + '" />\
+                                          <input name="IDCuentaCR" class="form-control d-none" value="' + id + '"/>\
+                                    </div>\
+                                      <div class="form-group col-md-3">\
+                                        <label style="margin-bottom:5px" for="IDOperacion">ID Operación</label>\
+                                        <input class="form-control foc" name="IDOperacion" type="text"  />\
+                                    </div>\
+                                    <div class="form-group col-md-3">\
+                                        <label style="margin-bottom:5px" for="monto">Monto</label>\
+                                        <input class="form-control d-none" name="Cantidad" type="text" value="1" />\
+                                        <input class="form-control" autocomplete="off" name="Monto" type="text" id="monto" />\
+                                    </div>\
+                                </div>';
+            }
+            $('#contenedorPM').append($(newFila));
+            $('#contenedorPM .row').last().find('.foc').focus();
+        });
+        //Cambio medio de pago
+        $(document).on('keyup', '#contenedorPM input[name="Monto"]', function (e) {
+            $('#TotalMP').val(sumarMP());
+        });
+        //Nuevo Proveedor
+        $(document).on('click', '#btnNuevoProveedor', function (e) {
+            $('#modalNuevoProveedor .modal-body').load("/Proveedores/NuevoProveedor #formulario");
+            $('#ModalProveedores').modal('hide');
+            $('#modalNuevoProveedor').modal('show');
+        });
+        $(document).on('click', '#btnIngresarProveedor', function (e) {
+            e.preventDefault();
+            var proveedor = {};
+            $('#formulario .form-control').each(function (i, item) {
+                var key = $(item).attr('name');
+                proveedor[key] = $(item).val();
+            });
+            $.ajax({
+                type: "POST",
+                url: "/Proveedores/NuevoProveedorJS/",
+                data: JSON.stringify(proveedor),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    $('#IDEmisor').val(response);
+                    $('#Emisor').val($('#NombreFantasia').val().toUpperCase());
+                    $('#modalNuevoProveedor').modal('hide');
+                }
+            });
+        })
+        $(document).on('keyup', '#IDProveedor', function (e) {
+
+            rut($('#IDProveedor'));
+
+        });
+        var items = [];
+        $(document).ready(function () {
+            $.ajax({
+                type: "POST",
+                url: "/Transaccion/obtenerItems/",
+                dataType: "json",
+                success: function (response) {
+                    items = response;
+                }
+            });
+        })
+
+        $(document).ready(function () {
+            $('#Itemrow').autocomplete({
+                source: "/Transaccion/obtenerItems/"
+            })
+        });
+
+
+
+    </script>
+
+
+
+
+</head>
+
+
+
+
+
+
+
+
+<h1 style="text-align:center;margin-bottom:30px">Editar Compra</h1>
+
+
+
+<div class="container-fluid fondogris" style="padding-bottom:50px">
+    <div class="row">
+        <div class="col-6">
+            <h2>Documento</h2>
+        </div>
+
+        <div class="col-6">
+            <div class="float-end">
+                <input type="button" class="btn btn-success" id="BtnIngresar" value="Ingresar" />
+            </div>
+
+        </div>
+    </div>
+    <form id="formDoc" class="border-dark" style="margin-top:4px;padding-left:10px;padding-right:40px;">
+
+
+        <div class="row border-dark">
+            <div class="form-group col-md-3">
+                <label for="IDDocumento">ID Documento</label>
+                <input name="ID" value="@Model.ID" class="form-control d-none" />
+                <input name="IDDocumento" class="form-control" value="@Model.IDDocumento" />
+                @*@Html.EditorFor(model => model.IDDocumento, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.ValidationMessageFor(model => model.IDDocumento, "", new { @class = "text-danger" })
+                <input class="form-control  d-none" name="IDTipo" value="1" />
+            </div>
+            <div class="form-group col-md-3">
+                <label for="FechadeNacimiento">Fecha de Emisión</label>
+
+                <input type="text" class="form-control fecha" name="FechaDocumento" value="@Model.FechaDocumento.ToString("dd-MM-yyyy")" id="FechaDocumento" />
+                @Html.ValidationMessageFor(model => model.FechaDocumento, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group col-md-6">
+                <label for="IDEmisor">Emisor</label>
+                <input type="text" name="Emisor" id="Emisor" value="@Model.Emisor" autocomplete="off" class="form-control" />
+                <input type="text" name="IDEmisor" id="IDEmisor" value="@Model.IDEmisor" class="d-none form-control" />
+
+                @Html.ValidationMessageFor(model => model.IDEmisor, "", new { @class = "text-danger" })
+
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="form-group col-6">
+                <label for="descripcion">Descripción</label>
+                <textarea class="form-control" id="Descripcion" name="Descripcion" rows="2" style="text-transform:uppercase">@Model.Descripcion</textarea>
+                @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+
+            </div>
+
+            <div class="form-group col 6">
+                <label for="descripcion">Comentarios</label>
+                <textarea class="form-control" id="Comentarios" name="Comentarios" rows="2" style="text-transform:uppercase">@Model.Comentarios</textarea>
+                @Html.ValidationMessageFor(model => model.Comentarios, "", new { @class = "text-danger" })
+
+            </div>
+
+        </div>
+
+
+
+
+
+
+        <input type="text" id="IDTipo" name="IDTipo" value="@ViewBag.Tipo" style="display:none" />
+
+
+
+
+
+
+        @*<button type="button" id="BtnNuevoItem" class="btn btn-primary">Nuevo Item</button>*@
+
+    </form>
+
+    <h2 style="margin-top:10px">Detalle</h2>
+
+    <table id="TablaDetalle" style="margin-top:15px" class="table">
+        <tr><th style="display:none"></th><th style="display:none"></th><th style="border:none">Centro Costos</th><th style="border:none">Cuenta Destino</th><th style="border:none">Item</th><th style="border:none">Cantidad</th><th style="border:none">Precio</th><th style="border:none">Total</th></tr>
+        @foreach (var fila in Model.Transacciones)
+        {
+            <tr class="resalte">
+                <td style="display:none"></td>
+                <td style="display:none"></td>
+                <td width="30%">
+                    <select style="font-size:13px" id="CecoRow" name="IDCECO" class="form-control vale">
+                        <option value="0">-Seleccionar-</option>
+                        @foreach (var row in ViewBag.ListaCECOs)
+                        {
+                            if (fila.IDCECO.ToString() == row.Value)
+                            {
+                                <option selected="selected" value="@row.Value">@row.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@row.Value">@row.Text</option>
+                            }
+
+                        }
+                    </select>
+                </td>
+
+                <td width="15%">
+                    <select style="font-size:13px" id="CuentaRow" name="IDCuentaDB" class="form-control vale">
+                        <option value="0">-Seleccionar-</option>
+                        @foreach (var row in ViewBag.ListaCuentaDestino)
+                        {
+                            if (fila.IDCuentaDB.ToString() == row.Value)
+                            {
+                                <option selected="selected" value="@row.Value">@row.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@row.Value">@row.Text</option>
+                            }
+                        }
+                    </select>
+                </td>
+                <td>
+                    <input style="text-transform:uppercase;font-size:13px" value="@fila.Item" name="Item" id="Itemrow" type="text" class="form-control vale" />
+
+                </td>
+
+                <td width="7%">
+                    <input id="Cantidadrow" name="Cantidad" style="font-size:13px" value="@fila.Cantidad" type="text" class="form-control vale" />
+
+                </td>
+                <td class="resalte" width="10%">
+                    <input id="Preciorow" style="font-size:13px" name="Monto" value="@fila.Monto" type="text" class="form-control vale" />
+
+                </td>
+
+                <td width="10%">
+                    <input style="font-size:13px" id="Totalrow" value="@((fila.Cantidad * fila.Monto))" type="text" class="form-control" />
+
+                </td>
+            </tr>
+        }
+
+
+
+        <tr class="resalte">
+            <td style="display:none"></td>
+            <td style="display:none"></td>
+            <td width="30%">
+                <select style="font-size:13px" id="CecoRow" name="IDCECO" class="form-control vale">
+                    <option value="0">-Seleccionar-</option>
+                    @foreach (var row in ViewBag.ListaCECOs)
+                    {
+                        <option value="@row.Value">@row.Text</option>
+                    }
+                </select>
+            </td>
+
+            <td width="15%">
+                <select style="font-size:13px" id="CuentaRow" name="IDCuentaDB" class="form-control vale">
+                    <option value="0">-Seleccionar-</option>
+                    @foreach (var row in ViewBag.ListaCuentaDestino)
+                    {
+                        <option value="@row.Value">@row.Text</option>
+                    }
+                </select>
+            </td>
+            <td>
+                <input style="text-transform:uppercase;font-size:13px" name="Item" id="Itemrow" type="text" class="form-control vale" />
+
+            </td>
+
+            <td width="7%">
+                <input id="Cantidadrow" name="Cantidad" style="font-size:13px" type="text" class="form-control vale" />
+
+            </td>
+            <td class="resalte" width="10%">
+                <input id="Preciorow" style="font-size:13px" name="Monto" type="text" class="form-control vale" />
+
+            </td>
+
+            <td width="10%">
+                <input style="font-size:13px" id="Totalrow" type="text" class="form-control" />
+
+            </td>
+        </tr>
+
+    </table>
+    @{ var suma = Model.Transacciones.Where(x => x.CuentaDB != null).Sum(x => x.Monto * x.Cantidad);}
+    <div class="row" style="border-bottom:solid;border-width:1px;border-color:#dee2e6;padding-bottom:10px;margin-left:2px;margin-right:2px">
+        <div class="col-4">
+            <div class="d-flex justify-content-center">
+                <label style="margin-right:5px" for="neto">Neto:  </label>
+                <input id="neto" style="width:148px" value="@suma.ToString("C")" name="Neto" type="text" class="form-control" />
+            </div>
+
+        </div>
+        <div class="col-4">
+            <div class="d-flex justify-content-center">
+                <label style="margin-right:5px" for="neto">IVA:  </label>
+                <input id="iva" style="width:148px" type="text" value="@((suma * 0.19m).ToString("C"))" class="form-control" />
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="d-flex justify-content-center">
+                <label style="margin-right:5px" for="totaltotal">Total:  </label>
+                <input id="totaltotal" style="width:148px" type="text" value="@((suma * 1.19m).ToString("C"))" class="form-control" />
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid" style="margin-top:25px">
+        <div class="row">
+            <div class="col-10" id="contenedorPM">
+                <div class="row" style="margin-bottom:10px">
+                    <div class="col-2">
+                        <div class="dropdown">
+                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="btnNuevoMP" data-bs-toggle="dropdown" aria-expanded="false">
+                                Añadir Medio de Pago
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                @foreach (var item in ViewBag.ListaMedioPago)
+                                {
+                                    <li><div id="@item.Value" class="dropdown-item" href="#">@item.Text</div></li>
+                                }
+
+                            </ul>
+                        </div>
+
+                    </div>
+                    <div class="col-2 offset-5"><div class="d-flex align-content-end">Total:</div></div>
+                    <div class="col-3"><input id="TotalMP" class="form-control" /></div>
+                </div>
+                @{ if (Model.Efectivos.Count > 0)
+                    {
+
+                        foreach (var item in Model.Efectivos)
+                        {
+                            <div class="row resalte" style="padding-bottom:10px" id="filaNewPM">
+                                <div class="form-group col-md-8">
+                                    <label style="margin-bottom:5px" for="IDCuentaCR">Medio de Pago</label>
+                                    <input name="CuentaCR" readonly="readonly" value="' EFECTIVO'" class="form-control" />
+                                    <input name="IDCuentaCR" class="form-control d-none" value="@item.IDCuentaCR" />
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label style="margin-bottom:5px" for="monto">Monto</label>
+                                    <input class="form-control d-none" name="Cantidad" type="text" value="1" />
+                                    <input class="form-control" autocomplete="off" name="Monto" value="@item.Monto;" type="text" id="monto" />
+                                </div>
+                            </div>
+                        }
+
+                    }
+                    else if (Model.TDebitos.Count > 0)
+                    {
+                        foreach (var item in Model.TDebitos)
+                        {
+                            <div class="row resalte" style="padding-bottom:10px" id="filaNewPM">
+
+                                <div class="form-group col-md-6">
+
+                                    <label style="margin-bottom:5px" for="IDCuentaCR">Medio de Pago</label>
+                                    <input name="CuentaCR" readonly="readonly" class="form-control" value="TARJETA DE DÉBITO" />
+                                    <input name="IDCuentaCR" class="form-control d-none" value="@item.IDCuentaCR" />
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label style="margin-bottom:5px" for="Voucher">Voucher</label>
+                                    <input class="form-control" name="Voucher" type="text" value="@item.Voucher" />
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label style="margin-bottom:5px" for="monto">Monto</label>
+                                    <input class="form-control d-none" name="Cantidad" type="text" value="1" />
+                                    <input class="form-control" autocomplete="off" value="@item.Monto" name="Monto" type="text" id="monto" />
+                                </div>
+                            </div>
+                        }
+                    }
+                    else if (Model.TCreditos.Count > 0)
+                    {
+                        foreach (var item in Model.TCreditos)
+                        {
+                            <div class="row resalte" style="padding-bottom:10px" id="filaNewPM">
+                                <div class="form-group col-md-3">
+                                    <label style="margin-bottom:5px" for="IDCuentaCR">Medio de Pago</label>
+                                    <input name="CuentaCR" readonly="readonly" class="form-control" value="TARJETA DE CRÉDITO" />
+                                    <input name="IDCuentaCR" class="form-control d-none" value="@item.IDCuentaCR" />
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label style="margin-bottom:5px" for="Voucher">Voucher</label>
+                                    <input class="form-control" name="Voucher" value="@item.Voucher" type="text" />
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label style="margin-bottom:5px" for="monto">Cuotas</label>
+                                    <input class="form-control" name="Cuotas" value="@item.Cuotas" type="text" />
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label style="margin-bottom:5px" for="monto">Monto</label>
+                                    <input class="form-control d-none" name="Cantidad" type="text" value="1" />
+                                    <input class="form-control" autocomplete="off" value="@item.Monto" name="Monto" type="text" id="monto" />
+                                </div>
+                            </div>
+                        }
+                    }
+                    else if (Model.Cheques.Count > 0)
+                    {
+                        foreach (var item in Model.Cheques)
+                        {
+                            <div class="row resalte" style="padding-bottom:10px" id="filaNewPM">
+
+                                <div class="form-group col-md-3">
+                                    <label style="margin-bottom:5px" for="IDCuentaCR">Medio de Pago</label>
+                                    <input name="CuentaCR" readonly="readonly" class="form-control" value="Cheque" />
+                                    <input name="IDCuentaCR" class="form-control d-none" value="@item.IDCuentaCR" />
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label style="margin-bottom:5px" for="monto">Serie</label>
+                                    <input class="form-control" type="text" value="@item.Serie" name="Serie" />
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label style="margin-bottom:5px" for="monto">Fecha</label>
+                                    <input class="form-control fecha" value="@item.Fecha.ToString("dd-MM-yyyy")" type="text" name="Fecha" />
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label style="margin-bottom:5px" for="monto">Monto</label>
+                                    <input class="form-control d-none" name="Cantidad" type="text" value="1" />
+                                    <input class="form-control" value="@item.Monto" autocomplete="off" name="Monto" type="text" id="monto" />
+                                </div>
+                            </div>
+                        }
+                    }
+                    else if (Model.OpTElectronicas.Count > 0)
+                    {
+                        foreach (var item in Model.OpTElectronicas)
+                        {
+                            <div class="row resalte" style="padding-bottom:10px" id="filaNewPM">
+                                <div class="form-group col-md-6">
+                                    <label style="margin-bottom:5px" for="IDCuentaCR">Medio de Pago</label>
+                                    <input name="CuentaCR" readonly="readonly" class="form-control" value="TRANSFERENCIA ELECTRÓNICA" />
+                                    <input name="IDCuentaCR" class="form-control d-none" value="@item.IDCuentaCR" />
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label style="margin-bottom:5px" for="IDOperacion">ID Operación</label>
+                                    <input class="form-control" name="IDOperacion" value="@item.IDOperacion" type="text" />
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label style="margin-bottom:5px" for="monto">Monto</label>
+                                    <input class="form-control d-none" name="Cantidad" type="text" value="1" />
+                                    <input class="form-control" autocomplete="off" name="Monto" value="@item.Monto" type="text" id="monto" />
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<div class="modal fade" id="ModalProveedores" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="width: 900px;">
+            <div class="modal-header btn-success">
+                <h5 class="modal-title" id="exampleModalLabel">Proveedores</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="container-fluid">
+                    <div class="row align-items-center">
+                        <div class="col-6">
+                            <button id="btnNuevoProveedor" class="btn btn-primary">Nuevo Proveedor</button>
+                        </div>
+                        <div class="col-6">
+                            <div class="float-end" style="margin-bottom:20px">
+                                <label>Buscar: </label>  <input id="buscador" autocomplete="off" class="form-control" style="width:300px" type="text" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <table id="TablaProveedores" class="table" style="width:100%">
+                        <tr><th>Rut</th><th>Nombre Fantasía</th><th>Razón Social</th></tr>
+                    </table>
+
+
+                </div>
+
+
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modalNuevoProveedor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="width: 900px;">
+            <div class="modal-header btn-success">
+                <h5 class="modal-title" id="exampleModalLabel">Nuevo Proveedor</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+
+
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

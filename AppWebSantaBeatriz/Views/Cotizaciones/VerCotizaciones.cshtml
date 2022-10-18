@@ -1,0 +1,114 @@
+﻿@model IEnumerable<AppWebSantaBeatriz.Models.CotizacionModel>
+
+@{
+    ViewBag.Title = "VerCotizaciones";
+}
+<link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+<style>
+    .encabezado {
+        background: rgb(4,0,255);
+        background: linear-gradient(37deg, rgba(4,0,255,1) 10%, rgba(255,0,44,1) 100%);
+    }
+   
+    /*.controls{
+        height:1vw;
+    }*/
+   /* .btnedit{
+        padding:1px 1px 1px 1px;
+        font-size:2px;
+
+    }*/
+   @@media
+    (max-width: 475px) {
+       /* td {
+            font-size: 2vw !important;
+            padding: 4px !important;
+        }*/
+        table{
+            width:800px!important;
+        }
+   
+   }
+</style>
+
+    <h2 class="margenes">Cotizaciones</h2>
+
+    <p style="font-size:large">
+
+        <a href="@Url.Action("Crear", new {idcotiprincipal = 0, idcliente = 0, principal = true})" class="btn btn-danger">Nueva</a>
+
+
+    </p>
+    <div style="overflow-y:auto;padding-bottom:30px">
+        <table class="tabla">
+
+            <tr class="encabezado">
+                <th>
+                    @Html.DisplayNameFor(model => model.Cliente)
+                </th>
+                <th style="width:30%">
+                    @Html.DisplayNameFor(model => model.Servicio)
+                </th>
+                <th style="width:10%">
+                    @Html.DisplayNameFor(model => model.Fecha)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.Total)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.Supervisor)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Estado)
+                </th>
+                <th style="width:25%"></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Cliente)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Servicio)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Fecha)
+                    </td>
+
+                    <td>
+                        @item.Total.ToString("$#,##0")
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Supervisor)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Estado)
+                    </td>
+
+                    <td>
+                        <div class="d-flex justify-content-around">
+                            <a class="btn btn-success btnedit" href="@Url.Action("EditarCoti","Cotizaciones", new { id = item.ID })">
+                                <img class="controls" src="~/Content/Pictures/editar.png" />
+                            </a>
+                            <a class="btn btn-danger btnedit" href="@Url.Action("VerCotizacion","Cotizaciones", new { id = item.ID })">
+                                <img class="controls" src="~/Content/Pictures/detail.png" />
+                            </a>
+                            <a class="btn btn-primary btnedit" href="@Url.Action("EliminaCotizacion","Cotizaciones", new { id = item.ID })">
+                                <img class="controls" src="~/Content/Pictures/delete.png" />
+                            </a>
+                        </div>
+
+
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+    </div>

@@ -1,0 +1,56 @@
+﻿@model BibliotecaDeClases.Modelos.ServicioAutomotriz.CategoriaMarcaModel
+
+@{
+    ViewBag.Title = "EditarCategoriaMarca";
+}
+<head>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <style>
+        .error {
+            color: red
+        }
+
+        input, textarea {
+            text-transform: uppercase
+        }
+    </style>
+</head>
+<h2 class="text-center">Editar Categoria Marca</h2>
+<div class="container-fluid">
+    <form method="post" action="@Url.Action("EditarCategoriaMarca")">
+        <div class="row">
+            <div class="col-md-12">
+                <label class="form-label">Categoría</label>
+                <input class="d-none" name="ID" value="@Model.ID" />
+                <input class="form-control" value="@Model.Categoria" name="Categoria" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <label class="form-label">Descripción</label>
+                <textarea name="Descripcion" class="form-control">@Model.Descripcion</textarea>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <input class="btn btn-outline-success" type="submit" value="Ingresar" />
+            </div>
+        </div>
+    </form>
+
+</div>
+<script>
+    $(document).ready(function () {
+        $('#nuevaCategoriaMarcaForm').validate({
+            rules: {
+                Categoria: "required",
+                Descripcion: "required"
+            },
+            messages: {
+                Categoria: "Debe proporcionar una categoría",
+                Descripcion: "Debe proporcionar una descripción"
+            }
+        });
+    });
+</script>

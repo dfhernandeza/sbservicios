@@ -1,0 +1,75 @@
+﻿@model IEnumerable<BibliotecaDeClases.Modelos.Transacciones.TimeSheetModel>
+
+@{
+    ViewBag.Title = "ResumenHHServicio";
+}
+
+<h2>Resumen HH Servicio</h2>
+
+@{ var fechas = Model.Select(x => x.Fecha).Distinct();
+    var empleados = Model.Select(x => x.Empleado).Distinct();
+    
+    
+    
+    }
+<style>
+    .fuentefila {
+        font-size: 10px;
+        font-weight: bold;
+        
+    }
+    .fuentefilas{
+        font-size:10px;
+        font-weight:bold;
+        background-color:lightpink!important
+    }
+    .fuentesum {
+        font-size: 10px;
+    }
+    .filatotales {
+        background-color: aliceblue;
+        font-size: 10px;
+        font-weight: bold
+    }
+
+</style>
+<table class="table">
+    <tr>
+        <th class="fuentefila">
+            Empleado
+        </th>
+        @foreach (var item in fechas)
+        {
+            <th data-bs-toggle="tooltip" data-bs-placement="top" title="@item.ToString("dddd")" class="fuentefila">@item.ToString("dd-MM")</th>
+        }
+    </tr>
+    @foreach (var item in empleados)
+    {
+        <tr>
+            <td class="fuentefilas">@item</td>
+            @foreach (var objeto in fechas)
+            {
+                <td data-bs-toggle="tooltip" data-bs-placement="top" title="@(Model.Where(y=>y.Empleado == item & y.Fecha == objeto).Sum(x=>x.HorasTotales).ToString() + " Horas" )" class="fuentesum">@Model.Where(y=>y.Empleado == item & y.Fecha == objeto).Sum(x=>x.ValorHH).ToString("C")</td>
+            }
+
+        </tr>
+    }
+<tr class="filatotales">
+    <td class="fuentefila">Total</td>
+    @foreach (var item in fechas)
+    {
+<td >
+    @Model.Where(y => y.Fecha == item).Sum(x => x.ValorHH).ToString("C")
+</td>
+    }
+</tr>
+   
+
+
+</table>
+
+<script>
+    $(document).ready(function () {
+        $('[data-bs-toggle="tooltip"]').tooltip();
+    });
+</script>

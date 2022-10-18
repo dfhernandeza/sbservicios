@@ -1,0 +1,162 @@
+﻿@model AppWebSantaBeatriz.Models.Transacciones.CuentaModel
+
+@{
+    ViewBag.Title = "NuevaCuenta";
+}
+
+<h2 style="margin-top:20px;margin-bottom:20px">Nueva Cuenta</h2>
+<script>
+ 
+ 
+
+    $(document).ready(function (e) {
+
+        $.ajax({
+            url: "/Transaccion/LoadTiposdeCuentas/",
+            type: 'POST',
+            async: false,
+            dataType: 'text',
+            data: {
+                
+            },
+            success: function (data) {
+
+                data = JSON.parse(data);
+                $(data).each(function (i, item) {
+
+                        $('#IDTipo').append(
+                            $('<option data-toggle="tooltip" data-placement="top" title="'+ item.Descripcion +'"></option>').val(item.ID).html(item.Nombre)
+                        );
+                });
+                
+                $('[data-toggle="tooltip"]').tooltip()
+
+            },
+        });
+
+        $(document).on('mouseover', '#algo', function (e) {
+            $('[data-toggle="tooltip"]').tooltip();
+            
+        });
+        
+
+        $('#IDSubTipo option').each(function (i) {
+            if (i > 0) {
+                var esto = $(this)
+                $.ajax({
+                    url: "/Transaccion/LookSubTipoCuenta/",
+                    type: 'POST',
+                    async: false,
+                    dataType: 'text',
+                    data: {
+                        id: $(this).val()
+                    },
+                    success: function (data) {
+
+                        data = JSON.parse(data);
+
+
+                        esto.attr('title', data.Descripcion);
+
+
+                    },
+                });
+                
+            }
+
+
+        });
+
+
+
+ 
+
+               
+    });
+   
+
+
+
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="container-fluid fondogris">
+        <form>
+            <div class="row align-items-end">
+                <div class="form-group col-md-4">
+                    @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                    @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.Tipo, htmlAttributes: new { @class = "control-label" })
+
+                    <select id="IDTipo" name="IDTipo" class="form-control">
+                        <option>-Seleccionar-</option>
+
+
+                    </select>
+
+
+                  @Html.ValidationMessageFor(model => model.Tipo, "", new { @class = "text-danger" })
+
+                </div>
+                <div class="form-group col-md-3">
+                    @Html.LabelFor(model => model.SubTipo, htmlAttributes: new { @class = "control-label" })
+                    <select class="form-control" id="IDSubTipo" name="IDSubTipo">
+                        <option value="">-Seleccionar-</option>
+                        @foreach (var row in Model.SubTiposDeCuentas)
+                        {
+                            <option id="algo"   data-toggle="tooltip" data-placement="top"  value="@row.Value">@row.Text</option>
+                        }
+                    </select>
+                   
+                    @Html.ValidationMessageFor(model => model.IDSubTipo, "", new { @class = "text-danger" })
+
+                </div>
+                <div class="form-group col-md-2">
+
+                    <input type="submit" value="Ingresar" class="btn btn-block botonrojo" />
+
+                </div>
+
+            </div>
+
+            <div class="row align-items-end">
+                <div class="form-group col-md-12">
+                    @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "control-label" })
+                    <textarea name="Descripcion" style="text-transform:uppercase" id="Descripcion" class="form-control" rows="2"></textarea>
+                    @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+
+                </div>
+
+
+            </div>
+
+           
+
+
+            <div style="margin-top:15px">
+                <a class="btn btn-primary" href="@Url.Action("VerCuentas")">Volver</a>
+                
+            </div>
+
+
+
+        </form>
+
+
+    </div>
+
+ 
+
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,403 @@
+﻿@model BibliotecaDeClases.Modelos.ServicioAutomotriz.TiendaModel
+
+@{
+    ViewBag.Title = "Tienda";
+    Layout = "/Views/Shared/_LayoutServAuto.cshtml";
+}
+<head>
+    <script src="~/Scripts/Funciones.js"></script>
+    <style>
+        .contenedor-producto {           
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+            border-radius:8px;
+            margin-bottom:24px;
+            color:grey;
+            background-color:white;
+            padding-bottom:10px;
+        }
+        .contenedor-opcion {
+            height: 100%;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+            border-radius: 8px;
+            color: grey;
+            background-color: white;
+            padding:5px;
+
+        }
+        .contenedor-opcion:hover{
+            cursor:pointer;
+            opacity: 0.6;
+        }
+        .contenedor-productos{
+            margin-top:3rem;
+        }
+        .carousel-control-next-icon  {
+            background-color: lightgray;
+
+        }
+        .carousel-control-prev-icon {
+            background-color: lightgray;
+        }
+        .lateral {
+
+        }
+        .superior {
+            height: 4rem;
+
+        }
+        .principal {
+
+        }
+        body{
+            background-color:#edeaea;
+        }
+        @@media (max-width: 475px) {
+            .imgmobil {
+                display:block;
+                height:100%;
+                width:100%;
+            }
+            .imgdesktop{
+                display:none;
+            }
+        }
+            @@media (min-width: 475px) {
+                .imgmobil {
+                    display: none;
+                }
+                .imgdesktop {
+                    display: block;
+                    height: 100%;
+                    width: 100%;
+                }
+            }
+
+        .precio {
+            background-color: red;
+            border-radius: 8px;
+            width: min-content;
+            color: white;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        .añadir {
+            background-color: orangered;
+            border-radius: 8px;
+            width: min-content;
+            color: white;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+            .añadir:hover {
+                cursor: pointer;
+                filter: brightness(85%);
+                color: white;
+            }
+        .filtros{
+            height:4rem;
+        }
+    </style>
+</head>
+<div class="row filtros" style="display:none">
+    <div class="col-12">
+
+    </div>
+</div>
+<div class="container-fluid mt-3" id="contenedorProductos" style="display:none">
+    <div class="row">
+
+    </div>
+
+
+
+</div>
+<div class="container-fluid" id="contenedorOpciones" style="display:none;margin-top:7rem!important">
+
+
+
+    
+</div>
+
+<script>
+    var data = @Html.Raw(Json.Encode(Model.Productos));
+    var opciones = @Html.Raw(Json.Encode(Model.FotosOpciones));
+    var i = 0;
+    var a = [];
+    var carrito = [];
+    if (localStorage.getItem("carrito") != null) {
+        carrito = JSON.parse(localStorage.getItem("carrito"));
+    }
+    function filtro(categoria) {
+        if (categoria == 'FILTROS') {
+            data = data.filter(x => x.Categoria == 'FILTROS DE AIRE' || x.Categoria == 'FILTROS DE COMUSTIBLE' || x.Categoria == 'FILTROS DE ACEITE');
+        }
+        else if (categoria == 'NEUMATICOS') {
+            
+        }
+        else {
+            data = data.filter(x => x.Categoria == categoria);
+        }
+        
+        $('#contenedorOpciones').empty();
+            while (i < 50 && i < data.length) {
+                var fotos = '';
+                $(data[i].Fotos).each(function (j, item) {
+                    if (j == 0) {
+                        fotos = fotos + `<div class="carousel-item active"><div class="d-flex justify-content-center"><img class="h-100" src="${item.URL}"/></div></div>`;
+                    }
+                    else {
+                        fotos = fotos + `<div class="carousel-item"><div class="d-flex justify-content-center"><img class=" h-100" src="${item.URL}"/></div></div>`;
+                    }
+                });
+                var carousel = `<div id="carouselExampleControls${i}" class="carousel slide" data-bs-ride="carousel">
+                              <div class="carousel-inner">
+                                    ${fotos}
+                              </div>
+                              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls${i}" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                              </button>
+                              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls${i}" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                              </button>
+                            </div>`;
+                var html = `<div class="col-md-3">
+                          <div class="contenedor-producto">
+                             <div class="row">
+                                <div class="col-12 text-center mt-2 fw-bold">${data[i].Nombre}</div>
+                             </div>
+                             <div class="row">
+                                <div class="col-12">${carousel}</div>
+                             </div>
+                           <div class="row mt-3">
+                                <div class="col-12 d-flex justify-content-center"><div class="precio">${FormateaPeso(data[i].Precio)}</div></div>
+                             </div>
+                             <div class="row mt-3">
+                                <div class="col-12 d-flex justify-content-center"><button type="button" data-id="${data[i].ID}" class="btn añadir"><div class="h-100 d-flex align-items-center justif-content-around contenidoBtnCesta"><img height="16" width="16" class="me-1" src="/Content/FotoSA/shopping-cart.png">Añadir</div></button></div>
+                             </div>
+                            
+                         
+                         </div>
+                        </div>`;
+
+
+                if (i == 0) {
+                    $('#contenedorProductos > .row').html(html);
+                }
+                else {
+                    $('#contenedorProductos > .row').append(html);
+                }
+
+                i++;
+
+            }
+        $('.filtros').css('display', 'block');
+        $('#contenedorProductos').fadeIn(1000);
+        
+    }
+    $(function () {
+        var h = window.innerHeight;
+        var w = window.innerWidth;
+        if (w < 475) {
+            var html = `<div class="row h-50 mb-3">
+                         <div class="col-6 h-100">
+                             <div class="contenedor-opcion" data-categoria="LUBRICANTES">
+                                 <div class="row h-75">
+                                     <div class="col-12 d-flex justify-content-center h-100">                                       
+                                       <img class="imgmobil" src="${opciones.find(x=>x.Nombre=="LUBRICANTE MOBIL").URL}" />
+                                     </div>
+                                 </div>
+                                 <div class="row h-25">
+                                     <div class="col-12 d-flex align-content-center justify-content-center">
+                                         <div class="text-center mt-auto mb-auto fw-bold ">Lubricantes</div>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                         <div class="col-6 h-100">
+                             <div class="contenedor-opcion" data-categoria="FILTROS">
+                                 <div class="row h-75">
+                                     <div class="col-12 d-flex justify-content-center h-100">
+                                         <img class="imgmobil" src="${opciones.find(x => x.Nombre == "FILTROS AIRE MOBIL").URL}" />
+                                     </div>
+                                 </div>
+                                 <div class="row h-25">
+                                     <div class="col-12 d-flex align-content-center justify-content-center">
+                                         <div class="text-center mt-auto mb-auto fw-bold ">Filtros</div>
+                                     </div>
+                                 </div>
+
+                             </div>
+                         </div>
+                     </div>
+                     <div class="row h-50">
+                        <div class="col-6 h-100">
+                            <div class="contenedor-opcion" data-categoria="FILTROS DE COMBUSTIBLE">
+                                 <div class="row h-75">
+                                     <div class="col-12 d-flex justify-content-center h-100">
+                                         <img class="imgmobil" src="${opciones.find(x => x.Nombre == "FILTRO COMBUSTIBLE MOBIL").URL}" />
+                                     </div>
+                                 </div>
+                                 <div class="row h-25">
+                                     <div class="col-12 d-flex align-content-center justify-content-center">
+                                         <div class="text-center mt-auto mb-auto fw-bold ">Filtros de Combustible</div>
+                                     </div>
+                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-6 h-100">
+                            <div class="contenedor-opcion" data-categoria="NEUMATICOS">
+                                      <div class="row h-75">
+                                     <div class="col-12 d-flex justify-content-center h-100">
+                                         <img class="imgmobil" src="${opciones.find(x => x.Nombre == "NEUMATICO MOBIL").URL}" />
+                                     </div>
+                                 </div>
+                                 <div class="row h-25">
+                                     <div class="col-12 d-flex align-content-center justify-content-center">
+                                         <div class="text-center mt-auto mb-auto fw-bold ">Neumáticos</div>
+                                     </div>
+                                 </div>
+                            </div>
+                        </div>
+                     </div>`;
+            $('#contenedorOpciones').html(html);
+            var hcontenedor = h - 140;
+
+            $('#contenedorOpciones').css('height', hcontenedor.toString() + 'px');
+            $('#contenedorOpciones').fadeIn(1000);
+        }
+        else {
+            var html = `<div class="row mb-3 h-75">
+                         <div class="col-3 h-100">
+                             <div class="contenedor-opcion" data-categoria="LUBRICANTES">
+                                 <div class="row h-75">
+                                     <div class="col-12 d-flex justify-content-center h-100">
+                                       <img class="imgdesktop" src="${opciones.find(x => x.Nombre == "LUBRICANTE DESKTOP").URL}" />
+                                     </div>
+                                 </div>
+                                 <div class="row h-25">
+                                     <div class="col-12 d-flex align-content-center justify-content-center">
+                                         <div class="text-center mt-auto mb-auto fw-bold ">Lubricantes</div>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                         <div class="col-3 h-100">
+                             <div class="contenedor-opcion" data-categoria="FILTROS">
+                                 <div class="row h-75">
+                                     <div class="col-12 d-flex justify-content-center h-100">
+                                         <img class="imgdesktop" src="${opciones.find(x => x.Nombre == "FILTRO DE AIRE").URL}" />
+                                     </div>
+                                 </div>
+                                 <div class="row h-25">
+                                     <div class="col-12 d-flex align-content-center justify-content-center">
+                                         <div class="text-center mt-auto mb-auto fw-bold ">Filtros</div>
+                                     </div>
+                                 </div>
+
+                             </div>
+                         </div>
+                        <div class="col-3 h-100">
+                             <div class="contenedor-opcion" data-categoria="FILTROS DE COMBUSTIBLE">
+                                 <div class="row h-75">
+                                     <div class="col-12 d-flex justify-content-center h-100">
+                                         <img class="imgdesktop" src="${opciones.find(x => x.Nombre == "FILTRO COMBUSTIBLE DESKTOP").URL}" />
+                                     </div>
+                                 </div>
+                                 <div class="row h-25">
+                                     <div class="col-12 d-flex align-content-center justify-content-center">
+                                         <div class="text-center mt-auto mb-auto fw-bold ">Filtros de Combustible</div>
+                                     </div>
+                                 </div>
+
+                             </div>
+                         </div>
+                         <div class="col-3 h-100">
+                             <div class="contenedor-opcion" data-categoria="NEUMATICOS">
+                                 <div class="row h-75">
+                                     <div class="col-12 d-flex justify-content-center h-100">
+                                         <img class="imgdesktop" src="${opciones.find(x => x.Nombre == "NEUMATICO DESKTOP").URL}" />                                     
+                                     </div>
+                                 </div>
+                                 <div class="row h-25">
+                                     <div class="col-12 d-flex align-content-center justify-content-center">
+                                         <div class="text-center mt-auto mb-auto fw-bold ">Neumáticos</div>
+                                     </div>
+                                 </div>
+
+                             </div>
+                         </div>
+                     </div>`;
+            $('#contenedorOpciones').html(html);
+            var hcontenedor = h - 101;
+
+            $('#contenedorOpciones').css('height', hcontenedor.toString() + 'px').addClass('d-flex').addClass('justify-content-center').addClass('align-items-center');
+            $('#contenedorOpciones').fadeIn(2000);
+        }
+       
+   
+    });
+    $(document).on('click', '.contenedor-opcion', function () {
+        var $this = $(this);
+        var categoria = $this.data('categoria');
+        $('#contenedorOpciones').fadeOut(1000, function () {
+            $('#contenedorOpciones').addClass('d-none');
+            if (categoria == 'NEUMATICOS') {
+                window.location.replace('/ServicioAutomotriz/Neumaticos')
+            }
+            else {
+                filtro(categoria);
+            }
+            
+        });
+        
+        
+    });
+    $(document).on('click', '.añadir', function () {
+        var $this = $(this);
+        var id = $this.data('id');
+        
+        if (JSON.parse(localStorage.getItem("carrito")) != null) {
+            carrito = JSON.parse(localStorage.getItem("carrito"));
+        }
+        var id = $this.data('id');
+        if (carrito.length == 0) {
+            var objeto = data.find(x => x.ID == id);
+            var item = {
+                ID: objeto.ID,
+                Cantidad: 1,
+                Item: objeto.Nombre,
+                Marca: objeto.Marca,
+                Foto: objeto.Fotos[0].URL,
+                Precio: objeto.Precio,
+                Modelo: null,
+                Logo: objeto.Logo
+            };
+            carrito.push(item);
+        }
+        else {
+            if (carrito.some(x => x.ID == id)) {
+                carrito.find(x => x.ID == id).Cantidad = carrito.find(x => x.ID == id).Cantidad + 1;
+            }
+            else {
+                var objeto = data.find(x => x.ID == id);
+                var item = {
+                    ID: objeto.ID,
+                    Cantidad: 1,
+                    Item: objeto.Nombre,
+                    Marca: objeto.Marca,
+                    Foto: objeto.Fotos[0].URL,
+                    Precio: objeto.Precio,
+                    Modelo: null,
+                    Logo: objeto.Logo
+                };
+                carrito.push(item);
+            }
+        }
+       
+        
+        localStorage.setItem('carrito', JSON.stringify(carrito));
+        actualizarCarro(carrito,false);
+    });
+</script>

@@ -1,0 +1,58 @@
+﻿@model BibliotecaDeClases.Modelos.Transacciones.MediosPagoModel
+
+@{
+    ViewBag.Title = "NuevoMedioPago";
+}
+
+<h2 style="text-align:center">Nuevo Medio de Pago</h2>
+
+<form class="fondogris" method="post" id="formulario" action="@Url.Action("NuevoMedioPago")">
+    @Html.AntiForgeryToken()
+
+    <div class="row align-items-end">
+        <div class="col-4">
+            <label for="MedioPago">Medio de Pago</label>
+            <input class="form-control" id="MedioPago" name="MedioPago" />
+        </div>
+        <div class="col-4">
+            <label for="IDCuenta">Cuenta Contable</label>
+            <select id="IDCuenta" class="form-control" name="IDCuenta">
+                <option value="0">-Seleccionar-</option>
+                @foreach (var item in Model.Cuentas)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+        </div>
+        <div class="col-4">
+            <div class="d-grid gap-2">
+                
+                <input type="submit" class="btn btn-danger" value="Ingresar" />
+            </div>
+          
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <label for="Descripcion">Descripción</label>
+            <textarea class="form-control" style="" id="Descripcion" name="Descripcion"></textarea>
+        </div>
+    </div>
+    <div style="margin-top:10px">
+        <a class="btn btn-primary" href="@Url.Action("VerMediosPago")" >Volver</a>
+        
+    </div>
+</form>
+<script>
+    $(document).ready(function (e) {
+        $("#formulario").validate();
+        $('textarea,input').css("text-transform", "uppercase");
+    });
+
+</script>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

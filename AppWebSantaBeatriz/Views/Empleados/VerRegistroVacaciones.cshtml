@@ -1,0 +1,33 @@
+﻿@model IEnumerable<BibliotecaDeClases.Modelos.Empleados.RegistroVacacionesModel>
+@{
+    ViewBag.Title = "VerRegistroVacaciones";
+}
+<head>
+    <link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+</head>
+<h2>Ver Registro Vacaciones</h2>
+
+<table class="tabla">
+    <tr class="encabezado">
+        <th>Empleado</th>
+        <th>Fecha Contratación</th>
+        <th>Dias Disponibles</th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model)
+    {
+<tr>
+    <td>@item.Empleado</td>
+    <td>@item.FechaContratacion.ToString("dd-MM-yyyy")</td>
+    <td>@item.DiasDisponibles</td>
+    <td>
+        <a style="text-decoration:none" href=@Url.Action("RegistrarVacaciones",new { idempleado = item.IDEmpleado })>
+
+            <img data-bs-toggle="tooltip" data-bs-placement="top" title="Registrar Vacaciones" style="width:32px;height:32px" src="~/Content/Pictures/vacaciones-de-verano.png" />
+        </a>
+
+
+    </td>  
+</tr>
+    }
+</table>

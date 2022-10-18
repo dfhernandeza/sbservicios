@@ -1,0 +1,244 @@
+﻿@model IEnumerable<BibliotecaDeClases.Modelos.Empleados.EmpModel>
+
+@{
+    ViewBag.Title = "Ver Liquidaciones";
+}
+<link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+<script src="~/Scripts/Funciones.js"></script>
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+@*<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>*@
+<style>
+    .encabezado {
+        background: rgb(212,48,200);
+        background: linear-gradient(37deg, rgba(212,48,200,1) 30%, rgba(94,0,255,1) 100%);
+    }
+    .ui-dialog-titlebar{
+        background-color:blue;
+        color:white
+    }
+</style>
+<script>
+  
+    $(document).ready(function (e) {
+  
+        $('#dialogo').load('/Empleados/FileUpload #descargar');
+        $('[data-bs-toggle="tooltip"]').tooltip();
+    });
+
+    $(document).on('click', '#btnNuevo', function (e) {
+        $('#dialogo').removeClass('d-none').dialog({ width: '1200px', resizable: false, resize: "auto", height: 'auto', position: { my: 'top', at: 'top+100' }, title: "Carga Individual" });
+        $('input[name="Multi"]').val("Single");
+        $('.ui-dialog-titlebar-close').addClass('btn-close');
+    });
+    $(document).on('click', '#btnNueva', function (e) {
+        $('#dialogo').removeClass('d-none').dialog({ width: '1200px', resizable: false, resize: "auto", height: 'auto', position: { my: 'top', at: 'top+100' }, title: "Carga Masiva" });
+        $('input[name="Multi"]').val("Multi");
+        $('.ui-dialog-titlebar-close').addClass('btn-close');
+    });
+
+
+</script>
+<h2>Liquidaciones</h2>
+
+<div class="row">
+    <div class="col-1">
+        <div id="btnNueva" type="button">
+            <img data-bs-toggle="tooltip" data-bs-placement="top" title="Subir Liquidaciones" style="width:40px;height:40px" src="/Content/Pictures/add-file.png" />
+        </div>
+
+    </div>
+    <div class="col-1">
+        <div id="btnNuevo" type="button">
+            <img data-bs-toggle="tooltip" data-bs-placement="top" title="Subir una Liquidación" style="width:40px;height:40px" src="/Content/Pictures/add-file.png" />
+        </div>
+
+    </div>
+    <div class="col-1">
+        <div id="btnDownloadMerge" type="button">
+            <img data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar Liquidaciones Firmadas" style="width:40px;height:40px" src="~/Content/Pictures/download.png" />
+        </div>
+    </div>
+
+</div>
+<table class="tabla">
+    <tr class="encabezado">
+        <th>
+            Empleado
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Mes)
+        </th>
+        <th>
+            Año
+        </th>
+        <th>
+            Fecha Subida
+        </th>
+        <th>
+            Fecha Envio
+        </th>
+       
+        <th>Fecha Firma</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Empleado)
+    </td>
+
+    <td>
+        @Html.DisplayFor(modelItem => item.Mes)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Ano)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.FechaSubida)
+    </td>
+
+    @if (item.FechaEnvio == null)
+    {
+        <td>No Enviado</td>
+
+    }
+    else
+    {
+        <td>@item.FechaEnvio</td>
+
+    }
+
+
+   
+    @if (item.FechaFirma == null)
+    {
+        <td>No Firmado</td>
+
+    }
+    else
+    {
+        <td>@item.FechaFirma</td>
+
+    }
+    <td>
+        <div class="d-flex justify-content-around">
+            <a href="@Url.Action("DownLoadFile",new { iddoc = item.ID })">
+                <img src="~/Content/Pictures/download.png" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar Original" />
+            </a>
+            @if (item.Firma != null)
+            {
+                <a href="@Url.Action("DownLoadFile",new { iddoc = item.Firma })">
+                    <img src="~/Content/Pictures/download.png" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar Firmado" />
+                </a>
+            }
+
+            <a href="@Url.Action("DeleteLiquidacionAsync",new { iddoc = item.ID })">
+                <img src="~/Content/Pictures/deletecolor.png" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" />
+            </a>
+            <button style="border:none;background-color:white" data-iddoc="@item.ID" data-idusuario="@item.IDUsuario" id="enviarcorreo" type="button">
+                <img src="~/Content/Pictures/email.png" data-bs-toggle="tooltip" data-bs-placement="top" title="Enviar Correo" />
+            </button>
+            @*<a  href="@Url.Action("correoLiquidacionAsync","Account", new { id = item.IDEmpleado, mes = item.Mes, año = item.Ano })">
+
+        </a>*@
+            @*<button style="border:none;background-color:white" data-iddoc="@item.ID" data-idusuario="@item.IDUsuario" id="firmar" type="button">
+            <img src="~/Content/Pictures/email.png" />
+        </button>*@
+            <div class="spinner-border text-primary d-none" role="status">
+                <span class="sr-only"></span>
+            </div>
+        </div>
+    </td>
+</tr>
+    }
+
+</table>
+<div id="dialogo" class="d-none"></div>
+<div class="d-none w-100" id="dialogoMerge">
+    <div class="row align-items-end">
+        <div class="col-4">
+            <label class="form-label">Mes</label>
+            <select class="form-control" id="MesMerge">
+                <option value="">-Seleccionar-</option>
+                @foreach (var item in Model.FirstOrDefault().MesesSelect)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+        </div>
+        <div class="col-4">
+            <label class="form-label">Año</label>
+            <select class="form-control" id="AñoMerge">
+                <option value="">-Seleccionar-</option>
+                @foreach (var item in Model.FirstOrDefault().Años)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+        </div>
+        <div class="col-4">
+            <a  class="btn btn-success" id="DescargarMerge">
+              Descargar
+            </a>
+        </div>
+    </div>
+  
+</div>
+<script>
+    $(document).on('click', '#firmar', function (e) {
+        var btn = $(this);
+        var spinner = btn.closest('td').find('.spinner-border');
+        btn.hide();
+        spinner.removeClass('d-none');
+        $.ajax({
+            type: "POST",
+            url: "/Empleados/firmaLiquidacionAsync/",
+            data: { iddoc : btn.data("iddoc")},
+            dataType: "json",
+            success: function (response) {
+                btn.show();
+                spinner.hide();
+            }
+        });
+    });
+    $(document).on('click', '#enviarcorreo', function (e) {
+        var btn = $(this);
+        var spinner = btn.closest('td').find('.spinner-border');
+        btn.hide();
+        spinner.removeClass('d-none');
+        $.ajax({
+            type: "POST",
+            url: "/Account/correoLiquidacionAsync/",
+            data: { iddoc: btn.data("iddoc"), idusuario: btn.data("idusuario") },
+            dataType: "json",
+            success: function (response) {
+                btn.show();
+                spinner.hide();
+            }
+        });
+    });
+    $(document).on('change', '#MesMerge', function (e) {
+       var mes = $('#MesMerge').val();
+        var año = $('#AñoMerge').val();
+        if (mes != "" && año !="") {
+            $('#DescargarMerge').attr('href', '/Empleados/DownloadFirmadas?mes=' + mes + '&año=' + año)
+        }
+      
+    });
+    $(document).on('change', '#AñoMerge', function (e) {
+        var mes = $('#MesMerge').val();
+        var año = $('#AñoMerge').val();
+        if (mes != "" && año != "") {
+            $('#DescargarMerge').attr('href', '/Empleados/DownloadFirmadas?mes=' + mes + '&año=' + año)
+        }
+    });
+    $(document).on('click', '#btnDownloadMerge', function (e) {
+        var wWidth = $(window).width();
+        var dWidth = wWidth * 0.4;
+        $('#dialogoMerge').removeClass('d-none').dialog({ height: 'auto', width: dWidth, title: "Descargar Liquidaciones", position: { my: 'top', at: 'top+100' } });
+        $('.ui-dialog-titlebar-close').addClass('btn-close');
+    });
+</script>

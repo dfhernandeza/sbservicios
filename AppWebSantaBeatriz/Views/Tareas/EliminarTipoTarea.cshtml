@@ -1,0 +1,72 @@
+﻿@model AppWebSantaBeatriz.Models.Servicios.TipoTareaModel
+
+@{
+    ViewBag.Title = "EliminarTipoTarea";
+}
+
+<h2 style="text-align:center">Eliminar Tipo de Tarea</h2>
+
+<h3 style="color:red">¿Confirma que desea eliminar este tipo de tarea?</h3>
+<div>
+  
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoTarea)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TipoTarea)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descripcion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreadoPor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreadoPor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreadoEn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreadoEn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EditadoPor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EditadoPor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EditadoEn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EditadoEn)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+                @Html.HiddenFor(x=>x.ID)
+        <div class="form-actions no-color">
+            <input  type="submit" value="Delete" class="btn btn-danger" />  <a class="btn btn-primary" href="@Url.Action("VerTiposTareas")">Volver</a>
+         
+        </div>
+    }
+</div>

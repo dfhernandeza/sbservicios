@@ -1,0 +1,50 @@
+﻿@model AppWebSantaBeatriz.Models.Servicios.TipoServicioModel
+
+@{
+    ViewBag.Title = "EditarTipoServicio";
+}
+
+<h2>Editar Tipo de Servicio</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container-fluid fondogris">
+        <form>
+            <div class="form-row align-items-end">
+
+                <div class="form-group col-md-8">
+                    <label for="TipoServicio">Tipo de Servicio</label>
+                    <input id="TipoServicio" name="TipoServicio" value="@Model.TipoServicio" style="text-transform:uppercase" class="form-control" type="text" />
+
+                </div>
+
+                <div class="form-group col-md-4">
+                    <input type="submit" value="Ingresar" class="btn btn-block botonrojo" />
+                </div>
+            </div>
+
+            <div class="form-row align-items-end">
+
+                <div class="form-group col-md-12">
+                    <label for="Descripcion">Descripción</label>
+                    <textarea style="text-transform:uppercase" rows="2" class="form-control" id="Descripcion" name="Descripcion">@Model.Descripcion</textarea>
+
+                </div>
+
+
+            </div>
+
+
+
+
+        </form>
+
+        <a class="btn btn-success" href="@Url.Action("VerTiposServicios")">Volver</a>
+
+    </div>
+
+
+}
+

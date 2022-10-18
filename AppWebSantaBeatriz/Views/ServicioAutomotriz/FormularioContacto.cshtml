@@ -1,0 +1,129 @@
+﻿
+@{
+    Layout = "/Views/Shared/_LayoutServAuto.cshtml";
+    ViewBag.Title = "Formulario Contacto";
+}
+<style>
+    .error {
+        color: red;
+        float: left;
+    }
+</style>
+<script src="~/Scripts/jquery.validate.js"></script>
+
+<div class="fondoContacto">
+
+    <div class="row justify-content-center">
+        <div class="col-md-4 text-center mb-5 mt-5 fondogristransparente text-white">
+            <h2 style="opacity:1" class="heading-section mt-5 mb-5">Fomulario de Contacto</h2>
+            <form action="@Url.Action("FormularioContactos","ServicioAutomotriz")" method="post" id="formularioContacto">
+
+                <div class="row justify-content-center mt-5">
+                    <div class="col-md-10">
+                        <input class="form-control-transparente" name="Nombre" id="Nombre" placeholder="Nombre" type="text" />
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-3">
+                    <div class="col-md-10">
+                        <input class="form-control-transparente" name="Apellido" id="Apellido" placeholder="Apellido" type="text" />
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-3">
+                    <div class="col-md-10">
+                        <input class="form-control-transparente" name="Email" id="Email" placeholder="Correo Electrónico" type="email" />
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-3">
+                    <div class="col-md-10">
+                        <input class="form-control-transparente" name="Fono" id="Fono" placeholder="Fono" type="text" />
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-3">
+                    <div class="col-md-10">
+                        <h5 style="opacity:1" class="heading-section mt-4 text-start">Información del Vehículo</h5>
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-3">
+                    <div class="col-md-10">
+                        <input class="form-control-transparente" name="Marca" id="Marca" placeholder="Marca" type="text" />
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-3">
+                    <div class="col-md-10">
+                        <input class="form-control-transparente" name="ModeloAuto" id="ModeloAuto" placeholder="Modelo" type="text" />
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-3">
+                    <div class="col-md-5">
+                        <input class="form-control-transparente" name="Ano" id="Ano" placeholder="Año" type="text" />
+                    </div>
+                    <div class="col-md-5">
+                        <input class="form-control-transparente" name="Cilindrada" id="Cilindrada" placeholder="Cilindrada" type="text" />
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-3">
+                    <div class="col-md-10">
+                        <textarea class="form-control-transparente" rows="2" name="Mensaje" id="Mensaje" placeholder="Mensaje" type="text"></textarea>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center mt-3 mb-3">
+                    <div class="col-md-10">
+                        <input class="btn btn-light" type="submit" value="Enviar" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+        $("#formularioContacto").validate({
+            rules: {
+
+                Nombre: "required",
+                Apellido: "required",
+                Email: "required",
+                Fono: "required",
+                Marca: "required",
+                ModeloAuto: "required",
+                Ano: "required",
+                Cilindrada: "required",
+                Mensaje: "required"
+            },
+            messages: {
+
+                Nombre: "Debe proporcionar su nombre",
+                Apellido: "Debe proporcionar su apellido",
+                Email: "Debe proporcionar un correo electrónico",
+                Fono: "Debe proporcionar un número telefónico",
+                Marca: "Debe proporcionar la marca del vehículo",
+                ModeloAuto: "Debe proporcionar el modelo del vehículo",
+                Ano: "Debe proporcionar el año del vehículo",
+                Cilindrada: "Debe proporcionar la cilindrada del vehículo",
+                Mensaje: "Debe describir su requerimiento"
+
+            },
+            submitHandler: function (form) {
+                
+                if (!this.beenSubmitted) {
+                    this.beenSubmitted = true;
+                    form.submit();
+                }
+            }
+        });
+    });
+
+
+
+
+</script>
+<script src="https://www.google.com/recaptcha/enterprise.js?render=6LfyJcYcAAAAAAT7aGvvyN1oF_56mtNXrOSD_q4Y"></script>
+<script>
+    grecaptcha.enterprise.ready(function () {
+        grecaptcha.enterprise.execute('6LfyJcYcAAAAAAT7aGvvyN1oF_56mtNXrOSD_q4Y', { action: 'login' }).then(function (token) {
+      
+    });
+});
+</script>

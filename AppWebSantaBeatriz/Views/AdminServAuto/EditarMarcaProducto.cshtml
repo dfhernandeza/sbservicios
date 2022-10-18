@@ -1,0 +1,80 @@
+﻿@model BibliotecaDeClases.Modelos.ServicioAutomotriz.MarcaProductoModel
+
+@{
+    ViewBag.Title = "Editar Marca Producto";
+}
+<head>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <style>
+        .error {
+            color: red
+        }
+
+        input, textarea {
+            text-transform: uppercase
+        }
+    </style>
+</head>
+<h2 class="text-center">Editar Marca Producto</h2>
+<div class="container-fluid">
+    <form method="post" action="@Url.Action("EditarMarcaProducto")" id="editarMarcaForm">
+        <div class="row">
+            <div class="col-md-8">
+                <label class="form-label">Marca</label>
+                <input class="form-control" value="@Model.Marca" name="Marca" />
+                <input name="ID" value="@Model.ID" class="d-none" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Categoría</label>
+                <select class="form-control" name="IDCategoria">
+                    <option value="">-Seleccionar-</option>
+                    @foreach (var item in Model.Categorias)
+
+                    {
+                        if (item.Value == Model.IDCategoria)
+                        {
+                            <option selected value="@item.Value">@item.Text</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+
+                    }
+                </select>
+            </div>
+        </div>
+       
+        <div class="row">
+            <div class="col-md-12">
+                <label class="form-label">Descripción</label>
+                <textarea name="Descripcion" class="form-control">@Model.Descripcion</textarea>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <input class="btn btn-outline-success" type="submit" value="Ingresar" />
+            </div>
+        </div>
+    </form>
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $('#editarMarcaForm').validate({
+            rules: {
+                Marca: "required",
+                IDCategoria: "required",
+                Descripcion: "required"
+            },
+            messages: {
+                Marca: "Debe proporcionar una marca",
+                IDCategoria: "Debe escoger una categoría",
+                Descripcion: "Debe proporcionar una descripción"
+            }
+        });
+    });
+
+</script>

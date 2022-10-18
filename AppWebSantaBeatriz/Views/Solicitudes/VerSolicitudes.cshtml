@@ -1,0 +1,100 @@
+﻿@model IEnumerable<BibliotecaDeClases.Modelos.Servicios.SolicitudesModel>
+@{
+    ViewBag.Title = "Solicitudes";
+}
+<link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+<style>
+    .encabezado {
+        background: rgb(81,0,255);
+        background: linear-gradient(37deg, rgba(81,0,255,1) 10%, rgba(46,0,255,1) 100%);
+    }
+</style>
+<script>
+    var data = [];
+    $(document).ready(function (e) {
+        $.ajax({
+            type: "POST",
+            url: "/Solicitudes/getDataSolicitudes/",
+            dataType: "json",
+            success: function (response) {
+                data = response;
+            }
+        });
+        $(document).on('click', '#cantidadSort', function (e) {
+            data.sort(GetSortOrder('Cantidad'));
+        });
+
+
+    });
+</script>
+<h2>Solicitudes de compra</h2>
+<table class="tabla">
+
+    <tr class="encabezado">
+
+        <th>
+            Servicio
+        </th>
+        <th class="d-none">
+            @Html.DisplayNameFor(model => model.IDSolicitud)
+        </th>
+        <th class="d-none">
+            @Html.DisplayNameFor(model => model.IDCotMaterial)
+        </th>
+        <th>
+            Tarea
+        </th>
+        <th>
+            Entregable
+        </th>
+        <th>
+
+            Item
+        </th>
+        <th id="cantidadSort">
+            Cantidad
+        </th>
+        <th>
+            Estado Solicitud
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+<tr class="fila">
+
+
+    <td>
+        @Html.DisplayFor(modelItem => item.NombreServicio)
+    </td>
+    <td class="d-none">
+        @Html.DisplayFor(modelItem => item.IDSolicitud)
+    </td>
+    <td class="d-none">
+        @Html.DisplayFor(modelItem => item.IDCotMaterial)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.NombreTarea)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Entregable)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Item)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Cantidad)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Estado)
+    </td>
+    <td>
+        <a href="@Url.Action()zAa"></a>     @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+        @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+        @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+    </td>
+</tr>
+    }
+
+</table>

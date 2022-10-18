@@ -1,0 +1,84 @@
+﻿@model BibliotecaDeClases.Modelos.Transacciones.TransaccionModel
+
+@{
+    ViewBag.Title = "Ampliar Transferencia";
+}
+
+
+<style>
+    .error:not(label) {
+        outline: none !important;
+        box-shadow: 2px 2px 3px red;
+        border: 2px solid red;
+    }
+
+    .error {
+        color: red
+    }
+    /*.body{
+        background-color:cornflowerblue
+    }*/
+</style>
+<h2 class="text-center mb-4">Nueva Transferencia</h2>
+<div class="container-fluid border bg-light bg-gradient p-4" style="border-radius:14px">
+    <form method="post" action="@Url.Action("AmpliarRendicion")" id="formulario">
+        <div class="row mt-lg-2 ">
+            <div class="col-4">
+                <label class="form-label">Cuenta de origen</label>
+                <input type="text" class="d-none" name="IDDocumento" value="@Model.IDDocumento" />
+                <input type="text" class="d-none" name="IDCuentaDB" value="@Model.IDCuentaDB" />
+                <select name="IDCuentaCR" class="form-control">
+                    <option value="">-Seleccionar-</option>
+                    @foreach (var item in Model.Cuentas)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+            </div>
+           
+            <div class="col-4">
+                <label class="form-label">Monto</label>
+                <input type="text" class="form-control" name="Monto" />
+            </div>
+        </div>
+        <input class="d-none form-control" value="Transferencia" name="Item" />
+        <input class="d-none form-control" value="1" name="Cantidad" />
+        <div class="row mt-2">
+            <div class="col-12">
+                <label class="form-label">Descripción</label>
+                <textarea rows="2" name="Descripcion" class="form-control text-uppercase"></textarea>
+            </div>
+
+        </div>
+        <div class="row mt-2">
+            <div class="col-12">
+                <input type="submit" id="btnGuardar" class="btn btn-success" />
+            </div>
+
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#formulario').validate({
+            rules: {
+                IDCuentaCR: "required",
+                IDCuentaDB: "required",
+                Monto: { required: true, number: true },
+                Descripcion: "required"
+            },
+            messages: {
+                IDCuentaCR: "Debe escoger una cuenta de origen",
+                IDCuentaDB: "Debe escoger una cuenta de destino",
+                Monto: { required: "Debe ingresar el monto a transferir", number: "Debe ingresar sólo números" },
+                Descripcion: "Debe describir el motivo de la transferencia"
+            }
+        });
+
+
+    });
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,249 @@
+﻿@model BibliotecaDeClases.Modelos.Cotizaciones.CotizacionAraucoModel
+
+@{
+    ViewBag.Title = "CreaCotizacion";
+}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
+<style>
+    .fila1 {
+        background-color: #CCCC00;
+        border: solid;
+        border-width: thin;
+        border-color: #696158
+    }
+
+    .etiquetasgris {
+        background-color: #696158;
+        color: white;
+        padding-left: 5px;
+        font-weight: 600;
+        font-family: Calibri;
+        font-size: 15px;
+        border-bottom: solid;
+        border-color: #696158;
+    }
+
+    .valoresblanco {
+        border-bottom: solid;
+        border-right: solid;
+        border-width: thin;
+        border-color: #696158;
+        font-family: Calibri;
+        font-size: 15px;
+        font-weight: 600;
+        padding-left: 5px;
+    }
+
+    textarea:focus, input:focus {
+        outline: none;
+    }
+
+    select:focus {
+        outline: none
+    }
+
+    .areatexto {
+        border: solid;
+        border-color: #696158;
+        font-family: Calibri;
+        border-width: thin;
+    }
+
+
+    .filas {
+        border-bottom: solid;
+        border-width: thin;
+        border-color: #696158;
+    }
+
+    .sinborde {
+        border: none;
+        width: 100%
+    }
+    .button {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display:block;
+        font-size: 16px;    
+        cursor: pointer;
+    }
+</style>
+<script>
+
+    $(document).ready(function () {
+
+        $('.picker').datepicker();
+        $.datepicker.setDefaults($.datepicker.regional['es']);
+    });
+
+
+
+</script>
+
+@using (Html.BeginForm())
+{
+
+
+<div class="container-fluid">
+
+
+    <div class="row fila1">
+        <div class="col-sm-6">
+            <strong>ANTECENTES EMPRESA DE SERVICIOS</strong>
+        </div>
+        <div class="col-sm-6">
+            <strong>ANTECEDENTES LICITACION</strong>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-sm-6">
+            <div class="row"><div class="col-sm-5 etiquetasgris">Código SAP</div><div class="col-sm-7 valoresblanco">85756</div></div>
+        </div>
+        <div class="col-sm-6">
+            <div class="row"><div class="col-sm-5 etiquetasgris">N° Solicitud Pedido</div><div class="col-sm-7 valoresblanco"><input class="sinborde" type="text" id="SolicitudPedido" name="SolicitudPedido" autocomplete="off" /></div></div>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-sm-6">
+            <div class="row"><div class="col-sm-5 etiquetasgris">Rut Empresa Contratista</div><div class="col-sm-7 valoresblanco">76.261.857-5</div></div>
+        </div>
+        <div class="col-sm-6">
+            <div class="row"><div class="col-sm-5 etiquetasgris">N° Licitación</div><div class="col-sm-7 valoresblanco"><input class="sinborde" type="text" id="NLicitacion" name="NLicitacion" autocomplete="off" /></div></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="row"><div class="col-sm-5 etiquetasgris">Razón Social</div><div class="col-sm-7 valoresblanco">Sociedad Avendaño y Hernandez Limitda</div></div>
+        </div>
+        <div class="col-sm-6">
+
+            <div class="row">
+                <div class="col-sm-5 etiquetasgris">Nombre Ingeniero Contratos</div><div class="col-sm-7 valoresblanco">
+                    <select id="IDSupervisor" name="IDSupervisor" class="sinborde">
+                        <option>-Seleccionar-</option>
+                        @{foreach (var item in Model.Supervisores)
+                            {
+                                <option value="@item.ID">@(item.Nombre + " " + item.Apellido)</option>
+                            } }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="row"><div class="col-sm-5 etiquetasgris">Nombre Representante Legal</div><div class="col-sm-7 valoresblanco">Maria Avendaño Mardones</div></div>
+        </div>
+        <div class="col-sm-6">
+            <div class="row"><div class="col-sm-5 etiquetasgris">Fecha Oferta</div><div class="col-sm-7 valoresblanco"><input class="sinborde picker" type="text" id="Fecha" name="Fecha" autocomplete="off" /></div></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="row"><div class="col-sm-5 etiquetasgris">Rut Representante Legal</div><div class="col-sm-7 valoresblanco">9.427.412-5</div></div>
+        </div>
+        <div class="col-sm-6">
+            <div class="row"><div class="col-sm-5 etiquetasgris">Validez Oferta</div><div class="col-sm-7 valoresblanco"><input class="sinborde picker" type="text" id="ValidezOferta" name="ValidezOferta" autocomplete="off" /></div></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="row"><div class="col-sm-5 etiquetasgris">Persona de Contacto</div><div class="col-sm-7 valoresblanco">David Hernandez Perez</div></div>
+        </div>
+        <div class="col-sm-6">
+            <div class="row"><div class="col-sm-5 etiquetasgris">N° Cotización </div><div class="col-sm-7 valoresblanco"><input class="sinborde" type="text" id="IDCotizacion" name="IDCotizacion" autocomplete="off" /></div></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="row"><div class="col-sm-5 etiquetasgris">Telefonos / Fax</div><div class="col-sm-7 valoresblanco">4222524696</div></div>
+        </div>
+        <div class="col-sm-6">
+            <div class="row"><div class="col-sm-5 etiquetasgris">Ejecución (Días Hábiles)</div><div class="col-sm-7 valoresblanco"><input class="sinborde" type="text" id="TiempoEjecucion" name="TiempoEjecucion" autocomplete="off" /></div></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="row"><div class="col-sm-5 etiquetasgris">Celular</div><div class="col-sm-7 valoresblanco">56999778984</div></div>
+        </div>
+        <div class="col-sm-6">
+            <div class="row"><div class="col-sm-5 etiquetasgris">Mutual Seguridad</div><div class="col-sm-7 valoresblanco">ACHS</div></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="row"><div class="col-sm-5 etiquetasgris">E-mail</div><div class="col-sm-7 valoresblanco">s.i.santabeatriz@gmail.com</div></div>
+        </div>
+        <div class="col-sm-6">
+            <div class="row"><div class="col-sm-5 etiquetasgris">Tasa (%)</div><div class="col-sm-7 valoresblanco">0,93</div></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6"></div>
+        <div class="col-sm-6">
+            <div class="row"><div class="col-sm-5 etiquetasgris">N° RFP Ariba</div><div class="col-sm-7 valoresblanco"><input class="sinborde" type="text" id="NRFPAriba" name="NRFPAriba" autocomplete="off" /></div></div>
+        </div>
+
+    </div>
+    <div class="row" style="height:6px">
+
+    </div>
+    <div class="row etiquetasgris">
+        <div class="col-sm-12" style="text-align:center">
+            DESCRIPCION  DEL SERVICIO EXTERNO COTIZADO COMO OBRA VENDIDA
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 areatexto"><textarea id="Detalles" name="Detalles" class="sinborde" rows="4"></textarea></div>
+    </div>
+    <div class="row etiquetasgris">
+        <div class="col-sm-12" style="text-align:center">
+            DETALLE Y ALCANCES TÉCNICOS DE LA OFERTA ECÓNOMICA
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 areatexto"><textarea id="DATOE" name="DATOE" class="sinborde" rows="4"></textarea></div>
+    </div>
+    <div class="row etiquetasgris">
+        <div class="col-sm-12" style="text-align:center">
+            Notas
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 areatexto"><textarea class="sinborde" name="Notas" id="Notas" rows="4"></textarea></div>
+    </div>
+    <div class="row" style="height:6px">
+
+    </div>
+    <div class="row" style="padding-left:0px">
+        <div class="col-sm-12" style="padding-left:0px"><input type="submit" class="button" value="Siguiente" /></div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+ }                         

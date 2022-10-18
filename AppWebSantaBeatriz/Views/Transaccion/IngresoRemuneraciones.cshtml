@@ -1,0 +1,105 @@
+﻿@model BibliotecaDeClases.Modelos.Transacciones.RemuneracionesModel
+
+@{
+    ViewBag.Title = "IngresoRemuneraciones";
+}
+
+<h2>Ingreso Remuneraciones</h2>
+
+<div class="row mb-3">
+    <div class="col-2">
+        <label class="form-label">
+            Mes
+        </label>
+        <select class="form-control" id="MesSelect">
+            <option value="">-Seleccionar-</option>
+            @foreach (var item in Model.Meses)
+            {
+                <option value="@item.Value">@item.Text</option>
+            }
+
+        </select>
+    </div>
+    <div class="col-2">
+        <label class="form-label">
+            Año
+        </label>
+        <select class="form-control" id="AñoSelect">
+            <option value="">-Seleccionar-</option>
+
+            @for (int i = DateTime.Now.Year - 1; i < DateTime.Now.Year+1; i++)
+            {
+                <option value="@i">@i</option>
+            }
+
+
+        </select>
+    </div>
+</div>
+
+<div class="row mb-2">
+    <div class="col-5">
+        <div class="fs-3">Empleado</div>
+    </div>
+    <div class="col-2">
+        <div class="fs-3">Monto</div>
+    </div>
+</div>
+<hr />
+<form action="@Url.Action("IngresoRemuneraciones")" method="post">
+    @foreach (var item in Model.Empleados)
+    {
+        <div class="row mb-1 filax">
+            <div class="col-5">
+                <input class="d-none" name="IDEmpleado" value="@item.Value" />
+                <input class="border-0 w-100" value="@item.Text" />
+                <input class="d-none" name="Año" />
+                <input class="d-none" name="Mes" />
+            </div>
+            <div class="col-2">
+                <input class="form-control w-100" name="Monto" autocomplete="off" />
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger eliminar">-</button>
+            </div>
+        </div>
+    }
+    <input type="button" id="btnEnviar" class="btn btn-success" value="Ingresar" />
+</form>
+
+<script>
+    $(document).on('change', '#MesSelect,#AñoSelect', function (e) {
+        if ($('#MesSelect').val() != "" && $('#AñoSelect').val() != "") {
+            $('.filax').each(function (i, item) {
+                $(item).find('input[name="Año"]').val($('#AñoSelect').val());
+                $(item).find('input[name="Mes"]').val($('#MesSelect').val());
+            });
+        }
+    });
+    $(document).on('click', '.eliminar', function (e) {
+        $(this).closest('.filax').remove();
+    });
+    $(document).on('click', '#btnEnviar', function (e) {
+        var modelo = [];
+        $('.filax').each(function (i, item) {
+            var idempleado = $(item).find('input[name="IDEmpleado"]').val();
+            var monto = $(item).find('input[name="Monto"]').val();
+            var mes = $(item).find('input[name="Mes"]').val();
+            var año = $(item).find('input[name="Año"]').val();
+
+            var rem = { IDEmpleado: idempleado.toString(), Monto: monto.toString(), Mes: mes.toString(), Año: año.toString() };
+            modelo.push(rem);
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "/Transaccion/IngresoRemuneracionesAsync/",
+            data: JSON.stringify(modelo),
+            dataType: "json",
+            contentType:"application/json",
+            success: function (response) {
+
+            }
+        });
+    })
+</script>

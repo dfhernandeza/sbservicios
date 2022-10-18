@@ -1,0 +1,35 @@
+﻿@model IEnumerable<BibliotecaDeClases.Modelos.ServicioAutomotriz.CategoriaFotoModel>
+
+@{
+    ViewBag.Title = "Ver Categorias Foto";
+}
+
+<h2 class="text-center">Categorias Fotos</h2>
+
+<a href="@Url.Action("NuevaCategoriaFoto")" class="btn btn-outline-primary">Nueva</a>
+<table class="table">
+    <tr class="encabezado">
+        <th>
+            @Html.DisplayNameFor(model => model.Categoria)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Categoria)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descripcion)
+        </td>
+        <td>
+
+        </td>
+    </tr>
+}
+
+</table>

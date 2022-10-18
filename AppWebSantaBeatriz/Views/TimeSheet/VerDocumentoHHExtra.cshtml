@@ -1,0 +1,119 @@
+﻿@model BibliotecaDeClases.Modelos.Transacciones.DocumentoModel
+
+@{
+    ViewBag.Title = "VerDocumentoHHExtra";
+}
+<head>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
+</head>
+<style>
+    @@media(max-width: 576px) {
+        .table {
+            font-size: 9px;
+        }
+        .cntrl {
+            width:12px;
+            height:12px;
+        }
+        .btn{
+            padding-right:2px;
+            padding-left:2px;
+            padding-top:1px;
+            padding-bottom:1px;
+        }
+    }
+    .ui-widget-header{
+        background:#000cf2;
+        color:white;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <h2 class="text-center">Detalle Mensual de Horas Extra</h2>
+        </div>
+        <hr />
+        <div class="col-sm-12">
+            <h4>Empleado: @Model.Empleado</h4>
+        </div>
+        <div class="col-sm-12">
+            <h4>Supervisor: @Model.Supervisor</h4>
+        </div>
+        <div class="col-sm-12 mb-3">
+            <h4>
+                Mes: @Model.HorasExtra.FirstOrDefault().Fecha.ToString("MMMM - yyyy")
+            </h4>
+        </div>
+        <hr />
+        <div class="col-sm-12">
+            <table class="table">
+                <tr>
+                    <th width="15%">Fecha</th>
+                    <th>Centro de Costos</th>
+                    <th>Horas</th>
+                    <th>Factor</th>
+                    <th>Comentarios</th>
+                    <th></th>
+                </tr>
+                @foreach (var item in Model.HorasExtra)
+                {
+                    <tr>
+                        <td>@item.Fecha.ToString("dd-MM-yyyy")</td>
+                        <td>@item.CECO</td>
+                        <td>@item.Horas.ToString("0.##")</td>
+                        <td>@item.Factor.ToString("0.##")</td>
+                        <td>@item.Comentarios</td>
+                        <td>
+                            <div class="d-flex justify-content-around">
+                                <button type="button" data-id="@item.ID" class="btn btn-success">
+                                    <img class="cntrl" src="~/Content/Pictures/editar.png" />
+                                </button>
+                                <button type="button" data-id="@item.ID" class="btn btn-danger">
+
+                                    <img class="cntrl" src="~/Content/Pictures/delete.png" />
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </table>
+
+
+
+
+        </div>
+    </div>
+</div>
+<div id="load" class="d-none">
+
+</div>
+<script>
+    $(document).on('click', '.btn-success', function (e) {
+        var id = $(this).data('id');
+        $('#load').load("/TimeSheet/editaHoraAsync/"+id + " #editarForm", function () {
+
+            $('#load').removeClass('d-none').dialog({ width: '90%',title:'Editar HH Extra' });
+            $('.ui-dialog-titlebar-close').addClass('btn-close')
+            $('.fecha').datepicker({ dateFormat: 'dd-mm-yy' });
+            $.datepicker.setDefaults($.datepicker.regional['es']);
+        });
+
+
+       
+    });
+    $(document).on('click', '.btn-danger', function (e) {
+        var id = $(this).data('id');
+        $('#load').load("/TimeSheet/elimnaHoraExtraAsync/" + id + " #eliminaForm", function () {
+
+            $('#load').removeClass('d-none').dialog({ width: '60%', title: 'Eliminar HH Extra' });
+            $('.ui-dialog-titlebar-close').addClass('btn-close')
+            
+        });
+
+
+
+    });
+</script>

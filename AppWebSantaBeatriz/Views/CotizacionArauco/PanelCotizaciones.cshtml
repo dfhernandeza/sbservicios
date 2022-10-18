@@ -1,0 +1,159 @@
+﻿@model IEnumerable<BibliotecaDeClases.Modelos.Cotizaciones.CotizacionAraucoModel>
+
+@{
+    ViewBag.Title = "PanelCotizaciones";
+}
+
+
+<style>
+    /*.body {
+        background: #606c88;
+    }*/
+    /* .resaltada:hover{
+        background-color:goldenrod;
+        color:white;
+    }*/
+    /*tr:not(:first-child){
+        font-size:13px;
+        background:white
+    }*/
+    .boton2 {
+        padding: 10px;
+        color: white;
+        border: solid;
+        border-width: thin;
+        border-color: white;
+        text-decoration: none;
+        background: rgba(0,0,0,0);
+    }
+
+    img {
+        height: 15px
+    }
+
+    .body {
+        width: 100%;
+        height: 100%;
+        font-family: sans-serif;
+        background: #606c88; /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #3f4c6b, #606c88); /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+
+    .tabla {
+        margin-top:15px;
+        box-shadow: inset 0 3px 6px rgba(0,0,0,0.16), 0 4px 6px rgba(0,0,0,0.45);
+        border-radius: 8px;
+        width: 100%;
+        /*width: 100%*/
+    }
+
+    .encabezado {
+        background: rgb(249,0,214);
+        background: linear-gradient(90deg, rgba(249,0,214,1) 19%, rgba(8,36,241,1) 73%);
+    }
+
+        .encabezado:hover {
+            cursor: pointer;
+        }
+
+    th {
+        padding: 10px !important;
+        color: white;
+    }
+
+
+
+    td {
+        background-color: white;
+        padding: 15px;
+        text-align: left;
+        vertical-align: middle;
+        font-weight: 300;
+        font-size: 12px;
+    }
+
+  /*  tr:hover{
+        background-color:black!important;
+        color:white;
+    }*/
+    tr:last-child > td:first-child {
+        border-bottom-left-radius: 8px
+    }
+
+    tr:last-child > td:last-child {
+        border-bottom-right-radius: 8px
+    }
+
+    th:first-child {
+        border-top-left-radius: 8px;
+    }
+
+    th:last-child {
+        border-top-right-radius: 8px;
+    }
+</style>
+
+    <!--for demo wrap-->
+    <h1 style="color:white;text-align:center">Cotizaciones Arauco</h1>
+   
+    <div class="row">
+
+        <div class="col-12">
+            <div class="dropdown">
+                <button class="boton2 dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    Nueva
+                </button>
+                <ul class="dropdown-menu tercera" aria-labelledby="dropdownMenuButton1">
+                    @{ foreach (var row in ViewBag.Ubicaciones)
+                        {
+                            <li><a class="dropdown-item cuarta" href="@Url.Action("CreaCotizacion",new { idubicacion = row.Value})">@row.Text</a></li>
+                        }
+                    }                   
+                </ul>
+            </div>
+           
+        </div>
+    </div>
+
+   
+        <table class="tabla">
+       
+                <tr class="encabezado">
+                    <th style="width:10%">Número</th>
+                    <th style="width:10%">Fecha</th>
+                    <th style="width:45%">Detalle</th>
+                    <th>Total</th>
+                    <th>Ingeniero de Contratos</th>
+                    <th></th>
+                </tr>
+            
+        
+  
+  
+            
+                @{foreach (var row in Model)
+                    {
+                        <tr>
+                            <td style="width:10%">@row.IDCotizacion</td>
+                            <td style="width:10%">@row.Fecha.ToString("dd-MM-yyyy") </td>
+                            <td style="width:45%">@row.Detalles </td>
+                            <td>@row.TotalOferta.ToString("C") </td>
+                            <td>@row.IngenieroContratos </td>
+                            <td style="display:flex;align-items: center;align-content: center;">
+                                <a class="btn btn-success" title="Detalles" style="margin:auto" href="@Url.Action("Detalles", new {id = row.ID })"><img src="~/Content/Pictures/detail.png" /></a>
+                                <a class="btn btn-danger" title="Editar" style="margin:auto" href="@Url.Action("EdicionCotizacion", new {id = row.ID })"><img src="~/Content/Pictures/editar.png" /></a>
+                                <a class="btn btn-dark" title="Eliminar" style="margin:auto" href="@Url.Action("Detalles", new {id = row.ID })"><img src="~/Content/Pictures/delete.png" /></a>
+                            </td>
+                        </tr>
+
+                    } }
+
+        
+        </table>
+   
+
+
+
+
+

@@ -1,0 +1,198 @@
+﻿@model BibliotecaDeClases.Modelos.Transacciones.CECOsModel
+
+@{
+    ViewBag.Title = "DetalleCECO";
+}
+<style>
+    .card{
+        height:100%
+    }
+    .card-header{
+        background-color:midnightblue
+    }
+</style>
+<script>
+
+    $(function () {
+
+        $(".card-header").addClass('botonazul')
+
+  
+
+    });
+
+    
+
+
+
+</script>
+<h2 style="text-align:center;margin-bottom:25px">Detalle Centros de Costos</h2>
+<div class="container-fluid fondogris">
+
+
+    <div class="row">
+        <div class="col-md-1">
+            <div class="card">
+
+                <div class="card-header">
+                  ID
+
+                </div>
+                <div style="text-align:center" class="card-body">
+
+                    @Html.DisplayFor(model => model.ID)
+                </div>
+
+
+            </div>
+
+
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+
+                <div class="card-header">
+                    @Html.DisplayNameFor(model => model.Nombre)
+
+                </div>
+                <div class="card-body">
+
+                    @Html.DisplayFor(model => model.Nombre)
+                </div>
+
+
+            </div>
+
+
+        </div>
+        <div class="col-md-2">
+            <div class="card">
+
+                <div class="card-header">
+                    @Html.DisplayNameFor(model => model.Gasto)
+
+                </div>
+                <div class="card-body">
+                    @Model.Gasto.ToString("C")
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+        <div class="col-md-5">
+            <div class="card">
+
+                <div class="card-header">
+                    @Html.DisplayNameFor(model => model.Encargado)
+
+                </div>
+                <div class="card-body">
+                    @Html.DisplayFor(model => model.Encargado)
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+    <div class="row margenes">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    @Html.DisplayNameFor(model => model.Descripcion)
+
+                </div>
+                <div class="card-body">
+                    @Html.DisplayFor(model => model.Descripcion)
+
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+
+    </div>
+    <div class="row margenes">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    Creado por
+
+                </div>
+                <div class="card-body">
+                    @Html.DisplayFor(model => model.CreadoPor)
+
+                </div>
+            </div>
+
+
+
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    Creado En
+
+                </div>
+                <div class="card-body">
+                    @Html.DisplayFor(model => model.CreadoEn)
+
+                </div>
+            </div>
+
+
+
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    Editado por
+
+                </div>
+                <div class="card-body">
+                    @Html.DisplayFor(model => model.EditadoPor)
+
+                </div>
+            </div>
+
+
+
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    Editado En
+
+                </div>
+                <div class="card-body">
+                    @Html.DisplayFor(model => model.EditadoEn)
+
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+   
+
+
+    <p class="margenes">
+        <a class="btn btn-success" href="@Url.Action("EditarCECO",new { idceco = Model.ID })">Editar</a>
+        <a class="btn btn-danger" href="@Url.Action("VerCECOs")">Volver</a>
+
+    </p>
+</div>
+
+
+
+

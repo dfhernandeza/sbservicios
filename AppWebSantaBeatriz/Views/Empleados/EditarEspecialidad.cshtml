@@ -1,0 +1,69 @@
+﻿@model BibliotecaDeClases.Modelos.EspecialidadModel
+
+@{
+    ViewBag.Title = "EditarEspecialidad";
+}
+
+<head>
+    <script>
+        $(function () {
+            $('.form-control').keyup(function () {
+                this.value = this.value.toLocaleUpperCase();
+            });
+        });
+    </script>
+
+</head>
+<h2 style="margin-top:20px;margin-bottom:20px">Editar Especialidad</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="container-fluid fondogris" >
+
+        <form>
+            <div class="row border-dark align-items-end">
+                <div class="form-group col-md-4">
+                    <label for="Especialidad">Especialidad</label>
+                    @Html.HiddenFor(Model => Model.ID)
+                    @Html.EditorFor(model => model.Especialidad, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Especialidad, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="ValorHH">Valor HH</label>
+                    <input id="ValorHH" name="ValorHH" value="@Model.ValorHH" class="form-control" />
+           
+                    @Html.ValidationMessageFor(model => model.ValorHH, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-md-4 align-bottom" style="vertical-align:bottom !important">
+
+                    <button type="submit" class="btn btn-block botonrojo">Aceptar</button>
+                </div>
+
+
+            </div>
+            <div class="row border-dark">
+                <div class="col-12">
+                    <label for="Descripcion">Descripción</label>
+                    <textarea rows="2" id="Descripcion" name="Descripcion" class="form-control">@Model.Descripcion</textarea>
+                    @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+                </div>
+                
+                
+                
+            </div>
+
+
+        </form>
+    
+    <a href="@Url.Action("VerEspecialidades")" class="btn btn-primary margenes">Volver</a>
+    
+    </div>
+}
+
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }

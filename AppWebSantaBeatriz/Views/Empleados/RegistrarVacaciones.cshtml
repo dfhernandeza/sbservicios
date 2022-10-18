@@ -1,0 +1,127 @@
+﻿@model BibliotecaDeClases.Modelos.Empleados.RegistroVacacionesModel
+
+@{
+    ViewBag.Title = "RegistrarVacaciones";
+}
+<head>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
+</head>
+<h2>Registro de Vacaciones</h2>
+
+<form method="post" action="@Url.Action("RegistrarVacaciones")">
+    <input class="d-none" name="IDEmpleado" value="@Model.IDEmpleado" />
+    <input class="d-none" name="PeriodoInicio" />
+    <input class="d-none" name="PeriodoTermino" />
+    <div class="row">
+        <div class="col-sm-3">
+            <label for="Período">
+                Periodo
+            </label>
+            <select id="PeriodoSelect" class="form-control">
+                <option value="">
+                    -Seleccionar-
+                </option>
+                @foreach (var item in Model.Periodos)
+                {
+                    <option data-Inicio="@item.PeriodoInicio" data-Fin="@item.PeriodoTermino" value="">@(item.PeriodoInicio.ToString("dd-MM-yyyy") +" - " + item.PeriodoTermino.ToString("dd-MM-yyyy"))</option>
+                }
+
+            </select>
+        </div>
+        <div class="col-sm-3">
+            <label for="DiasDisponibles">Dias Disponibles </label>
+            <input class="form-control" name="DiasDisponibles" value="@Model.DiasDisponibles" type="text" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+            <label for="FechaInicial">Fecha Inicial</label>
+            <input type="text" autocomplete="off" class="fecha form-control" name="FechaInicial" />
+
+        </div>
+        <div class="col-sm-3">
+            <label for="FechaFinal">Fecha Final</label>
+            <input type="text" autocomplete="off" class="fecha form-control" name="FechaFinal" />
+
+        </div>
+        <div class="col-sm-3">
+            <label for="Dias">Dias Totales</label>
+            <input class="form-control" autocomplete="off" name="Dias" />
+
+        </div>
+        <div class="col-sm-3">
+            <label for="Inhabiles">Dias Inhábiles</label>
+            <input class="form-control" autocomplete="off" name="Inhabiles" />
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <label for="Comentarios">Comentarios</label>
+            <textarea class="form-control text-uppercase" name="Comentarios"></textarea>
+
+        </div>
+    </div>
+    <input type="submit" class="btn btn-outline-success mt-3" />
+</form>
+
+<h2 class="mt-4">Registro</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            Fecha Inicial
+        </th>
+        <th>
+            Fecha Final
+        </th>
+        <th>
+            Dias
+        </th>
+        <th>
+            Período
+        </th>
+        <th>
+            Comentarios
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model.Registro)
+    {
+<tr>
+    <td>@item.FechaInicial.ToString("dd-MM-yyyy")</td>
+    <td>@item.FechaFinal.ToString("dd-MM-yyyy")</td>
+    <td>@item.Dias.ToString("#.##")</td>
+    <td>@(item.PeriodoInicio.ToString("dd-MM-yyyy") + " Al " + item.PeriodoTermino.ToString("dd-MM-yyyy") )</td>
+    <td>@item.Comentarios</td>
+    <td>
+        <a style="text-decoration:none" href=@Url.Action("EditarRegistroVacaciones",new { id = item.ID })>
+
+            <img data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Registro" style="width:32px;height:32px" src="~/Content/Pictures/vacaciones-de-verano.png" />
+        </a>
+        <a style="text-decoration:none" href=@Url.Action("DescargarComprobante",new { id = item.ID })>
+
+            <img data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar Comprobante" style="width:32px;height:32px" src="~/Content/Pictures/download-pdf.png" />
+        </a>
+        
+    </td>
+</tr>
+    }
+
+</table>
+
+
+<script>
+    $(function () {
+        $('.fecha').datepicker({ dateFormat: 'dd-mm-yy' });
+        $.datepicker.setDefaults($.datepicker.regional['es']);
+    });
+    $(document).on('change', '#PeriodoSelect', function (e) {
+        var inicio = $(this).find(':selected').data('inicio');
+        var final = $(this).find(':selected').data('fin')
+        $('input[name="PeriodoInicio"]').val(inicio);
+        $('input[name="PeriodoTermino"]').val(final);
+    });
+</script>

@@ -1,0 +1,49 @@
+﻿@model AppWebSantaBeatriz.Models.Clientes.ClienteModel
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+
+<h3>¿Confirma que desea eliminar este cliente?</h3>
+<div>
+   
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.IDCliente)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IDCliente)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RazonSocial)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RazonSocial)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Giro)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Giro)
+        </dd>
+
+
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(x => x.ID)
+        <div class="form-actions no-color">
+            <input type="submit" value="Confirmar" class="btn btn-danger" /> 
+            <a class="btn btn-success" href="@Url.Action("VerClientes")">Volver</a>
+        </div>
+    }
+</div>

@@ -1,0 +1,398 @@
+﻿@model BibliotecaDeClases.EmpleadoModel
+
+@{
+    ViewBag.Title = "CrearEmpleado";
+}
+<head>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
+ 
+    <script>
+
+        $(function () {
+            $('#IDEmpleado').keyup(function (e) {
+
+                rut($(this))
+            });
+        });
+
+
+
+
+
+    </script>
+
+
+
+
+</head>
+<style>
+    .form-group, .row {
+        margin-bottom: 5px
+    }
+    label.error{
+        color:red
+    }
+   /* input.error {
+        out
+        outline-style: solid;
+        outline-color: red;
+    }*/
+
+
+</style>
+<h2 style="margin-top:20px;text-align:center ">Formulario Nuevo Empleado</h2>
+
+
+
+<div class="container-fluid fondogris">
+
+    <form id="formularioNuevoEmpleado" method="post" action="@Url.Action("CreaEmpleado","Empleados")">
+
+
+
+        <div class="row border-dark align-items-end">
+            <div class="form-group col-md-4">
+                <label for="Rut">Rut</label>
+                <input type="text" class="form-control" id="IDEmpleado" name="IDEmpleado" />
+
+
+
+            </div>
+            <div class="form-group col-md-4">
+                <label for="FechadeNacimiento">Fecha de Nacimiento</label>
+
+                <input autocomplete="off" type="text" class="form-control fecha" name="FechadeNacimiento" id="FechadeNacimiento" />
+
+            </div>
+
+            <div class="form-group col-md-4">
+                <label for="FechaContratacion">Fecha Contratación</label>
+                <input autocomplete="off" type="text" class="form-control fecha" name="FechaContratacion" id="FechaContratacion" />
+
+            </div>
+
+
+        </div>
+
+
+        <div class="form-group">
+            <label for="inputAddress">Nombres</label>
+            <input type="text" class="form-control" name="Nombre" id="Nombre" />
+
+
+        </div>
+        <div class="form-group">
+            <label for="inputAddress2">Apellidos</label>
+            <input type="text" class="form-control" name="Apellido" id="Apellido" />
+
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label class="form-label">
+                    Estado Civil
+                </label>
+                <select class="form-control" name="IDEstadoCivil" id="IDEstadoCivil">
+                    <option value="">-Seleccionar-</option>
+                    @foreach (var item in Model.TiposEstadoCivil)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">
+                    Nacionalidad
+                </label>
+                <select class="form-control" name="IDNacionalidad" id="IDNacionalidad">
+                    <option value="">-Seleccionar-</option>
+
+
+                    @foreach (var item in Model.Paises)
+                    {
+
+                        <option value="@item.Value">@item.Text</option>
+
+
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">
+                    Licencia de Conducir
+                </label>
+                <select class="form-control" name="IDTipoLicencia" id="IDTipoLicencia">
+                    <option value="">-Seleccionar-</option>
+                    @foreach (var item in Model.TiposLicenciaConducir)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="Rut">Email</label>
+                <input type="text" name="Email" id="Email" class="form-control" />
+
+
+            </div>
+            <div class="form-group col-md-6">
+                <label for="FechadeNacimiento">Fono</label>
+                
+                <input type="text" name="Fono" id="Fono" class="form-control" />
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label for="inputAddress2">Dirección</label>
+
+            <input type="text" name="Direccion" id="Direccion" class="form-control" />
+      
+
+        </div>
+
+        <div class="row align-items-end">
+            <div class="form-group col-md-3">
+                <label for="Cargo">Cargo</label>
+
+                <input type="text" name="Cargo" id="Cargo" class="form-control" />
+
+            </div>
+            <div class="form-group col-md-3">
+                <label for="Especialidad">Especialidad</label>
+                <select class="form-control" name="IDEspecialidad" id="IDEspecialidad">
+                    <option value="">-Seleccionar-</option>
+                    @foreach (var item in Model.ListaEspecialidades)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+
+
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputAddress2">Supervisor</label>
+                <select class="form-control" name="IDSupervisor" id="IDSupervisor">
+                    <option value="">-Seleccionar-</option>
+                    @foreach (var item in Model.ListaSupervisores)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+
+            </div>
+            <div class="form-group col-md-2">
+               
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" name="Planta" id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        Trabajador de Planta
+                    </label>
+                </div>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputAddress2">Otros Detalles</label>
+            <input type="text" name="OtrosDetalles" id="OtrosDetalles" class="form-control" />
+          
+
+        </div>
+
+
+        <div class="row">
+            <div class="form-group col-md-2">
+                <label for="TallaZapatos">Talla Zapatos</label>
+               
+            <select class="form-control" name="TallaZapatos" id="TallaZapatos">
+                <option value="">-Seleccionar-</option>
+                @foreach (var item in Model.ListaTallasZapatos)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="TallaPantalon">Talla Pantalon</label>
+                <select class="form-control" name="TallaPantalon" id="TallaPantalon">
+                    <option value="">-Seleccionar-</option>
+                    @foreach (var item in Model.ListaTallaPantalones)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+                
+
+
+            </div>
+            <div class="form-group col-md-2">
+                <label for="TallaPolera">Talla Polera</label>
+                <select class="form-control" name="TallaTop" id="TallaTop">
+                    <option value="">-Seleccionar-</option>
+                    @foreach (var item in Model.ListaTallasTop)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+                
+            </div>
+            <div class="form-group col-md-3">
+                <label for="TallaPolera">Valor HH Día</label>
+                <input name="ValorHH" id="ValorHH" class="form-control" />
+
+            </div>
+            <div class="form-group col-md-3">
+                <label for="TallaPolera">Sueldo Base</label>
+                <input name="SueldoBase" id="SueldoBase" class="form-control" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label class="form-label">Banco</label>
+                <select class="form-control" name="IDBanco" id="IDBanco">
+                    <option value="">-Seleccionar-</option>
+                    @foreach (var item in Model.Bancos)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Tipo de Cuenta</label>
+                <select class="form-control" name="IDTipoCuenta" id="IDTipoCuenta">
+                    <option value="">-Seleccionar-</option>
+                    @foreach (var item in Model.TiposCuentaBancaria)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">N° Cuenta</label>
+                <input class="form-control" name="NumCuenta" id="NumCuenta" />
+            </div>
+        </div>
+        <div style="margin-top:20px">
+            @*<a href="~/Empleados/VerEmpleados" class="btn btn-primary">Volver</a>*@
+            <input id="btnsubmit" type="submit" class="btn botonrojo" value="Crear">
+        </div>
+    </form>
+
+
+</div>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $("#formularioNuevoEmpleado").validate({
+            rules: {
+                IDEmpleado: "required",
+                FechadeNacimiento: "required",
+                FechaContratacion: "required",
+                Nombre: "required",
+                Apellido: "required",
+                IDEstadoCivil: "required",
+                IDNacionalidad: "required",
+                IDTipoLicencia: "required",
+                Email: "required",
+                Fono: "required",
+                Direccion: "required",
+                IDEspecialidad: "required",
+                IDSupervisor: "required",
+                TallaZapatos: "required",
+                TallaPantalon: "required",
+                TallaTop: "required",
+                IDBanco: "required",
+                IDTipoCuenta: "required",
+                NumCuenta: "required"
+            },
+            messages: {
+                IDEmpleado: "Debe proporcionar el rut del empleado",
+                FechadeNacimiento: "Debe proporcionar la fecha de nacimiento del empleado",
+                FechaContratacion: "Debe proporcionar la fecha de contratación",
+                Nombre: "Debe proporcionar un nombre",
+                Apellido: "Debe proporcionar un apellido",
+                IDEstadoCivil: "Debe proporcionar un estado civil",
+                IDNacionalidad: "Debe proporcionar una nacionalidad",
+                IDTipoLicencia: "Debe proporcionar un tipo de licencia",
+                Email: "Debe proporcionar un Email",
+                Fono: "Debe proporcionar un Fono",
+                Direccion: "Debe proporcionar un domicilio",
+                IDEspecialidad: "Debe proporcionar una especialidad",
+                IDSupervisor: "Debe proporcionar un supervisor",
+                TallaZapatos: "Debe proporcionar una talla de Zapatos",
+                TallaPantalon: "Debe proporcionar una talla de Pantalón",
+                TallaTop: "Debe proporcionar una talla de Polera",
+                IDBanco: "Debe proporcionar un banco",
+                IDTipoCuenta: "Debe proporcionar un tipo de cueta bancaria",
+                NumCuenta: "Debe proporcionar un numero de cuenta"
+            },
+            submitHandler: function (form) {
+                var CuentaBancaria = { IDBanco: $('#IDBanco').val(), IDTipoCuenta: $('#IDTipoCuenta').val(), NumCuenta: $('#NumCuenta').val() };
+                var Empleado = {
+                    IDEmpleado: $('#IDEmpleado').val(),
+                    FechadeNacimiento: $('#FechadeNacimiento').val(),
+                    FechaContratacion: $('#FechaContratacion').val(),
+                    Nombre: $('#Nombre').val(),
+                    Apellido: $('#Apellido').val(),
+                    IDEstadoCivil: $('#IDEstadoCivil').val(),
+                    IDNacionalidad: $('#IDNacionalidad').val(),
+                    IDTipoLicencia: $('#IDTipoLicencia').val(),
+                    Email: $('#Email').val(),
+                    Fono: $('#Fono').val(),
+                    Direccion: $('#Direccion').val(),
+                    Cargo: $('#Cargo').val(),
+                    IDEspecialidad: $('#IDEspecialidad').val(),
+                    IDSupervisor: $('#IDSupervisor').val(),
+                    OtrosDetalles: $('#OtrosDetalles').val(),
+                    TallaZapatos: $('#TallaZapatos').val(),
+                    TallaPantalon: $('#TallaPantalon').val(),
+                    TallaTop: $('#TallaTop').val(),
+                    ValorHH: $('#ValorHH').val(),
+                    SueldoBase: $('#SueldoBase').val(),
+                    CuentaBancaria: CuentaBancaria
+                };
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify(Empleado),
+                    success: function (response) {
+                        window.location.href = "/Empleados/VerEmpleados"
+                    },
+                });
+
+            },
+
+        });
+    });
+   
+    $(function () {
+        $('.fecha').datepicker({ dateFormat: 'dd-mm-yy' });
+        $.datepicker.setDefaults($.datepicker.regional['es']);
+    });
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+@section Scripts {
+    @Styles.Render("~/Content/themes/base/css")
+    @Scripts.Render("~/bundles/jqueryval")
+
+}

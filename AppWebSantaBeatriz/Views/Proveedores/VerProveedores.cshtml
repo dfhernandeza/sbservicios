@@ -1,0 +1,46 @@
+﻿@model IEnumerable<AppWebSantaBeatriz.Models.Proveedores.ProveedorModel>
+
+@{
+    ViewBag.Title = "Ver Proveedores";
+}
+
+<h2 style="text-align:center">Proveedores</h2>
+
+<p>
+   <a href="@Url.Action("NuevoProveedor")" class="btn btn-danger">Nuevo</a>       
+<table class="table">
+    <tr>
+        <th>
+            Rut
+        </th>
+        <th>
+         Razón Social
+        </th>
+        <th>
+         Nombre de Fantasía
+        </th>
+  
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.IDProveedor)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NombreProveedor)
+        </td>
+     
+        <td>
+            @Html.DisplayFor(modelItem => item.NombreFantasia)
+        </td>
+        <td>
+            <a class="btn btn-success" href="@Url.Action("EditarProveedor", new {idproveedor = item.IDProveedor })">Editar</a>
+            <a class="btn btn-primary" href="@Url.Action("EliminarProveedor", new {idproveedor = item.IDProveedor })">Eliminar</a>
+            <a class="btn btn-dark" href="@Url.Action("DetalleProveedor", new {idproveedor = item.IDProveedor })">Detalles</a>
+        </td>
+    </tr>
+}
+
+</table>

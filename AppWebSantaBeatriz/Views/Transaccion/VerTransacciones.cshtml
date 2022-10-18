@@ -1,0 +1,111 @@
+﻿@model IEnumerable<BibliotecaDeClases.Modelos.Transacciones.RendicionModel>
+
+@{
+    ViewBag.Title = "VerTransacciones";
+}
+<link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+<style>
+    .encabezado {
+        background-image: linear-gradient(to left bottom, #bc036c, #b21080, #a32194, #8d31a7, #6d3fb7, #5958cc, #3e6ddd, #0081eb, #00a4fc, #00c4ff, #00e1f9, #5ffbf1);
+    }
+</style>
+<h2>Transacciones</h2>
+
+<p>
+    <a class="btn btn-success" href="@Url.Action("nuevaTransferencia")">Nueva</a>
+</p>
+<table class="tabla">
+    <tr class="encabezado">
+       
+        <th width="10%">
+            Fecha Ingreso
+        </th>
+        <th>
+            Última Actualización
+        </th>
+        <th>
+            Fecha Rendición
+        </th>
+        <th>
+            Destinatario
+        </th>
+        <th>
+            Transacciones
+        </th>
+        <th>
+            Total Transferencia
+        </th>
+
+        <th>
+            Total Rendido
+        </th>
+
+        <th></th>
+    </tr>
+    @foreach (var item in Model)
+  
+    {
+<tr>
+   
+    <td>
+        @(item.Fecha.ToString("dd-MM-yyyy"))
+    </td>
+    <td>
+        @(item.EditadoEn.ToString("dd-MM-yyyy"))
+    </td>
+    <td>
+        @if (item.FechaRendicion == DateTime.MinValue)
+        {
+            @("Pendiente")
+        }
+        else
+        {
+            @(item.FechaRendicion.ToString("dd-MM-yyyy"))
+        }
+
+    </td>
+    <td>
+        @item.Empleado
+    </td>
+    <td>
+        @item.CuentaTransacciones
+    </td>
+    <td>
+        @(item.Total.ToString("C"))
+    </td>
+    <td>
+        @item.MontoRendido.ToString("C")
+    </td>
+
+    <td>
+        <a href="@Url.Action("ProcesarRendicion",new {iddoc = item.ID  })" class="btn btn-success">
+            <img data-bs-toggle="tooltip" data-bs-placement="top" title="Procesar" src="~/Content/Pictures/process.png" />
+        </a>
+        <a href="@Url.Action("AmpliarRendicion",new {iddoc = item.ID, idcuenta = item.IDCuentaEmpleado  })" class="btn btn-dark">
+            <img data-bs-toggle="tooltip" data-bs-placement="top" title="Ampliar" src="~/Content/Pictures/add-button.png" />
+        </a>
+        @if (item.FechaRendicion == DateTime.MinValue)
+        {
+            <a  class="btn btn-danger" >
+                <img data-bs-toggle="tooltip" data-bs-placement="top" title="Debe procesar la rendición" src="~/Content/Pictures/add-button.png" />
+            </a>
+        }
+        else
+        {
+            <a href="@Url.Action("NuevaCompra",new {iddocrendicion = item.ID})" class="btn btn-danger">
+                <img data-bs-toggle="tooltip" data-bs-placement="top" title="Comprar" src="~/Content/Pictures/add-button.png" />
+            </a>
+        }
+
+    </td>
+</tr>
+   
+        
+    }
+
+</table>
+<script>
+    $(function () {
+        $('[data-bs-toggle="tooltip"]').tooltip();
+    })
+</script>

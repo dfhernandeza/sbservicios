@@ -1,0 +1,1355 @@
+﻿@model BibliotecaDeClases.Modelos.Cotizaciones.CotizacionAraucoModel
+
+@{
+    ViewBag.Title = "Detalles";
+}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="~/Scripts/Funciones.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#ItemMaterialModal').autocomplete({
+            source: "/CotizacionArauco/getItemAutocomplete/"                     
+            
+        });
+    });
+   
+    $(document).on('autocompleteselect', '#ItemMaterialModal',  function (event, ui) {
+   
+      var precio =  getPrice(ui.item.label);
+        $('#PrecioMaterialModal').val(precio);
+    });
+    function getPrice(item) {
+        var datos;
+        $.ajax({
+            type: "POST",
+            async:false,
+            url: "/CotizacionArauco/getPriceAuto/",
+            data: {item:item},
+            dataType: "json",
+            success: function (data) {
+                datos = data;
+            }
+        });
+        return datos;
+    }
+
+    $(document).ready(function (e) {
+        $('#ItemEquiposModal').autocomplete({
+            source: "/CotizacionArauco/getItemES/"
+        });
+    });
+    $(document).on('autocompleteselect', '#ItemEquiposModal',  function (event, ui) {
+
+      var data =  getPriceES(ui.item.label);
+        $('#PrecioEquiposModal').val(data.PUnitario);
+        $('#UnidadEquiposModal').val(data.Unidad);
+        $('#CantidadEquiposModal').focus();
+    });
+
+
+    function getPriceES(item) {
+        var datos;
+        $.ajax({
+            type: "POST",
+            async: false,
+            url: "/CotizacionArauco/getPreciosES/",
+            data: { item: item },
+            dataType: "json",
+            success: function (data) {
+                datos = data;
+            }
+        });
+        return datos;
+    }
+
+
+</script>
+<style>
+    .ui-front {
+        z-index: 9999999 !important;
+    }
+    .fila1 {
+        background-color: #CCCC00;
+        border: solid;
+        border-width: thin;
+        border-color: #696158
+    }
+
+    .etiquetasgris {
+        background-color: #696158;
+        color: white;
+        padding-left: 5px;
+        font-weight: 600;
+        font-family: Calibri;
+        font-size: 15px;
+        border-bottom: solid;
+        border-color: #696158;
+    }
+
+    .valoresblanco {
+        border-bottom: solid;
+        border-right: solid;
+        border-width: thin;
+        border-color: #696158;
+        font-family: Calibri;
+        font-size: 15px;
+        font-weight: 600;
+        padding-left: 5px;
+    }
+
+    textarea:focus, input:focus {
+        outline: none;
+    }
+
+    select:focus {
+        outline: none
+    }
+
+    .areatexto {
+        border: solid;
+        border-color: #696158;
+        font-family: Calibri;
+        border-width: thin;
+    }
+
+
+    .filas {
+        border-bottom: solid;
+        border-width: thin;
+        border-color: #696158;
+    }
+
+    .sinborde {
+        border: none;
+        width: 100%
+    }
+
+    .button {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .nuevo {
+        width: 15px;
+        /*height:15px;*/
+        padding: 3px;
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    .nuevofp {
+        width: 15px;
+        /*height:15px;*/
+        padding: 3px;
+        background-color: orangered;
+        border: none;
+        color: white;
+        text-align: center;
+        text-decoration: none !important;
+        margin-right: 3px
+    }
+
+    .formmio {
+        border: none;
+        border-bottom: solid;
+        border-bottom-color: blue;
+        border-width: 2px
+    }
+
+    .modal-header {
+        color: white;
+        background-color: #696158;
+    }
+
+    .btn3 {
+        background-color: orangered;
+        color: white;
+        border: none;
+        padding: 7px 16px;
+    }
+
+    .materiales {
+        border-bottom: solid;
+        border-left: solid;
+        font-family: Calibri;
+        font-size: 15px;
+        font-weight: 600;
+        border-color: #696158;
+    }
+
+    .btn4 {
+        width: 15px;
+        /*height:15px;*/
+        padding: 3px;
+        background-color: blue;
+        border: none;
+        color: white;
+        text-align: center;
+        text-decoration: none !important;
+        margin-right: 3px
+    }
+
+    .btn5 {
+        width: 15px;
+        /*height:15px;*/
+        padding: 3px;
+        background-color: red;
+        border: none;
+        color: white;
+        text-align: center;
+        text-decoration: none !important;
+        margin-right: 3px
+    }
+
+    .verfp {
+        width: 15px;
+        /*height:15px;*/
+        padding: 3px;
+        background-color: black;
+        border: none;
+        color: white;
+        text-align: center;
+        text-decoration: none !important;
+        margin-right: 3px
+    }
+
+    .minimizable {
+    }
+
+    .fila1:hover {
+        cursor: pointer;
+    }
+
+    .pdf {
+        margin-top: 5px;
+        height: 60px;
+        width: 60px;
+    }
+
+    .ordenable:hover {
+        cursor: pointer;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row fila1">
+        <div class="col-md-6">
+            <strong id="minimizar">ANTECENTES EMPRESA DE SERVICIOS</strong>
+        </div>
+        <div class="col-md-6">
+            <strong id="minimizar">ANTECEDENTES LICITACION</strong>
+            <div class="float-end"><a id="BtnServicio" href="@Url.Action("NuevoServicioArauco","Servicios",new {idcot= Model.ID })" class="btn-sm" style="display:none;text-decoration:none;color:green;background-color:white;font-weight:800">Servicio</a></div>
+            <div class="float-end">
+                <strong>Estado:</strong> <select id="IDEstado" style="border:none;background: rgba(0,0,0,0)">
+                    @foreach (var item in Model.Estados)
+                    {
+                        if (Model.IDEstado.ToString() == item.Value)
+                        {
+                            <option selected="selected" value="@item.Value">@item.Text</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="minimizable">
+        <div class="row ">
+            <div class="col-md-6">
+                <div class="row"><div class="col-5 etiquetasgris">Código SAP</div><div class="col-7 valoresblanco">85756</div></div>
+            </div>
+            <div class="col-md-6">
+                <div class="row"><div class="col-5 etiquetasgris">N° Solicitud Pedido</div><div class="col-7 valoresblanco">@Model.SolicitudPedido</div></div>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-md-6">
+                <div class="row"><div class="col-5 etiquetasgris">Rut Empresa Contratista</div><div class="col-7 valoresblanco">76.261.857-5</div></div>
+            </div>
+            <div class="col-md-6">
+                <div class="row"><div class="col-5 etiquetasgris">N° Licitación</div><div class="col-7 valoresblanco">@Model.NLicitacion</div></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row"><div class="col-5 etiquetasgris">Razón Social</div><div class="col-7 valoresblanco">Sociedad Avendaño y Hernandez Limitda</div></div>
+            </div>
+            <div class="col-md-6">
+
+                <div class="row">
+                    <div class="col-5 etiquetasgris">Nombre Ingeniero Contratos</div><div class="col-7 valoresblanco">
+                        @Model.IngenieroContratos
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row"><div class="col-5 etiquetasgris">Nombre Representante Legal</div><div class="col-7 valoresblanco">Maria Avendaño Mardones</div></div>
+            </div>
+            <div class="col-md-6">
+                <div class="row"><div class="col-5 etiquetasgris">Fecha Oferta</div><div class="col-7 valoresblanco">@Model.Fecha.ToString("dd-MM-yyyy")</div></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row"><div class="col-5 etiquetasgris">Rut Representante Legal</div><div class="col-7 valoresblanco">9.427.412-5</div></div>
+            </div>
+            <div class="col-md-6">
+                <div class="row"><div class="col-5 etiquetasgris">Validez Oferta</div><div class="col-7 valoresblanco">@Model.ValidezOferta.ToString("dd-MM-yyyy")</div></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row"><div class="col-5 etiquetasgris">Persona de Contacto</div><div class="col-7 valoresblanco">David Hernandez Perez</div></div>
+            </div>
+            <div class="col-md-6">
+                <div class="row"><div class="col-5 etiquetasgris">N° Cotización </div><div class="col-7 valoresblanco">@Model.IDCotizacion</div>@Html.HiddenFor(x => x.ID)</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row"><div class="col-5 etiquetasgris">Telefonos / Fax</div><div class="col-7 valoresblanco">4222524696</div></div>
+            </div>
+            <div class="col-md-6">
+                <div class="row"><div class="col-5 etiquetasgris">Ejecución (Días Hábiles)</div><div class="col-7 valoresblanco">@Model.TiempoEjecucion</div></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row"><div class="col-5 etiquetasgris">Celular</div><div class="col-7 valoresblanco">56999778984</div></div>
+            </div>
+            <div class="col-md-6">
+                <div class="row"><div class="col-5 etiquetasgris">Mutual Seguridad</div><div class="col-7 valoresblanco">ACHS</div></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row"><div class="col-5 etiquetasgris">E-mail</div><div class="col-7 valoresblanco">s.i.santabeatriz@gmail.com</div></div>
+            </div>
+            <div class="col-md-6">
+                <div class="row"><div class="col-5 etiquetasgris">Tasa (%)</div><div class="col-7 valoresblanco">0,93</div></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-6">
+                <div class="row"><div class="col-sm-5 etiquetasgris">N° RFP Ariba</div><div class="col-sm-7 valoresblanco">@Model.NRFPAriba</div></div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row" style="height:6px">
+
+    </div>
+    <div class="row etiquetasgris">
+        <div class="col-md-12" style="text-align:center">
+            DESCRIPCION  DEL SERVICIO EXTERNO COTIZADO COMO OBRA VENDIDA
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 areatexto">@Model.Detalles</div>
+    </div>
+    <div class="row etiquetasgris">
+        <div class="col-md-12" style="text-align:center">
+            Notas
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 areatexto">@Model.Notas</div>
+    </div>
+    <div class="row" style="height:6px">
+
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-8 etiquetasgris">01. Costos de insumos y materiales </div>
+                <div class="col-md-4 valoresblanco" style="border-top: solid;border-width: thin;border-color: #696158">@(Model.MaterialesExc.Sum(item => item.PUnitario*item.Cantidad).ToString("C"))</div>
+            </div>
+            <div class="row">
+                <div class="col-md-8 etiquetasgris">02. Costos del personal por servicio puntual cotizado:</div>
+                <div class="col-md-4 valoresblanco">@(Model.Personal.Sum(item => item.Cantidad*item.HH*item.ValorHH).ToString("C"))</div>
+            </div>
+            <div class="row ">
+                <div class="col-md-8 etiquetasgris">03. Costo equipos y servicios profesionales externos: </div>
+                <div class="col-md-4 valoresblanco">@(Model.Equipos.Sum(item => item.PUnitario*item.Cantidad)?.ToString("C"))</div>
+            </div>
+            <div class="row ">
+                <div class="col-md-8 etiquetasgris">Subtotal Costos</div>
+                @{var subtotal = (Model.MaterialesExc.Sum(item => item.PUnitario * item.Cantidad) + Model.Personal.Sum(item => item.Cantidad * item.HH * item.ValorHH) + Model.Equipos.Sum(item => item.PUnitario * item.Cantidad)); }
+                <div class="col-md-4 valoresblanco">
+                    @(subtotal?.ToString("C"))
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-7 etiquetasgris"><div id="CambiaUtilidad" style="cursor:pointer;width:max-content">04. Utilidad</div></div>
+                <div class="col-md-1 etiquetasgris">@(Model.Utilidad.ToString() + "%")</div>
+                @{ var utilidad = (Model.Utilidad * subtotal / 100); }
+                <div class="col-md-4 valoresblanco">@(utilidad?.ToString("C")) </div>
+            </div>
+            <div class="row">
+                <div class="col-7 etiquetasgris"><div id="CambiaGastosGenerales" style="cursor:pointer;width:max-content">05. Gastos Generales:</div> </div>
+                <div class="col-1 etiquetasgris">@(Model.GastosGenerales.ToString() + "%")</div>
+                @{ var gastos = (Model.GastosGenerales * subtotal / 100);}
+                <div class="col-4 valoresblanco">@(gastos?.ToString("C")) </div>
+
+            </div>
+            <div class="row" style="height:6px;border-right: solid;border-width: thin;border-color: #696158"></div>
+            <div class="row">
+                <div class="col-md-8 etiquetasgris">06. Valor Total Oferta  (Valor Neto)  </div>
+                <div style="border-top: solid;border-width: thin;border-color: #696158" class="col-4  valoresblanco">@((subtotal + utilidad + gastos)?.ToString("C"))</div>
+            </div>
+        </div>
+        <div class="col-3 valoresblanco" style="border-top: solid;border-width: thin;border-color: #696158">
+            <div class="row"><div class="col-12">Comentarios:</div></div>
+            <div class="row"><div class="col-12"><textarea id="Comentarios" name="Comentarios" class="sinborde" rows="4" style="height:100%"></textarea></div></div>
+        </div>
+    </div>
+    <div class="row" style="height:6px"></div>
+    <div id="TablaMateriales">
+        <div class="row etiquetasgris">
+            <div class="col-md-6">Detalle compra de materiales, repuestos y/o equipos</div>
+            <div class="col-1">Unidad</div>
+            <div class="col-1">Cantidad</div>
+            <div class="col-2 ordenable" id="ordenpreciomateriales">Precio Unitario</div>
+            <div class="col-2">
+                Valor Total ($)
+                <button type="button" style="margin-right:6px" class="nuevo float-end" id="BtnNuevoMaterial" title="Nuevo Material">+</button>
+                <a class="nuevofp float-end" href="@Url.Action("NuevaCotizacionFabricacionPropia","Cotizaciones",new {idcotiprincipal = Model.ID, cotiprincipal = Model.Detalles, origen = "Arauco" })" title="Nuevo Item Fabricación Propia">+</a>
+            </div>
+        </div>
+        @{ foreach (var row in Model.MaterialesExc)
+            {
+
+                <div id="materialdiv" class="row">
+
+                    <div name="idcot" id="idcell" style="display:none">@row.ID</div>
+                    <div name="idcategoria" id="idcategoria" style="display:none">@row.IDCategoria</div>
+                    <div name="item" id="itemcell" class="col-md-6 materiales">@row.Item</div>
+                    <div name="unidad" id="unidadcell" class="col-1 materiales">@row.Unidad</div>
+                    <div name="cantidad" id="cantidadcell" class="col-1 materiales">@(row.Cantidad.ToString("0.##"))</div>
+                    <div name="punitario" id="punitariocell" class="col-2 materiales">@(row.PUnitario.ToString("C"))</div>
+
+
+                    <div name="total" id="totalcell" class="col-2 materiales" style="        border-right: solid;border-color: #696158;">
+                        @((row.Cantidad * row.PUnitario).ToString("C"))
+                        @if (row.Tipo == "SUBCOTIZACION")
+                        {
+                            <a class="verfp float-end" href="@Url.Action("VerProductoFabricacionPropia",new {id = row.ID})" title="Detalles Item Fabricación Propia">!</a>
+                            <a class="nuevofp float-end" href="@Url.Action("EditarCotizacionFabricacionPropia","Cotizaciones",new {id = row.ID, origen = "Arauco"})" title="Edita Item Fabricación Propia">+</a>
+                            <button class="btn5 float-end" id="btnEliminarSubCoti" title="Eliminar">x</button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn4 float-end" id="btnEditarMaterial" title="Editar">+</button>
+                            <button class="btn5 float-end" id="btnEliminarMaterial" title="Eliminar">x</button>
+                        }
+
+
+
+                    </div>
+
+
+                </div>
+
+            }
+        }
+    </div>
+    <div class="row etiquetasgris"><div class="col-10">Total  Materiales   (sin % de recargo)</div><div class="col-2">@(Model.MaterialesExc.Sum(item => item.PUnitario*item.Cantidad).ToString("C"))</div></div>
+    <div class="row" style="height:6px"></div>
+    <div class="row etiquetasgris">
+        <div class="col-4">Detalle personal (indicar claramente especialidad)</div>
+        <div class="col-1">Cant.Pers.</div>
+        <div class="col-1">H.H.</div>
+        <div class="col-2">Total H.H.</div>
+        <div class="col-2">Valor Unit.H.H.</div>
+        <div class="col-2">
+            Valor Total H.H.($)
+            <button type="button" style="margin-right:6px" class="nuevo float-end" id="btnNuevoPersonal" title="Nuevo">+</button>
+        </div>
+    </div>
+
+    @{ foreach (var row in Model.Personal)
+        {
+
+            <div class="row">
+                <div name="idcot" id="idcell" style="display:none">@row.ID</div>
+                <div name="idespecialidad" id="idEspecialidad" style="display:none">@row.IDEspecialidad</div>
+                <div name="especialidad" id="especialidadcell" class="col-4 materiales">@row.Especialidad <input type="text" style="display:none" id="IDEspecialidad" value="@row.IDEspecialidad" /></div>
+                <div name="cantidad" id="cantidadcell" class="col-1 materiales">@row.Cantidad</div>
+                <div name="hh" id="hhcell" class="col-1 materiales">@(row.HH.ToString("0.##"))</div>
+                <div name="totalhh" id="totalhhcell" class="col-2 materiales">@((row.Cantidad * row.HH).ToString("0.##"))</div>
+                <div name="valorhh" id="valorhh" class="col-2 materiales">@((row.ValorHH).ToString("C"))</div>
+                <div name="totalplata" id="totalcell" class="col-2 materiales" style="        border-right: solid;border-color: #696158;">
+                    @((row.Cantidad * row.HH * row.ValorHH).ToString("C"))
+                    <button type="button" class="btn4 float-end" id="btnEditarPersonal" data-id="@row.ID" title="Editar">
+                        +
+                    </button>
+                    <button id="btnEliminarPersonal" class="btn5 float-end" title="Eliminar">x</button>
+                </div>
+            </div>
+
+        }
+    }
+    <div class="row etiquetasgris">
+        <div class="col-6">Costos del personal (deben incluir todos los costos legales y de protección personal)</div>
+        <div class="col-2">Cant. Total HH</div>
+        <div class="col-2">@(Model.Personal.Sum(item => item.Cantidad*item.HH))</div>
+        <div class="col-2">@(Model.Personal.Sum(item => item.Cantidad*item.HH*item.ValorHH).ToString("C"))</div>
+    </div>
+    <div class="row" style="height:6px"></div>
+    <div class="row etiquetasgris">
+        <div class="col-6">Equipos de apoyo y Servicios Profesionales Externos</div>
+        <div class="col-1">Unidad</div>
+        <div class="col-1">Cantidad</div>
+        <div class="col-2">Precio Unitario</div>
+        <div class="col-2">
+            Valor Total ($)
+            <button type="button" style="margin-right:6px" class="nuevo float-end" id="btnNuevoEquipo" title="Nueva">+</button>
+
+        </div>
+    </div>
+    @{ foreach (var row in Model.Equipos)
+        {
+            <div class="row">
+                <div name="idcot" id="idcell" style="display:none">@row.ID</div>
+                <div name="item" id="itemcell" class="col-6 materiales">@row.Item</div>
+                <div name="unidad" id="unidadcell" class="col-1 materiales">@row.Unidad</div>
+                <div name="cantidad" id="cantidadcell" class="col-1 materiales">@row.Cantidad</div>
+                <div name="punitario" id="punitariocell" class="col-2 materiales">@(row.PUnitario?.ToString("C"))</div>
+                <div name="total" id="totalcell" class="col-2 materiales" style="        border-right: solid;border-color: #696158;">
+                    @((row.Cantidad * row.PUnitario)?.ToString("C"))
+                    <button type="button" class="btn4 float-end" id="btnEditarEquipo" title="Editar">+</button>
+                    <button class="btn5 float-end" id="btnEliminarEquipo" title="Eliminar">x</button>
+                </div>
+            </div>
+
+        }
+    }
+    <div class="row etiquetasgris"><div class="col-10">Total costos de equipos de apoyo y servicios profesionales   externos</div><div class="col-2">@(Model.Equipos.Sum(item => item.PUnitario*item.Cantidad)?.ToString("C"))</div></div>
+
+    <a title="Imprimir PDF" href="@Url.Action("GetPDFFileAsync", new {id = Model.ID })"><img class="pdf" src="~/Content/Pictures/pdf-icon.png" /></a>
+    <a title="Imprimir Excel" href="@Url.Action("GetExcelFileAsync", new {id = Model.ID })"><img class="pdf" src="~/Content/Pictures/excelicon.png" /></a>
+    <a title="Imprimir PDF Oferta Técnica" href="@Url.Action("GetPDFFileOFTAsync", new {id = Model.ID })"><img class="pdf" src="~/Content/Pictures/pdf-icon.png" /></a>
+    <a title="Imprimir Excel Oferta Técnica" href="@Url.Action("GetExcelOfertaTecnicaFileAsync", new {id = Model.ID })"><img class="pdf" src="~/Content/Pictures/excelicon.png" /></a>
+    
+</div>
+
+@*Materiales*@
+<script>
+    var origen;
+    var IDMaterial;
+    $(document).ready(function () {
+        $(document).on('click', '#BtnNuevoMaterial', function (e) {
+            $('#materialModal').modal('show');
+            $('#idmaterialcot').val($('#ID').val())
+            origen = 'Nuevo';
+        });
+        $(document).on('click', '#IngresarMaterialModal', function (e) {
+            if (origen == 'Editar') {
+
+                $.ajax({
+                    url: "/CotMaterial/EditaMaterial/",
+                    type: 'POST',
+                    async: true,
+                    dataType: 'text',
+                    data: $("#nuevomaterialform").serialize(),
+
+                    success: function (data) {
+
+                        $("#materialModal").modal('hide');
+                        location.reload();
+                    },
+                });
+
+            }
+            else {
+
+                $.ajax({
+                    url: "/CotMaterial/NuevoMaterial/",
+                    type: 'POST',
+                    async: true,
+                    dataType: 'text',
+                    data: $("#nuevomaterialform").serialize(),
+                    success: function (data) {
+
+                        $("#materialModal").modal('hide');
+                        location.reload();
+                    },
+                });
+
+
+
+            }
+
+        });
+        $(document).on('click', '#btnEditarMaterial', function (e) {
+            origen = 'Editar';
+            generaJson($(this).closest('.row').children(), '#nuevomaterialform');
+            $('#materialModal').modal('show');
+
+        });
+        $(document).on('keyup', "#CantidadMaterialModal,#PrecioMaterialModal", function (e) {
+            multiplica('#CantidadMaterialModal', "#PrecioMaterialModal", "#VTotalMaterialModal");
+        });
+        $(document).on('click', "#btnEliminarMaterial", function (e) {
+            var tr = $(this).closest('.row');
+            IDMaterial = $(tr.find('#idcell')).text();
+            $('#EliminaMaterial').show();
+            $("#eliminaMaterialModal").modal('show');
+            document.getElementById("MaterialEliminado").innerHTML = '¿Confirma que desea eliminar  ' + $(tr.find('#itemcell')).text() + ' de la lista de materiales?';
+        });
+        $(document).on('click', "#btnEliminarSubCoti", function (e) {
+            var tr = $(this).closest('.row');
+            IDProduccionPropia = $(tr.find('#idcell')).text();
+            $('#EliminaSubCotizacion').show();
+            $("#eliminaMaterialModal").modal('show');
+            document.getElementById("MaterialEliminado").innerHTML = '¿Confirma que desea eliminar  ' + $(tr.find('#itemcell')).text() + ' de la lista?';
+        });
+        $(document).on('click', "#EliminaMaterial", function () {
+
+            $.ajax({
+                url: "/CotMaterial/BorrarMaterial/",
+                type: 'POST',
+                async: true,
+                dataType: 'text',
+                data: {
+                    id: IDMaterial,
+                },
+                success: function (data) {
+
+                    $("#eliminaMaterialModal").modal('hide');
+                    location.reload();
+                },
+            });
+        });
+        $(document).on('click', '#EliminaSubCotizacion', function (e) {
+            $.ajax({
+                url: "/CotizacionArauco/BorraSubCoti/",
+                type: 'POST',
+                async: true,
+                dataType: 'text',
+                data: {
+                    id: IDProduccionPropia
+
+                },
+                success: function (data) {
+
+                    $("#eliminaMaterialModal").modal('hide');
+                    location.reload();
+                },
+            });
+        });
+        $(document).on('click', '.cerrar', function (e) {
+            $("#materialModal").modal('hide');
+            LimpiaMaterialModal();
+            $("#eliminaMaterialModal").modal('hide');
+        });
+        $(document).on('shown.bs.modal', '#materialModal' , function () {
+            $('#ItemMaterialModal').focus();
+        });
+        function LimpiaMaterialModal() {
+            $('#materialModal').find('input').not('.btn3').val('');
+            $('#materialModal').modal('hide');
+        };
+    });
+</script>
+
+@* Personal *@
+<script>
+    var IDPersonal;
+    var Origen;
+    //Abre modal
+    //=======================================================================================================
+    $(document).ready(function () {
+        $(document).on('click', '#btnNuevoPersonal', function (e) {
+            Origen = 'Nuevo'
+            $('#idpersonalform').val($('#ID').val());
+            $('#ModalPersonal').modal('show');
+        });
+        $(document).on('click', '.cierrapersonal', function (e) {
+            $('#ModalPersonal').modal('hide');
+            LimpiarPersonalModal();
+            $('#ModalEliminarPersonal').modal('hide');
+        });
+        $(document).on('click', '#btnEliminarPersonal', function (e) {
+            var tr = $(this).closest('.row');
+            IDPersonal = $(tr.find('#idcell')).text();
+            document.getElementById("EliminarPersonalParrafo").innerHTML = "¿Confirma que desea eliminar " + $(tr.find('#especialidadcell')).text() + " de la lista de personal?";
+            $('#ModalEliminarPersonal').modal('show');
+        });
+        $(document).on('change', '#IDEspecialidadModal', function (e) {
+            $.ajax({
+                url: "/CotPersonal/GetValorHH/",
+                type: 'POST',
+                async: true,
+                dataType: 'text',
+                data: {
+                    id: $(this).val()
+                },
+                success: function (data) {
+
+                    data = JSON.parse(data);
+                    $("#ValorHHModal").val(data);
+                },
+            });
+
+        });
+        $(document).on('click', '#IngresarPersonalModal', function (e) {
+            if (Origen == 'Nuevo') {
+                var modelo = { IDCot: $('#idpersonalform').val(), IDEspecialidad: $('#IDEspecialidadModal').val(), HH: $('#HHModal').val(), ValorHH: $('#ValorHHModal').val(), Cantidad: $('#CantidadPersonalModal').val(), Dias: $('#DiasModal').val() }
+
+                $.ajax({
+                    url: "/CotPersonal/NuevoPersonal/",
+                    type: 'POST',
+                    async: true,
+                    dataType: 'json',
+                    contentType:'application/json; charset=utf-8',
+                    data: JSON.stringify(modelo),
+                    success: function () {
+
+                        location.reload();
+                    },
+                });
+
+            }
+            else {
+                var modelo = { ID: $('#idpersonalform').val(), IDEspecialidad: $('#IDEspecialidadModal').val(), HH: $('#HHModal').val(), ValorHH: $('#ValorHHModal').val(), Cantidad: $('#CantidadPersonalModal').val(), Dias: $('#DiasModal').val() }
+            
+                $.ajax({
+                    url: "/CotPersonal/EditarPersonal/",
+                    type: 'POST',
+                    async: true,
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(modelo),
+                    success: function () {
+
+                        location.reload();
+                    },
+                });
+
+            }
+        });
+        $(document).on('keyup', "#CantidadPersonalModal,#HHModal", function (e) {
+            multiplica("#CantidadPersonalModal", "#HHModal", "#TotalHHModal");
+        });
+        $(document).on('keyup', "#HHModal,#TotalHHModal", function (e) {
+            multiplica("#TotalHHModal", "#ValorHHModal", "#TotalPersonalModal");
+        });
+        $(document).on('click', "#btnEditarPersonal", function () {
+            Origen = "Editar";
+            var id = $(this).data('id');
+            $('#idpersonalform').val(id);
+            /*  var tr = $(this).closest('.row');*/
+            generaJson($(this).closest('.row').children(), '#nuevopersonalform')
+            $('#ModalPersonal').modal('show');
+        });
+        $(document).on('click', '#ConfirmarEliminarPersonalModal', function (e) {
+            $.ajax({
+                url: "/CotPersonal/BorrarPersonal/",
+                type: 'POST',
+                async: true,
+                dataType: 'text',
+                data: {
+                    id: IDPersonal
+                },
+                success: function () {
+
+                    location.reload();
+
+                    $('#ModalEliminarPersonal').modal('hide');
+
+                },
+            });
+        })
+    });
+    function LimpiarPersonalModal() {
+        $('#ModalPersonal').find('input').not('.btn3').val('');
+        $('#ModalPersonal').find('select').val(0)
+        $('#ModalPersonal').modal('hide');
+    };
+</script>
+
+@* Equipos *@
+<script type="text/javascript">
+    var Origen;
+    var IDEquipos;
+    $(document).ready(function () {
+        $(document).on('click', '#btnNuevoEquipo', function (e) {
+            $('#nuevoEquipoModal').modal('show');
+            $('#idcotequipos').val($('#ID').val())
+            Origen = "Nuevo"
+        });
+        $(document).on('click', '#btnEditarEquipo', function () {
+            origen = 'Editar';
+            generaJson($(this).closest('.row').children(), '#equiposform');
+            $('#nuevoEquipoModal').modal('show');
+        });
+        $(document).on('click', '#IngresarEquiposModal', function () {
+            if (Origen == 'Nuevo') {
+
+                $.ajax({
+                    url: "/CotEquiposServicios/CotiEquiposServicios/",
+                    type: 'POST',
+                    async: true,
+                    dataType: 'text',
+                    data: $('#equiposform').serialize(),
+                    success: function (data) {
+
+                        $("#nuevoEquipoModal").modal('hide');
+                        location.reload();
+                    },
+                });
+
+
+
+            }
+
+            else {
+
+
+                $.ajax({
+                    url: "/CotEquiposServicios/EditarEquiposServicios/",
+                    type: 'POST',
+                    async: true,
+                    dataType: 'text',
+                    data: $('#equiposform').serialize(),
+                    success: function (data) {
+
+                        $("#nuevoEquipoModal").modal('hide');
+                        location.reload();
+                    },
+                });
+
+
+
+
+
+            }
+
+
+
+        });
+        $(document).on('keyup', '#CantidadEquiposModal,#PrecioEquiposModal', function (e) {
+            multiplica('#CantidadEquiposModal', '#PrecioEquiposModal', '#VTotalEquiposModal');
+        });
+        $(document).on('click', '.cerrarequipos', function (e) {
+            LimpiarEquipoModal();
+            $("#nuevoEquipoModal").modal('hide');
+            $("#eliminaEquipoModal").modal('hide');
+        });
+        $(document).on('click', "#EliminaEquipo", function (e) {
+
+            $.ajax({
+                url: "/CotEquiposServicios/BorrarEquiposServicios/",
+                type: 'POST',
+                async: true,
+                dataType: 'text',
+                data: {
+                    id: IDEquipos,
+                },
+                success: function (data) {
+
+                    $("#eliminaEquipoModal").modal('hide');
+                    location.reload();
+                },
+            });
+
+
+        });
+        $(document).on('click', "#btnEliminarEquipo", function () {
+            var row = $(this).closest(".row");   // Finds the closest row <tr>
+            IDEquipos = $(row.find('#idcell')).text();
+
+            $("#eliminaEquipoModal").modal('show');
+            document.getElementById("EquipoEliminado").innerHTML = '¿Confirma que desea eliminar  ' + $(row.find('#itemcell')).text() + ' de la lista de equipos y servicios?';
+        });
+        $(document).on('shown.bs.modal','#nuevoEquipoModal', function () {
+            $('#ItemEquiposModal').focus();
+        });
+    });
+
+    function LimpiarEquipoModal() {
+        $("#nuevoEquipoModal").find('input').not('.btn3').val('');
+    };
+
+</script>
+
+@* Slide *@
+<script>
+    var mini = 'No';
+    $(document).ready(function () {
+        $(document).on('click', '#minimizar', function () {
+            if (mini == 'No') {
+                $('.minimizable').slideUp('slow');
+                mini = 'Si'
+            }
+            else {
+                $('.minimizable').slideDown('slow');
+                mini = 'No'
+            }
+
+        });
+    });
+</script>
+
+@* orden *@
+<script>
+    var TablaMateriales;
+    $(document).ready(function () {
+        $.ajax({
+            url: "/CotizacionArauco/Data/",
+            type: 'POST',
+            async: true,
+            dataType: 'text',
+            data: {
+                id: $('#ID').val(),
+
+            },
+            success: function (data) {
+                TablaMateriales = JSON.parse(data);
+            },
+        });
+        $(document).on('click', '#ordenpreciomateriales', function (e) {
+            TablaMateriales.sort(GetSortOrder("PUnitario"));
+            var tabla = $('#TablaMateriales').find('.row').not(':first');
+            for (var i = 0; i < tabla.length; i++) {
+                if (TablaMateriales[i].Tipo == "SUBCOTIZACION") {
+                    var botones = '<a class="verfp float-end" href="/CotizacionArauco/VerProductoFabricacionPropia/?id=' + TablaMateriales[i].ID + '" title="Detalles Item Fabricación Propia">!</a>' +
+                        '<a class="nuevofp float-end" href="/Cotizaciones/EditarCotizacionFabricacionPropia/?id=' + TablaMateriales[i].ID + '&origen=Arauco" title="Edita Item Fabricación Propia">+</a>' +
+                        '<button class="btn5 float-end" id="btnEliminarSubCoti" title="Eliminar">x</button>'
+                }
+                else {
+                    var botones = '<button type="button" class="btn4 float-end" id="btnEditarMaterial" title="Editar">+</button>' +
+                        '<button class="btn5 float-end" id="btnEliminarMaterial" title="Eliminar">x</button>'
+                }
+                $(tabla[i]).find('#idcell').text(TablaMateriales[i].ID);
+                $(tabla[i]).find('#itemcell').text(TablaMateriales[i].Item);
+                $(tabla[i]).find('#unidadcell').text(TablaMateriales[i].Unidad);
+                $(tabla[i]).find('#cantidadcell').text(TablaMateriales[i].Cantidad);
+                $(tabla[i]).find('#punitariocell').text(FormateaPeso(TablaMateriales[i].PUnitario));
+                $(tabla[i]).find('#totalcell').html(FormateaPeso((TablaMateriales[i].Cantidad * TablaMateriales[i].PUnitario)).toString() + botones);
+
+
+            }
+        });
+
+
+
+
+
+    });
+
+</script>
+
+@* Utilidad *@
+<script>
+    var UorG;
+    $(document).ready(function () {
+        $(document).on('click', '#CambiaUtilidad', function (e) {
+            $('#cambiaUtilidadModal').find('#exampleModalLabel').text('Utilidad');
+            $('#cambiaUtilidadModal').find('#infor').text('Ingrese el % deseado');
+            UorG = 'Utilidad';
+            $('#cambiaUtilidadModal').modal('show');
+        });
+        $(document).on('click', '#cerrarCambiaUtilidadModal', function (e) {
+            $('#cambiaUtilidadModal').modal('hide');
+        });
+        $(document).on('click', '#ingresaCambioUtilidad', function (e) {
+            if (UorG == 'Utilidad') {
+                $.ajax({
+                    url: "/Cotizaciones/CambiaUtilidadCotizacion/",
+                    type: 'POST',
+                    async: true,
+                    dataType: 'text',
+                    data: {
+                        id: $("#ID").val(),
+                        utilidad: $("#utilidadbox").val()
+                    },
+                    success: function (data) {
+
+                        $('#cambiaUtilidadModal').modal('hide');
+                        location.reload();
+                    },
+                });
+            }
+            else {
+                $.ajax({
+                    url: "/Cotizaciones/CambiaGGCotizacion/",
+                    type: 'POST',
+                    async: true,
+                    dataType: 'text',
+                    data: {
+                        id: $("#ID").val(),
+                        gg: $("#utilidadbox").val()
+                    },
+                    success: function (data) {
+
+                        $('#cambiaUtilidadModal').modal('hide');
+                        location.reload();
+                    },
+                });
+
+
+
+
+            }
+
+
+
+        });
+
+        $(document).on('click', '#CambiaGastosGenerales', function (e) {
+            $('#cambiaUtilidadModal').find('#exampleModalLabel').text('Gastos Generales');
+            $('#cambiaUtilidadModal').find('#infor').text('Ingrese el % deseado');
+            UorG = 'Generales';
+            $('#cambiaUtilidadModal').modal('show');
+        });
+        $(document).on('shown.bs.modal','#cambiaUtilidadModal', function () {
+            $('#utilidadbox').focus();
+         
+        });
+
+
+    });
+</script>
+
+@* Cambio de estado *@
+<script>
+ //Cambia el estado de la cotización
+    $(function () {
+        $(document).on('change', '#IDEstado', function () {
+
+            $.ajax({
+                url: "/Cotizaciones/CambiaEstado/",
+                type: 'POST',
+                async: true,
+                dataType: 'text',
+                data: {
+                    idcoti: '@Model.ID',
+                    idestado: $('#IDEstado').val()
+                },
+                success: function (data) {
+
+
+                },
+            });
+
+        });
+
+
+    });
+
+
+    $(function () {
+        $(document).ready(function () {
+
+            if ($('#IDEstado option:selected').html() == 'APROBADA') {
+
+                $('#BtnServicio').css("display", "block");
+            }
+            else {
+
+                $('#BtnServicio').css("display", "none");
+            }
+
+
+
+
+            $(document).on('change', '#IDEstado', function () {
+
+                if ($('#IDEstado option:selected').html() == 'APROBADA') {
+
+                    $('#BtnServicio').css("display", "block");
+                }
+
+                else {
+
+                    $('#BtnServicio').css("display", "none");
+                }
+
+
+
+            });
+
+
+
+        });
+
+
+    });
+</script>
+
+@*Modal
+    ========================================================================================================================================================================================================================================================*@
+@* Material *@
+
+<div class="modal fade" id="materialModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" style="max-width:max-content">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Nuevo Material</h5>
+                <button type="button" class="btn-close btn-close-white cerrar" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form class="row row-cols-lg-auto g-1 align-items-center" id="nuevomaterialform">
+                            <input style="display:none" name="idcot" id="idmaterialcot" />
+                            <div class="col-12">
+                                <input name="item" id="ItemMaterialModal" placeholder="Item" style="width:450px;text-transform:uppercase" type="text" class="formmio auto" />
+                            </div>
+                            <div class="col-12">
+                                <select class="formmio" name="idcategoria" style="width:130px;margin-left:5px" id="IDCategoriaModal">
+                                    <option value="0">-Seleccionar-</option>
+                                    @foreach (var row in Model.CategoriasMRE)
+                                    {
+                                        <option value="@row.Value">@row.Text</option>
+
+                                    }
+                                </select>
+
+                            </div>
+                            <div class="col-12">
+                                <input name="unidad" id="UnidadMaterialModal" style="width:85px;margin-left:5px;text-transform:uppercase" placeholder="Unidad" type="text" class="formmio" />
+                            </div>
+                            <div class="col-12">
+                                <input name="cantidad" id="CantidadMaterialModal" style="width:95px;margin-left:5px" placeholder="Cantidad" type="text" class="formmio" autocomplete="off" />
+                            </div>
+                            <div class="col-12">
+                                <input name="punitario" id="PrecioMaterialModal" placeholder="Precio" style="width:95px;margin-left:5px" type="text" class="formmio" autocomplete="off" />
+                            </div>
+
+                            <div class="col-12">
+                                <input name="total" id="VTotalMaterialModal" style="width:95px;margin-left:5px" placeholder="Total" type="text" class="formmio" />
+                            </div>
+
+                            <div class="col-12">
+                                <input type="button" id="IngresarMaterialModal" value="Ingresar" class="btn3" style="margin-left:10px" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="eliminaMaterialModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Eliminar Material</h5>
+                <button type="button" class="btn-close btn-close-white cerrar" id="CerrarEliminarMaterial" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                <h2 id="MaterialEliminado"></h2>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary cerrar" id="CerrarEliminarMaaterialF">Cerrar</button>
+                <button style="display:none" type="button" id="EliminaMaterial" class="btn btn-primary">Confirmar</button>
+                <button style="display:none" type="button" id="EliminaSubCotizacion" class="btn btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Personal *@
+<div class="modal fade" id="ModalPersonal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" style="max-width:max-content">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title expander_style text-white">Personal</h4>
+                <button type="button" id="CerrarPersonalModal" class="btn-close btn-close-white cierrapersonal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+
+                <form id="nuevopersonalform" class="row row-cols-lg-auto g-2">
+                    <input id="idpersonalform" name="idcot" style="display:none" />
+                    <div class="col-12">
+
+                        <select name="idespecialidad" id="IDEspecialidadModal" class="formmio" style="margin-left:5px">
+
+                            <option value="0">-Seleccionar-</option>
+                            @foreach (var item in Model.Especialidades)
+                            {
+                                <option value="@item.ID">@item.Especialidad</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-12">
+                        <input name="valorhh" class="formmio" style="margin-left:5px;width:100px" id="ValorHHModal" placeholder="Valor HH" />
+                    </div>
+
+                    <div class="col-12">
+                        <input name="cantidad" class="formmio" id="CantidadPersonalModal" style="width:110px;margin-left:5px" placeholder="Cantidad" />
+                    </div>
+
+                    <div class="col-12">
+                        <input name="hh" id="HHModal" class="formmio" style="width:75px;margin-left:5px" placeholder="HH" />
+                    </div>
+                    <div class="col-12">
+                        <input name="DiasModal" id="DiasModal" class="formmio" style="width:75px;margin-left:5px" placeholder="Dias" />
+                    </div>
+                    <div class="col-12">
+                        <input name="totalhh" class="formmio" id="TotalHHModal" style="width:100px;margin-left:5px" placeholder="TotalHH" />
+                    </div>
+
+                    <div class="col-12">
+                        <input name="totalplata" id="TotalPersonalModal" class="formmio" style="width:95px;margin-left:5px" placeholder="Total" />
+                    </div>
+                    <div class="col-12">
+                        <input type="button" id="IngresarPersonalModal" value="Ingresar" class="btn3" style="margin-left:10px" />
+                    </div>
+
+
+                </form>
+            </div>
+
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="ModalEliminarPersonal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header botonazul">
+                <h5 class="modal-title" id="exampleModalLabel">Eliminar Personal</h5>
+                <button type="button" class="btn-close btn-close-white cierrapersonal" id="CerrarModalEliminar" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                <h2 id="EliminarPersonalParrafo"></h2>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary cierrapersonal" id="CerrarEliminarPersonalF">Cerrar</button>
+                <button type="button" id="ConfirmarEliminarPersonalModal" class="btn btn-primary ">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="nuevoEquipoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" style="max-width:max-content">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Nuevo Equipo o Servicio</h5>
+                <button type="button" class="btn-close btn-close-white  cerrarequipos" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+              
+                    <form id="equiposform" class="row row-cols-lg-auto g-1 align-items-center">
+                        <div class="col-12">
+                            <input name="idcot" id="idcotequipos" style="display:none" />
+                        </div>
+                        <div class="col-12">
+                            <input name="item" id="ItemEquiposModal" placeholder="Item" style="width:200px;text-transform:uppercase" type="text" class="formmio" />
+                        </div>
+                        <div class="col-12">
+                            <input name="unidad" id="UnidadEquiposModal" style="width:95px;text-transform:uppercase" placeholder="Unidad" type="text" class="formmio" />
+                        </div>
+                        <div class="col-12">
+                            <input name="cantidad" id="CantidadEquiposModal" style="width:95px" placeholder="Cantidad" type="text" class="formmio" />
+                        </div>
+                        <div class="col-12">
+                            <input name="punitario" id="PrecioEquiposModal" placeholder="Precio" style="width:90px;margin-left:5px" type="text" class="formmio" />
+                        </div>
+                        <div class="col-12">
+                            <input name="total" id="VTotalEquiposModal" style="width:90px" placeholder="Total" type="text" class="formmio" />
+                        </div>
+                        <div class="col-12">
+                            <input type="button" id="IngresarEquiposModal" value="Ingresar" class="btn3" style="margin-left:10px" />
+                        </div>
+                    </form>
+              
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="eliminaEquipoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header botonazul">
+                <h5 class="modal-title" id="exampleModalLabel">Eliminar Equipo o Servicio</h5>
+                <button type="button" class="btn-close btn-close-white cerrarequipos" id="CerrarEliminarEquipo" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                <h2 id="EquipoEliminado"></h2>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary cerrarequipos" id="CerrarEliminarEquipoF">Cerrar</button>
+                <button type="button" id="EliminaEquipo" class="btn btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Cambia Utilidad *@
+<div class="modal fade" id="cambiaUtilidadModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen-md-down">
+        <div class="modal-content">
+            <div class="modal-header botonazul">
+                <h5 class="modal-title" id="exampleModalLabel">Utilidad</h5>
+                <button type="button" class="btn-close btn-close-white" id="cerrarCambiaUtilidadModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-10"><h4 id="infor">Ingrese el % de utilidad deseado</h4> </div>
+                    <div class="col-2"><input id="utilidadbox" class="form-control float-end" /></div>
+                </div>
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cerrarCambiaUtilidadModal">Cerrar</button>
+                <button type="button" id="ingresaCambioUtilidad" class="btn btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>

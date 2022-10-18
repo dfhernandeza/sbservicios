@@ -1,0 +1,10 @@
+﻿@model BibliotecaDeClases.Modelos.Traductor.Error
+@{
+    ViewBag.Title = "VistaError";
+}
+
+<h1>Un error ocurrió al intentar procesar la solicitud</h1>
+<h3 class="text-danger">@Model.Mensaje </h3>
+    <div>
+        @Html.ActionLink("Volver", "VerEspecialidades")
+    </div>

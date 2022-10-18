@@ -1,0 +1,54 @@
+﻿@model AppWebSantaBeatriz.Models.Cotizaciones.EstadoCotizacionModel
+
+@{
+    ViewBag.Title = "NuevoEstadoCotizacion";
+}
+
+
+<h2>Nuevo Estado de Cotización</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+
+    <div class="container-fluid fondogris">
+
+        <form >
+            <div class="form-row align-items-end">
+                <div class="form-group col-md-8">
+                    <label for="Especialidad">Nombre</label>
+                    @Html.EditorFor(model => model.Estado, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                    @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-md-4">
+                    <button type="submit" class="btn btn-block botonrojo">Ingresar </button>
+                </div>
+            
+
+
+            </div>
+            <div class="form-row border-dark">
+                <label for="Descripcion">Descripción</label>
+                <textarea id="Descripcion" name="Descripcion" style="text-transform:uppercase" rows="2" class="form-control"></textarea>
+
+                @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+            </div>
+
+
+        </form>
+        <div class="margenes">
+            <a href="@Url.Action("VerEstadosCotizaciones")" class="btn btn-primary">Volver</a>
+
+        </div>
+
+    </div>
+
+
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

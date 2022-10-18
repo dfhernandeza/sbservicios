@@ -1,0 +1,471 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="~/Estilos/SBSACss.css" rel="stylesheet" />
+    @Scripts.Render("~/bundles/jquery")
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-55ZCKC3PR1"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RJBG6XKNEX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-RJBG6XKNEX');
+    </script>
+    <script src="~/Scripts/Funciones.js"></script>
+    <script src="https://kit.fontawesome.com/f8104ea823.js" crossorigin="anonymous"></script>
+    <style>
+
+        /* width */
+        .carroDD::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        /* Track */
+        .carroDD::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        /* Handle */
+        .carroDD::-webkit-scrollbar-thumb {
+            box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+            max-height: 5rem;
+        }
+
+            /* Handle on hover */
+            .carroDD::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+        .carroText {
+            color: #65676b;
+        }
+        .dropdown-item{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row encabezadoRow" style="left:0px;right:0px">
+            <div class="col-md-1 encabezadoCol align-items-center">
+                <a class="ms-3 text-decoration-none" href="https://www.facebook.com/Santabeatrz">
+                    <img class="iconoEncabezado" src="~/Content/FotoSA/fb.png" />
+                </a>
+                <a class="ms-3 text-decoration-none" href="https://www.instagram.com/santa_beatriz_mant_automotriz">
+                    <img class="iconoEncabezado" src="~/Content/FotoSA/instagram.png" />
+                </a>
+                <a class="ms-3 text-decoration-none" href="#">
+                    <img class="iconoEncabezado" src="~/Content/FotoSA/whatsapp.png" />
+                </a>
+                @*<div class="ms-3 itemmobil" style="width:32px;height:32px;background-image: url(/Content/FotoSA/shopping-cart.png) !important; background-size: 32px 32px; background-repeat: no-repeat;">
+                    <div class="d-flex justify-content-end w-100 h-100 align-content-center"><div style="background-color:black;color:white;border-radius:25px;font-size:10px" class="h-50 w-50 text-center fw-bold">3</div></div>
+                </div>*@
+
+                <div class="dropdown d-flex">
+                    <div class="ms-3 itemmobil carrito dropdown-toggle" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" style="width:32px;height:32px;background-image: url(/Content/FotoSA/shopping-cart.png) !important; background-size: 32px 32px; background-repeat: no-repeat;">
+                        <div class="d-flex justify-content-end w-100 h-100 align-content-center"><div style="background-color:black;color:white;border-radius:25px;font-size:10px" class="h-50 w-50 text-center fw-bold cantidadCarrito">0</div></div>
+                    </div>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <div class="carroDD" id="carritoSuperior" style="overflow-y:scroll;overflow-x:hidden">
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="col-md-3 encabezadoMobil encabezadoCol align-items-center ">
+                <a class="ms-3 text-decoration-none text-white fw-bold" href="https://goo.gl/maps/6De3xFzj73yyyFgBA">
+                    Diego Portales 178, Chillán
+                </a>
+            </div>
+            <div class="col-md-4 encabezadoMobil encabezadoCol align-items-center ">
+                <a class="ms-3 text-decoration-none text-white fw-bold" href="tel:+56422254904">
+                    <img class="iconoEncabezado" src="~/Content/FotoSA/phone-call.png" />
+                    <span class="ms-2">42-2254904</span>
+                </a>
+            </div>
+            <div class="col-md-3 encabezadoMobil encabezadoCol align-items-center ">
+                <a class="btn b ms-3 text-decoration-none text-white fw-bold rounded-pill border-2 border-white" href="@Url.Action("FormularioContacto")">
+                    Cotizar
+                </a>
+            </div>
+            <div class="col-md-1 encabezadoMobil encabezadoCol align-items-center ">
+                @*<div class="ms-3 itemfull carrito" style="width:32px;height:32px;background-image: url(/Content/FotoSA/shopping-cart.png) !important; background-size: 32px 32px; background-repeat: no-repeat;">
+                    <a style="text-decoration:none" href="@Url.Action("Carrito")"><div class="d-flex justify-content-end w-100 h-100 align-content-center"><div style="background-color:black;color:white;border-radius:25px;font-size:10px" class="h-50 w-50 text-center fw-bold">3</div></div></a>
+                </div>*@
+
+
+                <div class="dropdown">
+                    <div class="ms-3 itemfull carrito dropdown-toggle" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style="width:32px;height:32px;background-image: url(/Content/FotoSA/shopping-cart.png) !important; background-size: 32px 32px; background-repeat: no-repeat;" data-bs-auto-close="outside">
+                        <div class="d-flex justify-content-end w-100 h-100 align-content-center"><div style="background-color:black;color:white;border-radius:25px;font-size:10px" class="h-50 w-50 text-center fw-bold cantidadCarrito">0</div></div>
+                    </div>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+
+                        <div class="carroDD" id="carritoSuperior" style="width: 32rem; height: 25rem;overflow-y:scroll;overflow-x:hidden">
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+            <div class="col-md-12 filanavbar">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="#">
+                            <img src="/Content/FotoSA/SBSERVICIOAUTOMOTRIZ.jpg" width="30" height="24" />
+                        </a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                <li class="nav-item">
+                                    <a class="nav-link active" aria-current="page" href="@Url.Action("Home")">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Tienda","ServicioAutomotriz")">Tienda</a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Servicios
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <li><a class="dropdown-item" href="#">Mantención de Frenos</a></li>
+                                        <li><a class="dropdown-item" href="#">Cambio de Aceite</a></li>
+                                        <li><a class="dropdown-item" href="@Url.Action("Neumaticos")">Neumáticos</a></li>
+
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#" tabindex="-1">Promociones</a>
+                                </li>
+                            </ul>
+                            <form class="d-flex">
+                                <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Search">
+                                <button class="btn btn-outline-success" type="button">Buscar</button>
+                            </form>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="col-12 bg-light" style="display:none" id="contenedorFiltros">
+                <div class="filtros container-fluid p-3" >
+
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                            Ordenar
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                            <li>
+                                <div class="btn-group dropend w-100">
+                                    <button class="dropdown-item dropdown-toggle" type="button" id="dropdownMenuButton2.1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Precio
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2.1">
+                                        <li><a class="dropdown-item" id="btnOrdenarPrecioAsc">Ascendente</a></li>
+                                        <li><a class="dropdown-item" id="btnOrdenarPrecioDesc">Descendente</a></li>
+
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="btn-group dropend w-100">
+                                    <button class="dropdown-item dropdown-toggle" type="button" id="dropdownMenuButton2.2" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Aro
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2.2">
+                                        <li><a class="dropdown-item" id="btnOrdenarAroAsc">Ascendente</a></li>
+                                        <li><a class="dropdown-item" id="btnOrdenarAroDesc">Descendente</a></li>
+
+                                    </ul>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+
+
+                    @*<div class="dropdown ms-1">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                            Ordenar
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton3">
+                            <li>
+                                <div class="btn-group dropend w-100">
+                                    <button class="dropdown-item dropdown-toggle" type="button" id="dropdownMenuButton3.1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Precio
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton3.1">
+                                        <li><a class="dropdown-item" href="#">Ascendente</a></li>
+                                        <li><a class="dropdown-item" href="#">Descendente</a></li>
+
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="btn-group dropend w-100">
+                                    <button class="dropdown-item dropdown-toggle" type="button" id="dropdownMenuButton3.2" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Aro
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton3.2">
+                                        <li><a class="dropdown-item" href="#">Ascendente</a></li>
+                                        <li><a class="dropdown-item" href="#">Descendente</a></li>
+
+                                    </ul>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>*@
+
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+  
+  
+
+
+    <div style="margin-top:105px" id="mainDiv">
+        @RenderBody()
+    </div>
+
+
+
+
+    @RenderSection("scripts", required: false)
+
+
+    <script>
+        var cantidad = 0;
+        var carro = [];
+        if (localStorage.getItem('carrito') != null) {
+            carro = JSON.parse(localStorage.getItem('carrito'));
+            cantidad = carro.length;
+
+        }
+        
+        $(document).ready(function () {
+            var w = window.innerWidth;
+            var h = window.innerHeight;
+            if (w < 475) {
+                $('#carritoSuperior').css({ 'height': h * 0.7, 'width': w * 0.98 });
+            }
+
+           /* $('.cantidadCarrito').each(function (i, item) { $(item).text(cantidad.toString()) });*/
+            if (cantidad === 0) {
+                $('.carroDD').each(function (i, item) { $(item).html('<div class="row"><div class="col-12"><div class="h-100 d-flex align-items-center justify-content-center"><img src="/Content/FotoSA/CarritoVacio.gif"></div></div></div>') });
+            }
+            else {
+                actualizarCarro(carro);
+            }
+        });
+        $(document).on('click', '.btnMenos', function () {
+            var $this = $(this);
+            carro = JSON.parse(localStorage.getItem('carrito'));
+            var cantidadDiv = $this.parent().find('.cantidad');
+            var totalDiv = $this.parent().parent().find('.total');
+            var cantidad = parseInt(cantidadDiv.text());
+            var id = $this.data('id');
+            if (cantidad == 1) {
+                $this.parent().parent().remove();
+                var newCarro = carro.filter(x => x.ID != id);
+                localStorage.setItem('carrito', JSON.stringify(newCarro));
+                $('.cantidadCarrito').each(function (i, item) { $(item).text(newCarro.length.toString()) });
+                if (newCarro.length == 0) {
+                    $('.carroDD').each(function (i, item) { $(item).html('<div class="row h-75"><div class="col-12"><div class="h-100 d-flex align-items-center justify-content-center"><img src="/Content/FotoSA/empty-cart.png"></div></div></div><div class="row h-25"><div class="col-12 d-flex justify-content-center align-items-center"><h1>Carrito Vacío</h1></div></div>') });
+                }
+                $('.cesta').each(function (i, item) {
+                    if ($(item).data('id') == id) {
+                        $(item).find('.contenidoBtnCesta').html('<img height="16" width="16" class="me-1" src="/Content/FotoSA/shopping-cart.png"> Añadir');
+                    }
+                });
+            }
+            else {
+               
+                carro.find(x => x.ID == id).Cantidad = carro.find(x => x.ID == id).Cantidad - 1;
+                var precio = carro.find(x => x.ID == id).Precio;
+                localStorage.setItem('carrito', JSON.stringify(carro));
+                var newcantidad = cantidad - 1;
+                cantidadDiv.text(newcantidad);
+                totalDiv.text(FormateaPeso(precio * newcantidad));
+            }
+            var suma = totalCarrito();
+            $('.cartSubTotal').each(function (i, item) {
+                $(item).text(FormateaPeso(suma / 1.19));
+            });
+
+            $('.cartIVA').each(function (i, item) {
+                $(item).text(FormateaPeso(suma / 1.19 * 0.19));
+            });
+
+
+            $('.cartTotal').each(function (i, item) {
+                $(item).text(FormateaPeso(suma));
+            });
+
+
+
+        });
+        $(document).on('click', '.btnMas', function () {
+            var $this = $(this);
+            var cantidadDiv = $this.parent().find('.cantidad');
+            var totalDiv = $this.parent().parent().find('.total');
+            var cantidad = parseInt(cantidadDiv.text());
+            var id = $this.data('id');
+            carro = JSON.parse(localStorage.getItem('carrito'));
+            carro.find(x => x.ID == id).Cantidad = carro.find(x => x.ID == id).Cantidad + 1;
+            var precio = carro.find(x => x.ID == id).Precio;
+            localStorage.setItem('carrito', JSON.stringify(carro));
+            var newcantidad = cantidad + 1;
+            cantidadDiv.text(newcantidad);
+            totalDiv.text(FormateaPeso(precio * newcantidad));
+            var suma = totalCarrito();
+            $('.cartSubTotal').each(function (i, item) {
+                $(item).text(FormateaPeso(suma / 1.19));
+            });
+
+            $('.cartIVA').each(function (i, item) {
+                $(item).text(FormateaPeso(suma / 1.19 * 0.19));
+            });
+
+
+            $('.cartTotal').each(function (i, item) {
+                $(item).text(FormateaPeso(suma));
+            });
+        });
+        function totalCarrito() {
+            var cart = JSON.parse(localStorage.getItem('carrito'));
+            var suma = 0;
+            $(cart).each(function (i, item) {
+                suma = suma + item.Cantidad * item.Precio;
+            });
+            return suma;
+        }
+        function actualizarCarro(carrito) {
+            $('.cantidadCarrito').each(function (i, item) { $(item).text(carrito.length.toString()) });
+            var rows = '';
+           
+                $(carrito).each(function (i, item) {
+                    if (item.Modelo != null) {
+                        rows = rows + `<div class="row mb-3">
+                                     <div class="col-3 d-flex align-items-center justify-content-center">
+                                       <img style="height:80px" src="${item.Foto}"/>
+                                     </div>
+                                     <div class="col-3">
+                                      
+                                         <div class="row h-25">
+                                            <div class="col-12">
+                                                     <img class="w-100" src="${item.Logo}"/>
+                                            </div>
+                                         </div>
+                                         <div class="row h-25">
+                                            <div class="col-12 carroText">
+                                                ${item.Item}
+                                            </div>
+                                         </div>
+                                         <div class="row h-25">
+                                            <div class="col-12 carroText">
+                                                ${item.Modelo}
+                                            </div>
+                                         </div>
+                                          <div class="row h-25">
+                                            <div class="col-12 carroText">
+                                                ${FormateaPeso(item.Precio)}
+                                            </div>
+                                         </div>
+                                     
+                                     </div>
+                                   <div class="col-3 d-flex align-items-center justify-content-around"><div class="btn btn-light btnMenos" data-id="${item.ID}">-</div><div class="w-25 ms-2 me-2 cantidad text-center">${item.Cantidad}</div><div class="btn btn-light btnMas" data-id="${item.ID}">+</div></div>
+                                   <div class="col-3 d-flex align-items-center"><div class="total carroText">${FormateaPeso(item.Precio * item.Cantidad)}</div></div>
+                                   <div class="col-12"><hr style="margin-left:10px;margin-right:10px"></div>
+                                    </div>`;
+                    }
+                    else {
+                        rows = rows + `<div class="row mb-3">
+                                     <div class="col-3 d-flex align-items-center justify-content-center">
+                                       <img style="height:80px" src="${item.Foto}"/>
+                                     </div>
+                                     <div class="col-3">
+                                       <div class="row h-25">
+                                            <div class="col-12">
+                                                     <img class="w-100" src="${item.Logo}"/>
+                                            </div>
+                                         </div>
+                                         
+                                         <div class="row h-50">
+                                            <div class="col-12 carroText">
+                                                ${item.Item}
+                                            </div>
+                                         </div>
+                                        
+                                          <div class="row h-25">
+                                            <div class="col-12 carroText">
+                                                ${FormateaPeso(item.Precio)}
+                                            </div>
+                                         </div>
+                                     
+                                     </div>
+                                   <div class="col-3 d-flex align-items-center justify-content-around"><div class="btn btn-light btnMenos" data-id="${item.ID}">-</div><div class="w-25 ms-2 me-2 cantidad text-center">${item.Cantidad}</div><div class="btn btn-light btnMas" data-id="${item.ID}">+</div></div>
+                                   <div class="col-3 d-flex align-items-center"><div class="total carroText">${FormateaPeso(item.Precio * item.Cantidad)}</div></div>
+                                   <div class="col-12"><hr style="margin-left:10px;margin-right:10px"></div>
+                                    </div>`;
+                    }
+                    
+
+
+                });
+            
+           
+           
+
+            var suma = totalCarrito();
+            $('.carroDD').each(function (i, item) {
+                $(item).html(`<div class="row" style="height:40px;margin-bottom:10px;position:fixed;z-index:9999;">
+                                    <div class="col-12" style="padding-right: 1.5rem;"><a style="text-decoration:none;padding:5px;width:100%" href="/ServicioAutomotriz/Carrito""><img style="width:100%" src="/Content/FotoSA/alcarro.gif"></a></div>
+                                  </div>
+                                    <div class="row" style="margin-top:3rem;"><div class="col-6"><div class="carroText fw-bold" style="margin-left:10px">Item</div></div><div class="col-3 carroText fw-bold">Cantidad</div><div class="col-3 carroText fw-bold">Total</div></div>
+                                 
+                                  <hr style="margin-left:10px;margin-right:10px;margin-top:0px!important">` + rows +
+                    `<div class="row">
+                                   <div class="col-6"></div>
+                                   <div class="col-3 carroText">Subtotal</div>
+                                   <div class="col-3 carroText cartSubTotal fw-bold" id="cartSubTotal">${FormateaPeso(suma / 1.19)}</div>
+                                  </div>
+                                  <div class="row">
+                                   <div class="col-6"></div>
+                                   <div class="col-3 carroText">IVA</div>
+                                   <div class="col-3 carroText cartIVA fw-bold" id="cartIVA">${FormateaPeso(suma / 1.19 * 0.19)}</div>
+                                  </div>
+                                   <div class="row" style="margin-bottom:3rem;">
+                                   <div class="col-6"></div>
+                                   <div class="col-3 carroText">Total</div>
+                                   <div class="col-3 carroText cartTotal fw-bold" id="cartTotal">${FormateaPeso(suma)}</div>
+                                  </div>
+                                  <div class="row" style="height:40px;position:fixed;z-index:9999;bottom:5px">
+                                    <div class="col-12" style="padding-right: 1.5rem;"><a style="text-decoration:none;padding:5px;width:100%" href="/ServicioAutomotriz/Carrito""><img style="width:100%" src="/Content/FotoSA/terminarcompra.gif"></a></div>
+                                  </div>              `);
+            });
+        }
+
+
+    </script>
+</body>
+
+</html>
+

@@ -1,0 +1,1621 @@
+﻿@model AppWebSantaBeatriz.Models.Servicios.ServicioModel
+
+@{
+    ViewBag.Title = "Detalles";
+}
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <link href="~/datetimepicker-master/jquery.datetimepicker.css" rel="stylesheet" />
+    <script src="~/datetimepicker-master/build/jquery.datetimepicker.full.min.js"></script>
+    <script src="~/Scripts/Servicios/DetallesPagina.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
+</head>
+<style>
+
+    .error {
+        color: red;
+        /* margin-top:10px*/
+    }
+
+    .fila {
+        background-color: #00a1ff;
+        color: white;
+    }
+
+    .sombra {
+        box-shadow: inset 0 3px 6px rgba(0,0,0,0.16), 0 4px 6px rgba(0,0,0,0.45)
+    }
+
+    .margensi {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    .gris {
+        background-color: #f7f7f7;
+    }
+
+    .resaltado:hover {
+        background-color: gold;
+        color: white;
+        cursor: pointer
+    }
+    .resalteHH:hover {
+        background-color: gold;
+        color: white;
+        cursor: pointer
+    }
+    .notfocus{
+        color:inherit
+    }
+    .notfocus:focus{
+        outline:none
+    }
+    .fuente {
+        font-size: 10px;
+        font-weight: bold;
+        margin: auto
+    }
+
+    .contenedorpersonal {
+        background-color: white;
+        padding: 10px;
+        overflow-x: hidden;
+        overflow-y: scroll;
+        height: 100%;
+    }
+
+    .contenedortareas {
+        background-color: white;
+        padding: 10px;
+        transition: 0.5s;
+        height: 100%;
+        overflow-y: scroll;
+        overflow-x: hidden
+    }
+
+    .btn {
+        padding: 2px;
+        margin: auto;
+    }
+
+    .contenedorcostos {
+        background-color: white;
+        padding: 10px;
+        /*transition: 0.5s;*/
+        height: auto;
+        width: auto
+        /* overflow-x: hidden;
+        overflow-y: scroll;*/
+    }
+
+    .trans {
+        transition: 0.8s;
+    }
+
+    .errorTxt {
+        /*border: 1px solid red;*/
+        min-height: 20px;
+    }
+
+    .filauno {
+        height: 250px;
+    }
+
+    .headerprograma {
+        font-size: 12px;
+        background: rgb(2,0,36);
+        background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(0,4,210,0.8211659663865546) 0%, rgba(0,212,255,1) 100%);
+        color: white
+    }
+
+    .tdprograma {
+        font-size: 10px;
+        /* height:min-content;*/
+    }
+
+    .btnnaranjo {
+        color: white;
+        background-color: orangered
+    }
+
+        .btnnaranjo:hover {
+            background-color: #be3502;
+            color: white
+        }
+
+    input, textarea {
+        text-transform: uppercase;
+    }
+
+    .button:hover {
+        cursor: pointer;
+    }
+
+    .bordederecho {
+        border-right: solid;
+        border-color: white;
+    }
+
+    .detalleentregable {
+        background-color: #2f323a;
+        color: #35d84f;
+    }
+
+    .detalleentregableheader {
+        background-color: #2f323a;
+        color: #9481f7;
+    }
+
+    .labeldetalleentregable {
+    }
+
+    .divisordetallentregable {
+        border-left: dashed;
+        border-color: #7b7e81;
+    }
+
+    .subtitulosdetalleentregable {
+        color: white;
+        margin-top: 20px;
+    }
+
+    .headertablamateriales {
+        color: white;
+        font-weight: 700;
+        background-color: #01987a;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .contenedordetallemateriales {
+        padding: 0px 40px 0px 40px;
+        margin-top: 20px;
+    }
+
+    .etiquetaverde {
+        color: white;
+        background-color: #01987a;
+        font-weight: 700
+    }
+
+    .filafondoblanco {
+        background-color: #ffffff;
+        color: #7b7e81;
+    }
+
+        .filafondoblanco:last-of-type {
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+    .infoentregable {
+        background-color: #ffffff;
+        color: #7b7e81;
+        /*border-radius: 10px*/
+    }
+
+    .progresoheader {
+        background-color: #7ee8fa;
+        background-image: linear-gradient(315deg, #7ee8fa 0%, #80ff72 74%);
+        color: grey
+    }
+
+    .newtoolheader {
+        background: rgb(111,0,189);
+        background: linear-gradient(90deg, rgba(111,0,189,0.8939950980392157) 32%, rgba(44,7,255,1) 65%);
+        color: white;
+    }
+
+    .filanewtool {
+        background-color: gold;
+    }
+
+    .click {
+        padding-bottom: 10px;
+    }
+
+    .descarta {
+        padding-top: 10px;
+    }
+
+    .etiquetatools {
+        color: white;
+        font-weight: bold
+    }
+
+    .headercostos {
+        background: rgb(34,195,191);
+        background: linear-gradient(37deg, rgba(34,195,191,1) 0%, rgba(248,0,255,1) 100%);
+        color: white;
+    }
+
+    .progresolabel {
+        width: 25%;
+        border-color: lightgrey;
+        padding: 5px;
+        border-radius: 2px;
+        background-color: darkgrey;
+        border-width: 1px;
+        color: white;
+        font-weight: bold;
+    }
+
+    .noborder {
+        background-color: transparent;
+        border: none;
+    }
+
+        .noborder:focus {
+            outline: none;
+        }
+    /* .row {
+        --bs-gutter-x:0rem!important;
+    }*/
+    .body {
+        height: 100%
+    }
+
+    .vertical-center {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+
+    .btn-grafico {
+        background-color: #001dff;
+        color: white;
+        padding-right: 10px;
+        padding-left: 10px;
+        text-decoration: none !important;
+        border-radius: 4px;
+        border: none
+    }
+
+        .btn-grafico:hover {
+            background-color: #041176;
+            cursor: pointer;
+        }
+
+    .btn-programa {
+        background-color: orangered;
+        color: white;
+        padding-right: 10px;
+        padding-left: 10px;
+        text-decoration: none !important;
+        border-radius: 4px;
+        border: none
+    }
+
+        .btn-programa:hover {
+            background-color: #962e00;
+        }
+</style>
+<style>
+    .form-textbox {
+        width: 100%;
+        border: none;
+        border-bottom: solid;
+        border-bottom-color: blue;
+        border-width: 2px;
+        font-size: 10px !important;
+    }
+
+        .form-textbox:focus {
+            outline: none
+        }
+
+    .contenedorform {
+        width: 100%;
+    }
+
+    .ui-dialog-titlebar {
+        background: rgb(34,220,250) !important;
+        background: linear-gradient(94deg, rgba(34,220,250,1) 18%, rgba(33,230,250,1) 44%, rgba(62,29,253,1) 76%) !important;
+    }
+
+    .ui-dialog-title {
+        color: white
+    }
+
+    .form-label {
+        font-size: 13px !important
+    }
+
+    .col5 {
+        flex: 0 0 auto;
+        width: 5%;
+    }
+
+    .ui-datepicker-trigger:hover {
+        cursor: pointer
+    }
+</style>
+<div style="border-bottom:solid;border-color:white;vertical-align:middle;height:3.5rem" class="row">
+    @Html.HiddenFor(x => x.ID)
+    @Html.HiddenFor(x => x.IDCotizacion)
+    @Html.HiddenFor(x => x.IDCeco)
+    @Html.HiddenFor(x => x.NombreServicio)
+    <input style="display:none" type="text" value="@Model.FechaInicio.ToString("dd-MM-yyyy")" id="FechaInicio" />
+    <input style="display:none" type="text" value="@Model.FechaTermino.ToString("dd-MM-yyyy")" id="FechaTermino" />
+    <div class="bordederecho d-flex align-items-center justify-content-center" style="background-color:#07a373; color: white; height: 100% !important;width:70%;border-top-left-radius:8px">
+
+        <div style="font-weight: bold; text-align: center">@Model.NombreServicio</div>
+    </div>
+    <div class="bordederecho d-flex align-items-center justify-content-center" style="background-color: green; color: white; height: 100% !important;width:15%;">
+
+        <div style="font-weight: bold; text-align: center">Inicio:  @Model.FechaInicio.ToString("dd-MM-yyyy")</div>
+    </div>
+    <div class="d-flex align-items-center justify-content-center" style="background-color: orangered; color: white; height: 100% !important; width: 15%;border-top-right-radius:8px">
+        <div style="font-weight:bold;">Termino:  @Model.FechaTermino.ToString("dd-MM-yyyy")</div>
+    </div>
+</div>
+<div class="row" style="color:white;height:2rem">
+    <div class="col-4 bordederecho" style="background-color:red;border-bottom-left-radius:8px">
+        <div style="font-weight: bold; padding-left: 5px">Encargado:  @Model.Encargado</div>
+    </div>
+    <div class="col-4 bordederecho" style="background-color:darkblue">
+        <div style="font-weight: bold; padding-left: 5px">Cliente:  @Model.CLiente - @Model.Ubicacion</div>
+    </div>
+    <div class="col-2" style="background-color:gold">
+        <div style="font-weight: bold; padding-left: 5px">Estado:  @Model.Estado</div>
+    </div>
+    <div class="col-2" style="background-color:darkmagenta;border-bottom-right-radius:8px">
+        <div style="font-weight: bold; padding-left: 5px">NP:  @Model.NumPedido</div>
+    </div>
+</div>
+
+@*Tablas*@
+@*==============================================================================================================*@
+@* Programa *@
+<div class="row filauno" style="margin-top:15px;background-color:#f7f7f7">
+    <div id="tareadiv" class="col-8 trans" style="padding:5px;height:100%">
+        <div class="container-fluid sombra resalte contenedortareas">
+            <div class="row" style="display: flex; align-items: center;">
+                <div class="col-8">
+                    <h5 style="color:darkgrey" class="margensi">Programación</h5>
+                </div>
+                <div class="col-4">
+                    <input id="DeslizarDerecha" class="btn-programa reaparece float-end" style="margin-right:1px;display:none;padding:1px" type="button" value=">>" />
+                    <button id="NuevaTareaBtn" name="NuevaTarea" data-bs-toggle="tooltip" data-placement="top" title="Nueva Tarea" class="btn-programa float-end me-2" type="button">+</button>
+                </div>
+            </div>
+            <table style="margin-top:5px" id="TablaTareas" class="table">
+                <tr class="headerprograma">
+                    <th>
+                        Tarea
+                    </th>
+                    <th class="desaparece">
+                        Encargado
+                    </th>
+                    <th class="desaparece">
+                        Inicio
+                    </th>
+
+                    <th class="desaparece">
+                        Fin
+                    </th>
+                    <th class="desaparece">
+                        Progreso
+                    </th>
+
+                    <th id="thveinte" style="width:15%">
+
+                    </th>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div id="personaldiv" class="col-4 trans" style="padding:5px;height:100%">
+        <div class="container-fluid sombra contenedorpersonal">
+            <div class="row" style="display:flex; align-items: center;" id="titulopersonal">
+                <div class="col-8">
+                    <h5 style="color:darkgrey" class="margensi">Personal</h5>
+                </div>
+
+            </div>
+            <div id="personalcontenedor"></div>
+            <table style="margin-top:5px" id="TablaEmpleados" class="table">
+                <tr class="headerprograma">
+                    <th style="display:none">
+                        ID
+                    </th>
+                    <th class="ancho">
+                        Empleado
+                    </th>
+
+                    <th>
+                        Especialidad
+                    </th>
+                    <th style="display:none;width:14%" class="aparece trans">
+                        Inicio
+                    </th>
+
+                    <th style="display:none;width:14%" class="aparece trans">
+                        Termino
+                    </th>
+
+                    <th style="display:none;width:30%" class="aparece trans">
+                        Responsabilidades
+                    </th>
+                    <th style="display:none" class="aparece trans">
+                        <input class="d-none" id="fechaHH" type="text" readonly="readonly" data-bs-toggle="tooltip" data-bs-placement="top" title="Registrar HH" />
+                        <input id="NuevaAsignacionBtn" data-bs-toggle="tooltip" data-bs-placement="top" title="Nueva Asignación" class="btn-dark reaparece float-end" style="margin-right:2px;display:none;padding:1px" type="button" value="+" />
+                        <input id="NuevasAsignacionesBtn" data-bs-toggle="tooltip" data-bs-placement="top" title="Nuevas Asignaciones" class="btn-dark reaparece float-end" style="margin-right:2px;display:none;padding:1px" type="button" value="+" />
+                    </th>
+                </tr>
+
+
+            </table>
+
+            <div id="tabs" style="display:none">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" style="font-size:12px" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Personal</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="contact-tab" style="font-size:12px" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Entregables</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tool-tab" style="font-size:12px" data-bs-toggle="tab" data-bs-target="#tool" type="button" role="tab" aria-controls="tool" aria-selected="false">Herramientas</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="profile-tab" style="font-size:12px" data-bs-toggle="tab" data-bs-target="#epp" type="button" role="tab" aria-controls="epp" aria-selected="false">EPP</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="profile-tab" style="font-size:12px" data-bs-toggle="tab" data-bs-target="#eys" type="button" role="tab" aria-controls="eys" aria-selected="false">Eq. de apoyo y Ser. Prof. Ext.</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="profile-tab" style="font-size:12px" data-bs-toggle="tab" data-bs-target="#dinero" type="button" role="tab" aria-controls="dinero" aria-selected="false">Transferencias</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="profile-tab" style="font-size:12px" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Descripción</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="profile-tab" style="font-size:12px" data-bs-toggle="tab" data-bs-target="#bitacora" type="button" role="tab" aria-controls="bitacora" aria-selected="false">Bitácora</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div id="personaltab"></div>
+                    </div>
+                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <div id="contenedordescripcion" style="margin-top:10px">
+
+                            <p id="textodescripcion" class="col-12"></p>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                        <table style="margin-top:5px" id="TablaEntregables" class="table">
+                            <tr class="headerprograma">
+                                <th style="display:none">
+                                    ID
+                                </th>
+                                <th>
+                                    Entregable
+                                </th>
+
+                                <th>
+                                    Fecha de Entrega
+                                </th>
+                                <th>
+                                    Unidad
+                                </th>
+                                <th>
+                                    Cantidad
+                                </th>
+                                <th>
+                                    Estado
+                                </th>
+                                <th>
+                                    <input id="nuevosEntregablesBtn" data-bs-toggle="tooltip" data-bs-placement="top" title="Producto Terminado" class="btn-success float-end" style="margin-right:2px;padding:1px" type="button" value="+" />
+                                    <input id="nuevoEntregableBtn" data-bs-toggle="tooltip" data-bs-placement="top" title="Servicio" class="btn-dark float-end" style="margin-right:2px;padding:1px" type="button" value="+" />
+
+                                </th>
+                            </tr>
+
+
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="tool" role="tabpanel" aria-labelledby="tool-tab">
+                        <table id="tablaherramientas" class="table">
+                            <tr class="headerprograma"><th class="d-none">ID</th><th>Item</th><th>Cant.</th><th>Especificaciones</th><th>Estado Solicitud</th><th><input id="nuevaHerramientaBtn" data-bs-toggle="tooltip" data-bs-placement="top" title="Nueva Herramienta" class="btn-success float-end" style="margin-right:2px;padding:1px" type="button" value="+" />  </th></tr>
+
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="epp" role="tabpanel" aria-labelledby="tool-tab">
+                        <table id="tablaepp" class="table">
+                            <tr class="headerprograma"><th class="d-none">ID</th><th>Item</th><th>Cant.</th><th>Especificaciones</th><th>Estado Solicitud</th><th><input id="nuevoEppBtn" data-bs-toggle="tooltip" data-bs-placement="top" title="Nuevo EPP" class="btn-success float-end" style="margin-right:2px;padding:1px" type="button" value="+" />  </th></tr>
+
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="eys" role="tabpanel" aria-labelledby="tool-tab">
+                        <table id="tablaEyS" class="table">
+                            <tr class="headerprograma">
+                                <th class="d-none">ID</th>
+                                <th>Item</th>
+                                <th>Unidad</th>
+                                <th>Cant.</th>
+                                <th>Comentarios</th>
+                                <th>Estado Solicitud</th>
+                                <th>
+                                    <input id="nuevoEySBtn" data-bs-toggle="tooltip" data-bs-placement="top"
+                                           title="Nuevo Equipo de apoyo y/o Servicio Profesional Externo" class="btn-success float-end"
+                                           style="margin-right:2px;padding:1px" type="button" value="+" />
+                                </th>
+                            </tr>
+
+                        </table>
+
+                    </div>
+                    <div class="tab-pane fade" id="dinero" role="tabpanel" aria-labelledby="tool-tab">
+                        <table id="tablaTransferencias" class="table">
+                            <tr class="headerprograma">
+                                <th class="d-none">ID</th>
+                                <th>Receptor</th>
+                                <th>Monto</th>
+                                <th>Descripcion</th>
+                                <th>Estado Solicitud</th>
+                                <th>
+                                    <input id="nuevaTransferenciaBtn" data-bs-toggle="tooltip" data-bs-placement="top"
+                                           title="Nueva Transferencia de fondos" class="btn-success float-end"
+                                           style="margin-right:2px;padding:1px" type="button" value="+" />
+                                </th>
+                            </tr>
+
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="bitacora" role="tabpanel" aria-labelledby="tool-tab">
+                        <table id="tablabitacora" class="table">
+                            <tr class="headerprograma"><th>Fecha</th><th>Progreso</th><th>Comentarios</th><th></th></tr>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </div>
+</div>
+
+@* Costos *@
+
+<div class="row" style="margin-top:5px;background-color:#f7f7f7;height:300px">
+    <div id="costosdiv" class="col-4 trans" style="padding:5px;height:100%">
+        <div class="container-fluid contenedortareas sombra" style="height:100%;overflow-y:hidden">
+            <div class="row" style="height:15%">
+                <div class="col-8">
+                    <h5 style="color:darkgrey" class="margensi">Costos</h5>
+                </div>
+                <div class="col-4 d-flex align-items-center justify-content-around">
+                    <a id="NuevoGastoBtn" name="Nuevogasto" data-bs-toggle="tooltip" data-placement="top" title="Nuevo Gasto" class="btn-grafico me-1" href="@Url.Action("NuevaCompra", "Transaccion")">+</a>
+                    <a id="NuevoGastoBtn" name="Horas" data-bs-toggle="tooltip" data-bs-placement="top" title="Hora" class="btn-grafico me-1" href="@Url.Action("Nuevo", "TimeSheet")">+</a>
+                    <a id="nuevaColacionBtn" name="Colaciones" data-bs-toggle="tooltip" data-bs-placement="top" title="Colaciones" class="btn-grafico me-1">+</a>
+                    <a id="nuevoViajeBtn" name="Viajes" data-bs-toggle="tooltip" data-bs-placement="top" title="Viajes" class="btn-grafico me-1">+</a>
+                </div>
+            </div>
+            <div class="row" style="height:85%">
+                <div class="col-12">
+                    <div class="container-fluid sombra resalte contenedorcostos" style="height:100%" id="contenedorgrafico">
+                        <canvas id="myChart"></canvas>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+    <div id="detallediv" class="col-8 trans" style="padding:5px;height:100%">
+        <div class="container-fluid contenedortareas sombra">
+            <ul class="nav nav-tabs" id="costosTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="comprasTab" data-bs-toggle="tab" data-bs-target="#compras" type="button" role="tab" aria-controls="home" aria-selected="true">Mat., rep y/o equip. </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="gastoHHTab" data-bs-toggle="tab" data-bs-target="#gastoHH" type="button" role="tab" aria-controls="contact" aria-selected="false">HH</button>
+                </li>
+
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="compras" role="tabpanel" aria-labelledby="home-tab">
+                    <table id="tablaGastos" class="table" style="margin-top:10px">
+                        <tr class="headercostos"><th>Item</th><th>Cantidad</th><th>P. Unitario</th><th>Total</th></tr>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="gastoHH" role="tabpanel" aria-labelledby="profile-tab">
+                    <div class="row align-items-end">
+                        <div class="col-12">
+                            <div class="d-flex float-end">
+                                <input class="form-control ms-2" id="filtroEmpleadoHH" type="text" placeholder="Filtro empleado" />
+                            </div>
+                            <div class="d-flex float-end">
+                                <input class="d-none" id="fechaFiltroHH" type="text" readonly="readonly" data-bs-toggle="tooltip" data-bs-placement="top" title="Filtrar por día" />
+                            </div>
+                        </div>
+                    </div>
+                    <table id="tablaGastoHH" class="table" style="margin-top:10px">
+                        <tr class="headercostos"><th>Fecha</th><th>Empleado</th><th>Horas</th><th>Valor Total</th><th></th></tr>
+                    </table>
+                </div>
+               
+
+            </div>
+        </div>
+    </div>
+</div>
+@{var k = 0;
+                var array = Model.ResumenDiaList.ToArray();
+                if (array.Length > 6)
+                {
+                    for (int i = 0; i < Math.Ceiling(Convert.ToDecimal(array.Length)/6); i++)
+                    {
+            <div class="row mt-4">
+
+
+                @for (int j = 0; j < 6; j++)
+                {
+                    if (k < array.Length)
+                    {
+                        <div class="col-2">
+                            <div class="card">
+                                <div class="card-header headerprograma fw-bold" style="font-size:11px">
+                                    @(array[k].Fecha.ToString("D"))
+                                </div>
+                                <div class="card-body" style="font-size:11px">
+                                    Total HH :  @(array[k].HorasTotales) <br>
+                                    Gasto HH :  @(array[k].ValorHH.ToString("C")) <br>
+                                    Colaciones :  @(array[k].CantidadColaciones) <br>
+                                    Gasto Colaciones :  @(array[k].CostoColaciones.ToString("C")) <br>
+                                    Gasto Peajes :  @(array[k].CostoPeajes.ToString("C")) <br>
+                                    Gasto Comb. :  @(array[k].CostoCombustible.ToString("C")) <br>
+                                    Gasto Material. :  @(array[k].CostoMateriales.ToString("C")) <br>
+                                </div>
+                                <div class="card-footer text-end">
+                                   Total: @((array[k].ValorHH + array[k].CostoColaciones + array[k].CostoPeajes+array[k].CostoCombustible+array[k].CostoMateriales).ToString("C"))
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                        k = k + 1;
+                    }
+
+
+    }
+            </div>
+        }
+    }
+    else
+    {
+        <div class="row mt-4">
+
+
+            @for (int j = 0; j < array.Length; j++)
+            {
+
+
+                    <div class="col-2">
+                        <div class="card">
+                            <div class="card-header" style="font-size:10px!important">
+                                @(array[j].Fecha.ToString("D"))
+                            </div>
+                            <div class="card-body">
+                                <p>
+                                    Total HH :  @(array[j].HorasTotales) <br>
+                                    Gasto HH :  @(array[j].ValorHH.ToString("C")) <br>
+                                    Gasto Colaciones :  @(array[j].CostoColaciones.ToString("C")) <br>
+                                    Gasto Peajes :  @(array[j].CostoPeajes.ToString("C")) <br>
+                                    Gasto Comb. :  @(array[j].CostoCombustible.ToString("C")) <br>
+                                    Gasto Material. :  @(array[j].CostoMateriales.ToString("C")) <br>
+                                </p>
+
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                
+                
+
+
+            }
+        </div>
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<a class="btn btn-danger" href="@Url.Action("GetReport","Tareas", new { id = Model.ID })">Reporte</a>*@
+<!--</div>-->
+@*==============================================================================================================================================*@
+@*Modal*@
+@*==============================================================================================================================================*@
+<div class="modal fade" id="nuevaTareaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="border-radius:25px">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header botonazul">
+                <h5 class="modal-title" id="exampleModalLabel">Nueva Tarea</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body gris">
+
+                <form id="nuevaTareaForm" action="@Url.Action("EditaTarea","Tareas")" method="post">
+                    <input style="display:none" value="@Model.ID" type="text" name="IDServicio" id="iDServicioNuevaTarea" />
+                    <input style="display:none" type="text" name="ID" id="iDTareaNuevaTarea" />
+                    <div class="row">
+                        <div class="col-7 me-0">
+                            <label class="form-label" for="TareaModal">Tarea</label>
+                            <input type="text" class="form-control" name="Nombre" id="TareaModal">
+                        </div>
+                        <div class="col-5">
+                            <label class="form-label" for="IDEncargadoTarea">Encargado</label>
+
+                            <select id="IDEncargadoTarea" name="IDEncargado" class="form-control">
+                                <option value="">-Seleccionar-</option>
+                                @foreach (var row in Model.Empleados)
+                                {
+                                    <option value="@row.Value">@row.Text</option>
+                                }
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-3">
+                            <label class="form-label" for="inputAddress">Fecha Inicio</label>
+                            <input id="iniciotarea" class="form-control tiempo" name="FechaInicial" type="text">
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label" for="inputAddress">Fecha Termino</label>
+                            <input id="fintarea" name="FechaFinal" class="form-control tiempo" type="text">
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label" for="IDUbicacion">Ubicación</label>
+                            <select id="IDUbicacion" name="IDUbicacion" class="form-control">
+                                <option value="">-Seleccionar-</option>
+                                @foreach (var row in Model.UbisTareas)
+                                {
+                                    <option value="@row.Value">@row.Text</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label" for="EsCECO">¿Es CECO?</label>
+                            <div class="form-check form-switch"><input class="form-check-input" type="checkbox" name="EsCECO"></div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label" for="DescripcionTarea">Descripción</label>
+                            <textarea id="DescripcionTarea" name="Descripcion" rows="2" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer gris">
+                        <input type="submit" id="BtnIngresarTarea" class="btn btn-success " value="Ingresar" />
+                    </div>
+
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="nuevaAsignacionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="border-radius:25px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header botonazul">
+                <h5 class="modal-title" id="asignacionModalHeader">Nueva Asignación</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body gris">
+
+                <form id="nuevaAsignacionForm" action="@Url.Action("CreaAsignacion","Programa")" method="post">
+
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label" for="IDEmpleadoTarea">Empleado</label>
+                            <input style="display:none" name="id" id="idasignacion" />
+                            <input style="display:none" name="idtarea" id="idtareaNA" />
+                            <select name="idempleado" id="IDEmpleadoTarea" class="form-control">
+                                <option value="">-Seleccionar-</option>
+                                @foreach (var row in Model.Empleados)
+                                {
+                                    <option value="@row.Value">@row.Text</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-3">
+                            <label class="form-label" for="inputAddress">Fecha Inicio</label>
+                            <input name="fechainicial" id="inicioasignacion" class="form-control tiempo" type="text">
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label" for="inputAddress">Fecha Termino</label>
+                            <input name="fechatermino" id="finasignacion" autocomplete="off" class="form-control tiempo" type="text">
+                            <div class="errorTxt"></div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <label class="form-label" for="DescripcionAsignacion">Responsabilidades</label>
+                            <textarea id="DescripcionAsignacion" name="responsabilidades" rows="2" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer gris">
+                        <input type="submit" id="BtnIngresarAsignacion" class="btn btn-success " value="Ingresar" />
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="eliminarTareaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="border-radius:25px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header botonazul">
+                <h5 class="modal-title" id="exampleModalLabel">Eliminar Tarea</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body gris">
+
+                <h2 id="TextoEliminar"></h2>
+
+
+            </div>
+            <div class="modal-footer gris">
+                <input type="button" id="BtnConfirmarEliminarTarea" class="btn btn-success " value="Confirmar" />
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="eliminarAsignacionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="border-radius:25px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header botonazul">
+                <h5 class="modal-title" id="exampleModalLabel">Eliminar Asignación</h5>
+                <button type="button" class="close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="eliminaAsignacionForm" method="post" action="@Url.Action("BorraAsignacion","Programa")">
+                <div class="modal-body gris">
+                    <input style="display:none" name="id" id="idAsignacionEliminar" />
+                    <div class="row"><div class="col-12"> <h4>¿Confirma que desea eliminar esta asignación?</h4> </div> </div>
+                    <div class="row"><div class="col-12"> <strong>Empleado:</strong>  <span name="empleado"></span> </div> </div>
+                    <div class="row"><div class="col-12"> Fecha Inicial: <span name="fechainicial"></span> </div> </div>
+                    <div class="row"><div class="col-12"> Fecha Termino: <span name="fechatermino"></span> </div> </div>
+                </div>
+                <div class="modal-footer gris">
+                    <input type="submit" id="BtnConfirmarEliminarAsignacion" class="btn btn-success " value="Confirmar" />
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="nuevosEntregableModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="border-radius:25px">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header headerprograma">
+                <h5 class="modal-title">Nuevo Entregable</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body gris">
+
+                <div class="row"><div class="col-12"><h5 class="float-start" style="color:darkgrey"><span>Entregables según cotización</span></h5> <span><input class="btn btn-outline-success float-end" value="Ingresar" id="btnIngresarEntregables" type="button" /></span></div></div>
+                <table style="margin-top:35px;" id="TablaItemsAFabricar" class="table">
+                    <tr style="cursor:pointer">
+                        <th style="display:none">ID Cotizacion</th>
+                        <th style="display:none">ID Tarea</th>
+                        <th class="headerentregables">Entregable</th>
+                        <th class="headerentregables">Unidad</th>
+                        <th class="headerentregables">Cantidad</th>
+                        <th class="headerentregables">Precio Venta</th>
+                        <th class="headerentregables">Costo Produción</th>
+                        <th><div class="form-check form-switch"><input class="form-check-input checkprincipal" type="checkbox" id="checkHeader"></div></th>
+                    </tr>
+                </table>
+
+                <div class="row" id="mensajenoentregable" style="margin-top:20px;">  <div><h3>No hay entregables disponibles</h3></div></div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="nuevoEntregableModal" tabindex="-1" aria-labelledby="example bnModalLabel" aria-hidden="true" style="border-radius:25px">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header headerprograma">
+                <h5 class="modal-title" id="tituloEntregableModal">Nuevo Entregable</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body gris">
+
+                <form id="nuevoEntregableForm" method="post" action="@Url.Action("NuevoEntregable","Tareas")">
+                    <div class="row"> <div><h5 class="float-start" style="color:darkgrey"><span>Crear Entregable</span></h5> <span><input class="btn btn-outline-success float-end" value="Ingresar" id="btnIngresarEntregable" type="submit" /></span></div> </div>
+
+                    <input style="display:none" type="text" class="form-control" name="IDTarea" id="IDTareaEntregable">
+                    <input style="display:none" type="text" class="form-control" name="ID">
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label" for="EntregableModal">Entregable</label>
+                            <input type="text" class="form-control" name="Entregable" id="EntregableModal">
+                        </div>
+
+                        <div class="col-6">
+                            <label class="form-label" for="encargadoEntregableModal">Encargado</label>
+                            <select class="form-control" name="IDEncargado" id="encargadoEntregableModal"><option value="0">-Seleccionar-</option></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <label class="form-label" for="fechainicial">Fecha Inicial</label>
+                            <input id="fechainicialentregable" class="form-control tiempo" name="FechaInicial" type="text">
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label" for="fechaentregable">Fecha Entrega</label>
+                            <input id="fechaentregable" class="form-control tiempo" name="FechaEntrega" type="text">
+                        </div>
+                        <div class="col-1">
+                            <label class="form-label" for="Unidad">Unidad</label>
+
+                            <input type="text" class="form-control" id="Unidad" name="Unidad" />
+                        </div>
+                        <div class="col-1">
+                            <label class="form-label" for="Cantidad">Cantidad</label>
+                            <input type="text" id="Cantidad" class="form-control" name="Cantidad" />
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label" for="IDCategoriaEntregable">Categoría</label>
+                            <select name="IDCategoriaEntregable" class="form-control">
+                                <option value="0">-Seleccionar-</option>
+                                @foreach (var row in Model.CategoriasEntregables)
+                                {
+                                    <option value="@row.Value">@row.Text</option>
+                                }
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label" for="ComentarioEntregableModal">Comentarios</label>
+                            <textarea rows="3" class="form-control" id="ComentarioEntregableModal" name="Comentarios"></textarea>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label" for="instruccionesEntregableModal">Instrucciones</label>
+                            <textarea rows="3" id="instruccionesEntregableModal" class="form-control" name="Instrucciones"></textarea>
+
+                        </div>
+                    </div>
+                    <div id="ContenedorMPTSuperior">
+                        <div class="row" style="margin-top:10px"> <div><h5 class="float-start" style="color:darkgrey"><span>Materiales, repuestos y/o equipos</span></h5></div> </div>
+                        <div class="container-fluid" id="ContenedorMPT">
+                            <div class="row"><div style="display:none">IDCotMaterial</div><div style="display:none">IDEntregablePT</div><div class="col-7">Item</div><div class="col-2">Unidad</div><div class="col-2">Cantidad</div><div class="col-1"><div class="form-check form-switch"><input class="form-check-input checkprincipal" type="checkbox" id="checkHeaderMPT"></div></div></div>
+
+                        </div>
+                    </div>
+                </form>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="detalleEntregableModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header detalleentregableheader">
+                <h3 class="modal-title" id="tituloEntregableModal">Detalle Entregable</h3>
+                <button type="button" class="btn-close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body detalleentregable">
+                <h4 class="subtitulosdetalleentregable">Información General</h4>
+
+                <div class="contenedordetallemateriales">
+                    <div class="row infoentregable" style="border-radius:10px" id="infoEntregable">
+                        <div class="col-12" @*style="border-top-left-radius:10px;border-top-right-radius:10px"*@>
+                            <div class="row labeldetalleentregable" @*style="border-top-left-radius:10px"*@>
+                                <div class="col-6">
+                                    <div class="row">
+                                        <div class="col-3 etiquetaverde" style="border-top-left-radius:10px">
+                                            Tarea:
+                                        </div>
+                                        <div class="col-9">
+                                            <span name="NombreTarea"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3 etiquetaverde">
+                                            Entregable:
+                                        </div>
+                                        <div class="col-9">
+                                            <span name="Entregable"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3 etiquetaverde">
+                                            Fecha límite:
+                                        </div>
+                                        <div class="col-9">
+                                            <span name="FechaEntrega"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3 etiquetaverde">
+                                            Encargado:
+                                        </div>
+                                        <div class="col-9">
+                                            <span name="Encargado"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-2 etiquetaverde">
+                                    Instrucciones:
+                                </div>
+                                <div class="col-4">
+                                    <span name="Instrucciones"></span>
+                                </div>
+
+
+                            </div>
+                            <div class="row labeldetalleentregable" style="border-bottom-left-radius:10px">
+                                <div class="col-6">
+                                    <div class="row">
+                                        <div class="col-3 etiquetaverde">
+                                            Categoria:
+                                        </div>
+                                        <div class="col-9">
+                                            <span name="CategoriaEntregable"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3 etiquetaverde">
+                                            Estado:
+                                        </div>
+                                        <div class="col-9">
+                                            <span name="Estado"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3 etiquetaverde">
+                                            Unidad:
+                                        </div>
+                                        <div class="col-9">
+                                            <span name="Unidad"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="border-bottom-left-radius:10px">
+                                        <div class="col-3 etiquetaverde" style="border-bottom-left-radius:10px">
+                                            Cantidad:
+                                        </div>
+                                        <div class="col-9">
+                                            <span name="Cantidad"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="col-2 etiquetaverde">
+                                    Comentarios:
+                                </div>
+                                <div class="col-4">
+                                    <span name="Comentarios"></span>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="subtitulosdetalleentregable">Detalle Materiales</h4>
+
+                <div class="contenedordetallemateriales">
+                    <div class="row clasedetallematerial headertablamateriales"><div class="col-6">Item</div><div class="col-1">Unidad</div><div class="col-1">Cantidad</div><div class="col-4">Estado Solicitud</div></div>
+                </div>
+
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="eliminarEntregableModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="border-radius:25px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header botonazul">
+                <h5 class="modal-title" id="exampleModalLabel">Eliminar Entregable</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body gris">
+
+                <h2 id="TextoEliminarEntregable"></h2>
+
+
+            </div>
+            <div class="modal-footer gris">
+                <input type="button" id="BtnConfirmarEliminarEntregable" class="btn btn-success " value="Confirmar" />
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="actualizaBitacoraModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="border-radius:25px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header progresoheader">
+                <h5 class="modal-title" id="exampleModalLabel">Actualizar Progreso</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="progresoform">
+                <div class="modal-body gris">
+                    <div class="row" style="margin-bottom: 15px;">
+                        <div class="col-12">
+                            <span class="progresolabel"><label style="margin-right: 5px;">Tarea: </label><label id="tareaObjetivo">TRANSPORTE</label></span>
+                            <span class="progresolabel"><label style="margin-right: 5px;">Progreso Actual:</label><label id="progresoObjetivo"></label></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <label class="form-label" for="progresotxt">Fecha</label>
+                            <input name="Fecha" id="fechaActProgTarea" type="text" class="form-control fecha" />
+
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label" for="progresotxt">Progreso</label>
+                            <input name="Progreso" type="text" class="form-control" id="progresotxt" />
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <label class="form-label" for="bitacoraDescrpTxt">Comentarios</label>
+                            <textarea name="Descripcion" type="text" rows="3" id="bitacoraDescrpTxt" class="form-control"></textarea>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer gris">
+                    <input type="submit" id="btnActProgr" class="btn btn-success " value="Confirmar" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="newToolModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="border-radius:25px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header newtoolheader">
+                <h5 class="modal-title" id="newToolHeader">Requerimiento de Herramientas, equipos, colaciones o vehículos</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="herramientasForm">
+                <div class="modal-body gris">
+                    <div id="herramientasDiv">
+                        <div class="row click">
+                            <div class="col-4 click">
+                                <label class="form-label" for="progresotxt">Item</label>
+                                <input class="d-none" name="ID" id="idSolicitudHerramienta" />
+                                <input name="IDTarea" type="text" class="form-control d-none" id="idTareaHerramientas" />
+                                <input name="Item" type="text" class="form-control" id="itemModalHerramienta" autofocus />
+                            </div>
+                            <div class="col-1 click">
+                                <label class="form-label" for="Cantidad">Cant.</label>
+                                <input name="Cantidad" type="text" class="form-control" id="CantidadHerramientas" />
+                            </div>
+                            <div class="col-7 click">
+
+                                <label class="form-label" for="progresotxt">Especificaciones</label>
+                                <textarea rows="2" name="Descripcion" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row descarta"><div class="col-12"><button id="bntNuevaFilaTools" class="btn btn-dark" type="button">+</button></div></div>
+                </div>
+                <div class="modal-footer gris">
+                    <input type="submit" id="btnIngresarHerramientas" class="btn btn-success " value="Confirmar" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="eliminarHerramientaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="border-radius:25px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header newtoolheader">
+                <h5 class="modal-title" id="exampleModalLabel">Eliminar Herramientas, equipos o vehículos </h5>
+                <button type="button" class="btn-close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body gris">
+
+                <h2 id="TextoEliminarHerramienta"></h2>
+
+
+            </div>
+            <div class="modal-footer gris">
+                <input type="button" id="BtnConfirmarEliminarHerramienta" class="btn btn-success " value="Confirmar" />
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="nuevaAsignacionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="border-radius:25px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header botonazul">
+                <h5 class="modal-title" id="asignacionModalHeader">Nueva Asignación</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body gris">
+
+                <form id="nuevaAsignacionForm" action="@Url.Action("CreaAsignacion","Programa")" method="post">
+
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label" for="IDEmpleadoTarea">Empleado</label>
+                            <input style="display:none" name="id" id="idasignacion" />
+                            <input style="display:none" name="idtarea" id="idtareaNA" />
+                            <select name="idempleado" id="IDEmpleadoTarea" class="form-control">
+                                <option value="">-Seleccionar-</option>
+                                @foreach (var row in Model.Empleados)
+                                {
+                                    <option value="@row.Value">@row.Text</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-3">
+                            <label class="form-label" for="inputAddress">Fecha Inicio</label>
+                            <input name="fechainicial" id="inicioasignacion" class="form-control tiempo" type="text">
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label" for="inputAddress">Fecha Termino</label>
+                            <input name="fechatermino" id="finasignacion" autocomplete="off" class="form-control tiempo" type="text">
+                            <div class="errorTxt"></div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <label class="form-label" for="DescripcionAsignacion">Responsabilidades</label>
+                            <textarea id="DescripcionAsignacion" name="responsabilidades" rows="2" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer gris">
+                        <input type="submit" id="BtnIngresarAsignacion" class="btn btn-success " value="Ingresar" />
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="newTransferenciaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="border-radius:25px">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header newtoolheader">
+                <h5 class="modal-title" id="newTransferenciaHeader">Requerimientos de Transferencias de fondos</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="transferenciasForm">
+                <div class="modal-body gris">
+                    <div id="transferenciasDiv">
+                        <div class="row click">
+                            <div class="col-4 click">
+                                <label class="form-label" for="IDEmpleado">Empleado</label>
+                                <select id="iDEmpleadoTransferencias" name="IDEmpleado" class="form-control"><option value="0">-Seleccionar-</option></select>
+                            </div>
+                            <div class="col-2 click">
+                                <label class="form-label" for="montoModalHerramienta">Monto</label>
+                                <input class="d-none" name="ID" id="idSolicitudTransferencia" />
+                                <input name="IDTarea" type="text" class="form-control d-none" id="idTareaTransferencia" />
+                                <input name="Monto" type="text" class="form-control" id="montoModalHerramienta" autofocus />
+                            </div>
+                            <div class="col-6 click">
+                                <label class="form-label" for="descripcionTransferenciaModal">Descripción</label>
+                                <textarea rows="2" id="descripcionTransferenciaModal" name="Descripcion" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row descarta"><div class="col-12"><button id="bntNuevaFilaTransferencias" class="btn btn-dark" type="button">+</button></div></div>
+                </div>
+                <div class="modal-footer gris">
+                    <input type="submit" id="btnIngresarTransferencias" class="btn btn-success " value="Confirmar" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editarBitacoraModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="border-radius:25px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header newtoolheader">
+                <h5 class="modal-title" id="editBitacoraHeader">Editar Bitácora</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="editarBitacoraForm">
+                <div class="modal-body gris">
+                    <div id="editarBitacoraDiv">
+                        <div class="row">
+                            <div class="col-3">
+                                <label class="form-label">Fecha</label>
+                                <input class="form-control tiempo"  type="text" name="Fecha" id="fechaprogresoTxtBx" />
+                            </div>
+
+                            <div class="col-3">
+                                <label class="form-label">Progreso %</label>
+                                <input class="form-control" type="text" name="Progreso" id="progresoTxtBx" />
+                            </div>
+                        </div>
+                        <div class="row click">
+
+                            <div class="col-12">
+                                <label class="form-label" for="comentariosBitacoraModal">Comentarios</label>
+                                <input class="d-none" name="ID" id="idEditarBitacora" />
+                                <textarea rows="2" id="comentariosBitacoraModal" name="Descripcion" class="form-control"></textarea>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer gris">
+                    <input type="button" id="btnIngresarEditarBitacora" class="btn btn-success " value="Confirmar" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="nuevasAsignacionesModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="border-radius:25px">
+    <div class="modal-dialog modal-xl" style="max-width: 1350px;">
+        <div class="modal-content">
+            <div class="modal-header botonazul">
+                <h5 class="modal-title" id="asignacionModalHeader">Nuevas Asignaciones</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body gris">
+
+                <form id="nuevasAsignacionesForm" action="@Url.Action("CreaAsignacionesAsync","Programa")" method="post">
+                    <table id="tablaNuevasAsignaciones" class="table">
+                        <tr>
+                            <th class="d-none">IDTarea</th>
+                            <th class="d-none">IDEmpleado</th>
+                            <th width="28%">Empleado</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Término</th>
+                            <th width="35%">Responsabilidades</th>
+                            <th>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input checkprincipal" type="checkbox" id="checkHeaderNuevasAsignaciones">
+                                </div>
+                            </th>
+                        </tr>
+
+                        @foreach (var row in Model.Empleados)
+                        {
+                            <tr>
+                                <td class="d-none"><input name="IDTarea" type="text"></td>
+                                <td class="d-none"><input name="IDEmpleado" value="@row.Value" type="text"></td>
+                                <td><input style="width: 100%;font-size:14px" class="noborder" readonly="readonly" name="Empleado" value="@row.Text"></td>
+                                <td><input class="noborder tiempo" name="FechaInicial" type="text"></td>
+                                <td><input class="noborder tiempo" name="FechaTermino" type="text"></td>
+                                <td><textarea style="background-color: white;border-radius:10px;width:100%" class="noborder" name="Responsabilidades" rows="2"></textarea></td>
+                                <td>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input deslizado" type="checkbox">
+                                    </div>
+                                </td>
+
+                            </tr>
+
+
+                        }
+
+
+
+                    </table>
+                    <div id="seccionError" class="d-none">
+                        <h3>Hubo un problema al intentar procesar la solicitud</h3>
+                        <ul>
+                        </ul>
+                    </div>
+                    <div class="modal-footer gris">
+                        <input type="button" id="BtnIngresarAsignaciones" class="btn btn-success " value="Ingresar" />
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="nuevosEySModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="border-radius:25px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header botonazul">
+                <h5 class="modal-title" id="asignacionModalHeader"> Equipos de apoyo y Servicios Profesionales Externos</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body gris">
+
+                <form id="nuevasEySForm" action="@Url.Action("nuevaStEyS","Tareas")" method="post">
+                    <table id="tablaNuevosEyS" class="table">
+                        <tr>
+                            <th class="d-none">IDTarea</th>
+                            <th class="d-none">IDCotEyS</th>
+                            <th width="20%">Item</th>
+                            <th width="15%">Unidad</th>
+                            <th width="15%">Cantidad</th>
+                            <th width="45%">Comentarios</th>
+                            <th width="5%">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input checkprincipal" type="checkbox" id="checkHeaderNuevosEyS">
+                                </div>
+                            </th>
+                        </tr>
+
+                        @foreach (var row in Model.EySList)
+                        {
+                            <tr>
+                                <td class="d-none"><input name="IDTarea" type="text"></td>
+                                <td class="d-none"><input name="IDCotEyS" value="@row.ID" type="text"></td>
+                                <td><input style="width: 100%;font-size:14px" class="noborder" readonly="readonly" name="Item" value="@row.Item"></td>
+                                <td><input style="width: 100%;font-size:14px" class="noborder" readonly="readonly" name="Unidad" value="@row.Unidad"></td>
+                                <td><input style="background-color: white;border-radius:10px;width:100%;font-size:14px;padding:4px" class="noborder" name="Cantidad" type="text"></td>
+                                <td><textarea style="background-color: white;border-radius:10px;width:100%" class="noborder" name="Comentarios" rows="2"></textarea></td>
+                                <td>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input deslizado" type="checkbox">
+                                    </div>
+                                </td>
+
+                            </tr>
+
+
+                        }
+
+
+
+                    </table>
+                    <div class="d-none" id="modalEySErrorMsg">
+                        <h4>Debe Seleccionar al menos un Ítem</h4>
+                    </div>
+                    <div class="d-none" id="modalEySErrorMsgList">
+                        <ul></ul>
+                    </div>
+                    <div class="modal-footer gris">
+                        <input type="button" id="btnIngresarEyS" class="btn btn-success " value="Ingresar" />
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editarEySModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="border-radius:25px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header botonazul">
+                <h5 class="modal-title" id="asignacionModalHeader"> Equipos de apoyo y Servicios Profesionales Externos</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body gris">
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<a class="btn btn-success mt-3" href="@Url.Action("GetReport","Servicios",new { id = Model.ID })">Informe</a>
+<div class="d-none" id="dialogodiv"></div>
+
+@section Scripts {
+    @Styles.Render("~/Content/themes/base/css")
+    @Scripts.Render("~/bundles/jqueryval")
+
+}

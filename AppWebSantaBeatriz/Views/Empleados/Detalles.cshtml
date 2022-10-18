@@ -1,0 +1,310 @@
+﻿@model BibliotecaDeClases.EmpleadoModel
+
+@{
+    ViewBag.Title = "Detalles";
+}
+
+
+<link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script>
+    $(document).ready(function (e) {
+        $('[data-bs-toggle="tooltip"]').tooltip()
+    });
+
+</script>
+
+<style>
+    .body {
+        width: 100%;
+        height: 100%;
+        font-family: sans-serif;
+        background: #606c88; /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #3f4c6b, #606c88); /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+
+    .col00 {
+        border-top-left-radius: 8px;
+    }
+
+    .col01 {
+        border-top-right-radius: 8px;
+    }
+
+    .col10 {
+        border-bottom-left-radius: 8px;
+    }
+
+    .col11 {
+        border-bottom-right-radius: 8px;
+    }
+
+    .bluelabel {
+        background-color: #606c88;
+        color: white;
+        font-weight: 800
+    }
+
+    .whitelabel {
+        background-color: white;
+        color: black;
+        font-weight: 800
+    }
+
+    h2 {
+        text-align: center;
+        color: white;
+    }
+
+    .contenedor {
+        padding: 30px
+    }
+
+    .filaizq {
+        height: 16.666666667%;
+    }
+
+    .filaderecha {
+        height: 10%;
+    }
+
+    .filagrande {
+        height: 18rem;
+        margin-bottom: 20px
+    }
+
+    .tabla {
+        width: 25%;
+        margin: 0px
+    }
+
+    h2 {
+        text-align: start;
+        margin-bottom: 25px;
+    }
+
+    .tabla {
+        margin-bottom: 15px
+    }
+</style>
+
+
+<div class="contenedor">
+    <h2>Detalle Empleado</h2>
+    <div class="row filagrande">
+        <div class="col-md-6">
+            <div class="row filaizq">
+                <div class="col-md-4 col00 bluelabel">
+                    Nombre
+                </div>
+                <div class="col-md-8 whitelabel">
+                    @Model.NombreCompleto
+                    <input class="d-none" id="ID" value="@Model.ID" />
+                </div>
+            </div>
+            <div class="row filaizq">
+                <div class="col-md-4 bluelabel">
+                    Rut
+                </div>
+                <div class="col-md-8 whitelabel">
+                    @Model.IDEmpleado
+                </div>
+            </div>
+            <div class="row filaizq">
+                <div class="col-md-4 bluelabel">
+                    Fecha de Nacimiento
+                </div>
+                <div class="col-md-8 whitelabel">
+                    @Model.FechadeNacimiento.ToString("dd-MM-yyyy")
+                </div>
+            </div>
+            <div class="row filaizq">
+                <div class="col-md-4 bluelabel">
+                    Dirección
+                </div>
+                <div class="col-md-8 whitelabel">
+                    @Model.Direccion
+                </div>
+            </div>
+            <div class="row filaizq">
+                <div class="col-md-4 bluelabel">
+                    Fono
+                </div>
+                <div class="col-md-8 whitelabel">
+                    @Model.Fono
+                </div>
+            </div>
+            <div class="row filaizq">
+                <div class="col-md-4 bluelabel col10">
+                    Email
+                </div>
+                <div class="col-md-8 whitelabel">
+                    @Model.Email
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-md-6">
+            <div class="row filaderecha">
+                <div class="col-md-4 bluelabel">
+                    Cargo
+                </div>
+                <div class="col-md-8 whitelabel col01">
+                    @Model.Cargo
+                </div>
+            </div>
+            <div class="row filaderecha">
+                <div class="col-md-4 bluelabel">
+                    Especialidad
+                </div>
+                <div class="col-md-8 whitelabel">
+                    @Model.Especialidad
+                </div>
+            </div>
+            <div class="row filaderecha">
+                <div class="col-md-4 bluelabel">
+                    Supervisor
+                </div>
+                <div class="col-md-8 whitelabel">
+                    @Model.Supervisor
+                </div>
+            </div>
+            <div class="row filaderecha">
+                <div class="col-md-4 bluelabel">
+                    Otros Detalles
+                </div>
+                <div class="col-md-8 whitelabel">
+                    @Model.OtrosDetalles
+                </div>
+            </div>
+            <div class="row filaderecha">
+                <div class="col-md-4 bluelabel">
+                    Valor HH
+                </div>
+                <div class="col-md-8 whitelabel">
+                    @Model.ValorHH
+                </div>
+            </div>
+            <div class="row filaderecha">
+                <div class="col-md-4 bluelabel">
+                    Talla Zapatos
+                </div>
+                <div class="col-md-8 whitelabel">
+                    @Model.TallaZapatos
+                </div>
+            </div>
+            <div class="row filaderecha">
+                <div class="col-md-4 bluelabel">
+                    Talla Poleron
+                </div>
+                <div class="col-md-8 whitelabel">
+                    @Model.TallaTop
+                </div>
+            </div>
+            <div class="row filaderecha">
+                <div class="col-md-4 bluelabel">
+                    Talla Pantalón
+                </div>
+                <div class="col-md-8 whitelabel">
+                    @Model.TallaPantalon
+                </div>
+            </div>
+            <div class="row filaderecha">
+                <div class="col-md-4 bluelabel">
+                    Contratación
+                </div>
+                <div class="col-md-8 whitelabel">
+                    @Model.FechaContratacion.ToString("dd-MM-yyyy")
+                </div>
+            </div>
+            <div class="row filaderecha">
+                <div class="col-md-4 bluelabel">
+                    Finiquito
+                </div>
+                <div class="col-md-8 whitelabel col11">
+                    @if (Model.Finiquito != null)
+                    {
+                        @Model.Finiquito.Fecha.ToString("dd-MM-yyyy")
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        @if (Model.Finiquito == null)
+        {
+            <div class="col-sm-1">
+                <button id="btnFiniquitar" class="btn btn-outline-danger">Finiquitar</button>
+            </div>
+        }
+            @if (Model.Finiquito != null)
+            {
+                <div class="col-sm-1">
+                    <a class="btn btn-outline-light" href="@Url.Action("DownloadFiniquito",new {id = Model.Finiquito.ID })">Finiquito</a>
+                </div>
+            }
+
+        </div>
+
+    @*<h2>Liquidaciones</h2>
+        <div class="row">
+            <table class="tabla">
+                <tr>
+                    <th>Mes</th>
+                    <th>Año</th>
+                    <th></th>
+                </tr>
+                @foreach (var item in Model.Liquidaciones)
+                {
+                    <tr>
+                        <td>@item.MesTexto</td>
+                        <td>@item.Ano</td>
+                        <td>
+                            <div class="d-flex justify-content-around">
+                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar Liquidación" href="@Url.Action("DownLoadFile",new { idempleado = item.IDEmpleado, ano = item.Ano, mes = item.Mes })">
+                                <img src="~/Content/Pictures/download.png" />
+                            </a>
+                            <a data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar Liquidación" href="@Url.Action("DeleteLiquidacionAsync",new { idempleado = item.IDEmpleado, ano = item.Ano, mes = item.Mes })">
+                                <img src="~/Content/Pictures/deletecolor.png" />
+                            </a>
+                                </div>
+                        </td>
+                    </tr>
+
+                }
+            </table>
+            <p>
+                <a class="btn btn-danger" href="@Url.Action("Edit","Empleados",new {id = Model.ID})">Editar</a>
+                <a class="btn btn-primary" href="~/Empleados/VerEmpleados">Volver</a>
+
+            </p>
+        </div>*@
+
+
+
+
+
+</div>
+<div class="d-none" id="finiquitoDiv"></div>
+<script>
+    $(document).on('click', '#btnFiniquitar', function (e) {
+        var id = $('#ID').val();
+        $('#finiquitoDiv').load('/Empleados/NuevoFiniquito/' + id + ' #nuevoFiniquitoForm', function () {
+            $('.fecha').datepicker();
+            $('.fecha').datepicker({ dateFormat: 'dd-mm-yy' });
+            $.datepicker.setDefaults($.datepicker.regional['es']);
+            $('#finiquitoDiv').removeClass('d-none').dialog({title:'Formulario Finiquito', width:'70%'});
+
+        });
+    });
+</script>
+
+
+
+

@@ -1,0 +1,114 @@
+﻿@model IEnumerable<AppWebSantaBeatriz.Models.UsuariosViewModel>
+
+@{
+    ViewBag.Title = "VerUsuarios";
+}
+<link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+<style>
+    .encabezados {
+        background: #3C3B3F; /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #605C3C, #3C3B3F); /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #605C3C, #3C3B3F); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+</style>
+<h2>Usuarios</h2>
+
+
+<table class="tabla">
+    <tr class="encabezados">
+        <th>Empleado</th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+<tr>
+    <td>
+        @item.Empleado
+    </td>
+    <td>
+        @item.Email.ToLower()
+    </td>
+    <td>
+        @item.UserName.ToLower()
+    </td>
+    <td>
+        @item.Name.ToLower()
+    </td>
+    <td>
+        <div class="d-flex justify-content-sm-around">
+            @if (item.Email == "admin@sbservicios.cl")
+            {
+                <button class="bg-transparent border-0" id="btnCorreoRestablecer" data-idusuario="@item.Id">
+                    <img data-bs-toggle="tooltip" data-bs-placement="top" title="Enviar Correo Reestablecer" src="~/Content/Pictures/email.png" />
+                </button>
+            }
+            else
+            {
+                <button class="bg-transparent border-0" id="btnCorreoRestablecer" data-idusuario="@item.Id">
+                    <img data-bs-toggle="tooltip" data-bs-placement="top" title="Enviar Correo Reestablecer" src="~/Content/Pictures/email.png" />
+                </button>
+                <button class="bg-transparent border-0" id="btnCorreoConfirmar" data-idusuario="@item.Id">
+                    <img data-bs-toggle="tooltip" data-bs-placement="top" title="Enviar Correo Confirmar" src="~/Content/Pictures/nuevo-correo-electronico.png" />
+                </button>
+            }
+
+        </div>
+
+    </td>
+</tr>
+    }
+
+</table>
+<script>
+    var iduser;
+    var url;
+
+    $(document).on('click', '#btnCorreoRestablecer', function (e) {
+        iduser = $(this).data('idusuario');
+        $('#dialogo').removeClass('d-none').dialog({ position: { my: 'top', at: 'top+100' }, title: "Reestablecer Contraseña", resize: "auto", width: "auto" });
+        $('.ui-dialog-titlebar-close').text('x').css('font-size', '12px');
+        url = "/Account/correoRestablecerPassAsync/";
+    });
+    $(document).on('click', '#btnCorreoConfirmar', function (e) {
+        iduser = $(this).data('idusuario');
+        $('#dialogo').removeClass('d-none').dialog({ position: { my: 'top', at: 'top+100' }, title: "Confirmar Cuenta", resize: "auto", width: "auto" });
+        $('.ui-dialog-titlebar-close').text('x').css('font-size', '12px');
+        url = "/Account/correoConfirmarPassAsync/";
+    });
+    $(document).on('click', '#btnenviarCorreoRestablecer', function (e) {
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: { userid:iduser},
+            dataType: "json",
+            success: function (response) {
+                $('#dialogo').dialog('close');
+            }
+        });
+
+    });
+
+    $(document).ready(function (e) {
+        $('[data-bs-toggle="tooltip"]').tooltip();
+    });
+</script>
+<div id="dialogo" class="d-none">
+    <div class="capsula">
+     <p>
+         <span style="font-size:20px">Para enviar el correo haga click en enviar</span><button id="btnenviarCorreoRestablecer" style="margin-left:10px" type="button" class="btn btn-success">Enviar</button>
+         </p> 
+        
+    </div>
+</div>

@@ -1,0 +1,130 @@
+﻿@model BibliotecaDeClases.FirmaLiquidacionModel
+
+@{
+    ViewBag.Title = "FirmarLiquidacion";
+}
+@{
+    Layout = "";
+}
+@Scripts.Render("~/bundles/jquery")
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+
+<style>
+
+    .d-none {
+        display: none
+    }
+
+    .btna {
+        text-decoration: none !important;
+        background-color: darkslategrey;
+        color: white !important;
+        border: none;
+        border-radius: 8px;
+        padding: 10px;
+        margin-top: 10px
+    }
+
+    .btnb {
+        text-decoration: none !important;
+        background-color: #171b48;
+        color: white !important;
+        border: none;
+        border-radius: 8px;
+        padding: 10px;
+        margin-top: 10px
+    }
+
+    .contenedor {
+        background-color: #f7f6f6;
+        padding: 10px;
+        padding-bottom: 30px;
+        padding-left: 20px;
+        /*  width: 55%;*/
+        border-radius: 8px;
+        box-shadow: inset 0 3px 6px rgba(0,0,0,0.16), 0 4px 6px rgba(0,0,0,0.45)
+    }
+
+    .firma {
+        width: 40%;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        font-size: larger
+    }
+
+    body {
+        margin: 25px
+    }
+
+    p {
+        font-size: large
+    }
+
+    .alert {
+        margin-top: 10px
+    }
+</style>
+
+
+<script>
+    $(document).ready(function () {
+        $('#formulario').validate({
+            rules: {
+                Firma: "required"
+            },
+            messages: {
+                Firma: "Debe ingresar su nombre completo"
+            },
+            submitHandler: function (form) {
+                var token = $('input[name="__RequestVerificationToken"]').val();
+                var model = {};
+                $(form).find('input').each(function (i, row) {
+                    var name = $(row).attr('name');
+                    model[name] = $(row).val();
+                });
+                model['__RequestVerificationToken'] = token;
+                $.ajax({
+                    type: "POST",
+                    url: "/Account/FirmaLiquidacion/",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(model),
+                    dataType: "json",
+                    success: function (response) {
+                        $('.alert').removeClass('d-none');
+                        $('#enviar').prop('disabled', true);
+                    }
+                });
+            }
+
+
+        });
+    });
+
+</script>
+
+<div class="contenedor">
+    <form id="formulario" method="post">
+        @Html.AntiForgeryToken()
+        <input class="d-none" value="@Model.ID" name="ID" />
+        @*<input class="d-none" value="@Model.Code" name="Code" />*@
+        <input class="d-none" value="@Model.IDUsuario" name="IDUsuario" />
+        <h2>Estimado @Model.Usuario,</h2>
+        <p>
+            Para firmar su documento favor ingresar su nombre completo a continuación.<br />
+
+            Atentamente,<br />
+            Administración Santa Beatriz Servicios Industriales<br />
+
+
+        </p>
+        <input name="Firma" type="text" class="form-control firma" />
+        <input id="enviar" type="submit" class="btna " value="Enviar" />
+    </form>
+    <div class="alert alert-success d-none" role="alert">
+        ¡Gracias, el documento ha sido firmado exitosamente!
+    </div>
+</div>
+@Scripts.Render("~/bundles/jqueryval", "~/bundles/jqueryui")

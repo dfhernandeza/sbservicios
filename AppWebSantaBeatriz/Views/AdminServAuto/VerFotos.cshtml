@@ -1,0 +1,106 @@
+﻿@model IEnumerable<BibliotecaDeClases.Modelos.ServicioAutomotriz.FotoModel>
+
+@{
+    ViewBag.Title = "VerFotos";
+}
+<head>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.validate.js"></script>
+  <style>
+      .error {
+          color: red;
+          float: left;
+      }
+  </style>
+</head>
+
+<h2 class="text-center mb-5">Ver Fotos</h2>
+
+<p>
+    <button id="nuevaFotoBtn" class="btn btn-outline-primary">Nueva</button>
+</p>
+<table class="tabla">
+    <tr class="encabezado">
+        <th>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </th>
+        <th>
+            Fecha Subida
+        </th>
+        <th>
+            Categoria
+        </th>
+        <th>
+            Sección
+        </th>
+        <th>
+            Foto
+        </th>
+
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td class="celda">
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td class="celda">
+               @item.FechaSubida.ToString("dd-MM-yyyy")
+            </td>
+            <td>
+                @item.Categoria
+            </td>
+            <td>
+                @item.Seccion
+            </td>
+            <td class="celda">
+                <img class="zoom" width="150" style="height:150px!important" src="@item.URL" />
+            </td>
+            <td>
+                <div class="d-flex justify-content-around">
+                    <a href="@Url.Action("EliminarFoto",new {id = item.ID })" class="btn btn-danger">
+                        <img src="~/Content/Pictures/delete.png" />
+                    </a>
+                    <a href="@Url.Action("EditarFoto",new {id = item.ID })" class="btn btn-success">
+                        <img src="~/Content/Pictures/editar.png" />
+                    </a>
+                </div>
+               
+            </td>
+        </tr>
+    }
+
+</table>
+<div id="dialogDiv" class="d-none">
+
+</div>
+<script>
+    $(document).on('click', '#nuevaFotoBtn', function () {
+        $('#dialogDiv').load("/AdminServAuto/NuevaFoto .container-fluid", function () {
+            $('#dialogDiv').removeClass("d-none").dialog({ title: "Subir Foto", width: "75%",height:'auto' });
+            $('#nuevaFotoForm').validate({
+                rules: {
+                    Nombre: "required",
+                    IDCategoria: "required",
+                    IDSeccion: "required",
+                    Foto: "required"
+                },
+                messages: {
+                    Nombre: "Debe proporcionar un nombre",
+                    IDCategoria: "Debe escoger una categoría",
+                    IDSeccion: "Debe escoger una sección",
+                    Foto: "Debe escoger un archivo"
+                },
+
+            });
+        });
+
+    });
+</script>

@@ -1,0 +1,96 @@
+﻿@model BibliotecaDeClases.Modelos.ServicioAutomotriz.FotoModel
+
+@{
+    ViewBag.Title = "Nueva Foto";
+}
+<head>
+    <link href="~/Estilos/SBSACss.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <style>
+        .error{
+            color:orangered;
+        }
+    </style>
+</head>
+
+<h2 class="text-center mb-5">Nueva Foto</h2>
+
+<div class="container-fluid">
+    <form id="nuevaFotoForm" enctype="multipart/form-data" method="post" action="@Url.Action("NuevaFoto")">
+        <div class="row">
+            <div class="col-sm-4">
+                <label>Nombre</label>
+                <input name="Nombre" class="form-control" />
+            </div>
+            <div class="col-sm-2">
+                <label>Categoria</label>
+                <select class="form-control" name="IDCategoria">
+                    <option value="">-Seleccionar-</option>
+                    @foreach (var item in Model.CategoriasFotos)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+
+                    }
+
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <label>Sección</label>
+                <select class="form-control" name="IDSeccion">
+                    <option value="">-Seleccionar-</option>
+                    @foreach (var item in Model.Secciones)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+
+                    }
+
+                </select>
+            </div>
+            <div class="col-sm-4">
+                <label>Foto</label>
+                <input name="Foto" class="form-control" type="file" />
+            </div>
+            <div class="col-sm-12">
+                <label class="form-label">Descripción</label>
+                <textarea name="Descripcion" class="form-control">@Model.Descripcion</textarea>
+            </div>
+            <div class="col-sm-12 mt-3">
+                <input class="btn btn-outline-success" type="submit" value="Subir" />
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#nuevaFotoForm').validate({
+            rules: {
+                Nombre: {
+                    required: true,
+                    remote: {
+                        url: "/AdminServAuto/DisponibilidadNombreFoto",
+                        type: "post",
+                        data: {
+                            nombre: function () {
+                                return $('input[name="Nombre"]').val();
+                            }
+                        },
+                    },
+                },
+                IDCategoria: "required",
+                IDSeccion: "required",
+                Foto: "required",
+                
+            },
+            messages: {
+                Nombre: {
+                    required: "Debe proporcionar un nombre",
+                    remote: "El nombre no está disponible",
+                },
+                IDCategoria: "Debe escoger una categoría",
+                IDSeccion: "Debe escoger una sección",
+                Foto: "Debe seleccionar un archivo"
+            }
+
+        })
+    });
+</script>

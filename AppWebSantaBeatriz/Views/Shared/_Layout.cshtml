@@ -1,0 +1,793 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewBag.Title - Santa Beatriz Servicios Industriales</title>
+    <link href="~/Estilos/LayoutPrincipal.css" rel="stylesheet" />
+    @Scripts.Render("~/bundles/jquery")
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+
+    <script src="~/Scripts/Funciones.js"></script>
+    <style>
+        /* The sidebar menu */
+        .sidebar {
+            height: 100%; /* 100% Full-height */
+            width: 0; /* 0 width - change this with JavaScript */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Stay on top */
+            top: 0;
+            left: 0;
+            background-color: #111; /* Black*/
+            overflow-x: hidden; /* Disable horizontal scroll */
+            padding-top: 60px; /* Place content 60px from the top */
+            transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
+        }
+
+        .sidebarb {
+            height: 100%; /* 100% Full-height */
+            width: 0; /* 0 width - change this with JavaScript */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Stay on top */
+            top: 0;
+            left: 0;
+            background: rgb(243,60,0);
+            background: linear-gradient(180deg, rgba(243,60,0,1) 35%, rgba(218,10,0,1) 66%);
+            overflow-x: hidden; /* Disable horizontal scroll */
+            padding-top: 60px; /* Place content 60px from the top */
+            transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
+            border-right: thick;
+            border-color: blue;
+            border-width: 2px;
+        }
+        /* The sidebar links */
+        .sidebar a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebarb a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+        /* When you mouse over the navigation links, change their color */
+        .sidebar a:hover {
+            color: #f1f1f1;
+        }
+
+        .sidebarb a:hover {
+            color: #f1f1f1;
+        }
+        /* Position and style the close button (top right corner) */
+        .sidebar .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        .sidebarb .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+        /* The button used to open the sidebar */
+        .openbtn {
+            font-size: 14px;
+            cursor: pointer;
+            background-color: transparent;
+            color: white;
+            /*padding: 10px 15px;*/
+            border: none;
+        }
+
+            .openbtn:hover {
+                background-color: #444;
+            }
+
+        /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+        #main {
+            transition: margin-left .5s; /* If you want a transition effect */
+            padding: 20px;
+        }
+
+        /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+        /*media screen and (max-height: 450px) {
+          .sidebar {padding-top: 15px;}
+          .sidebar a {font-size: 18px;}
+        }*/
+    </style>
+
+    <style>
+        .btn-block {
+            /* background-color: white;*/ /* Blue background */
+            border: none; /* Remove borders */
+            color: black; /* White text */
+            /* Some padding */
+            font-size: 16px; /* Set a font size */
+            cursor: pointer; /* Mouse pointer on hover */
+            margin-left: 1px;
+            margin-right: 3px;
+        }
+
+            /* Darker background on mouse-over */
+            .btn-block:hover {
+                background-color: darkgrey;
+                color: white;
+            }
+
+
+
+        .margenes {
+            margin-top: 20px;
+            margin-bottom: 20px
+        }
+
+        .fondogris {
+            background-color: #f7f7f7;
+            padding: 20px;
+            border-radius: 25px
+        }
+
+        .botonazul {
+            background-color: #007bff;
+            color: #fff;
+            border-color: #0062cc
+        }
+
+        .botonrojo {
+            color: #fff;
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .botonnaranjo {
+            color: #fff;
+            background-color: #ff6a00;
+            border-color: #ff6a00;
+        }
+
+        .list-group-item {
+            background-color: transparent;
+        }
+
+        @@media(max-width: 768px) {
+            .mobil {
+                display: flex !important;
+            }
+
+            .full {
+                display: none !important;
+            }
+        }
+
+        @@media(min-width: 768px) {
+            .full {
+                display: flex !important;
+            }
+
+            .mobil {
+                display: none !important;
+            }
+        }
+    </style>
+
+    <script>
+
+        function openNav() {
+            var sidebar = document.getElementById("mySidebar");
+            sidebar.style.width = "16rem";
+            sidebar.style.zIndex = "2";
+            /*document.getElementById("main").style.marginLeft = "250px";*/
+            document.getElementById("main").style.zIndex = "1";
+            $('#contenedorgrafico').css('width', '100%');
+        }
+
+        /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+        function closeNav() {
+            document.getElementById("mySidebar").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+    </script>
+</head>
+<body class="body" style="margin-top:0px; overflow-x:hidden">
+   
+    <header style="margin-top:0px">
+        @if (this.ViewContext.RouteData.Values["controller"].ToString() == "AdminServAuto")
+        {
+            <div class="row primerfilab">
+                <div class="col-sm-1 encabezadoCol d-flex align-items-center">
+                    @if (Request.IsAuthenticated)
+                    {
+                        <button style="color:darkgray" class="openbtn" onclick="openNav()">&#9776; Menú</button>
+                    }
+
+
+                </div>
+                <div class="col-sm-5 encabezadoCol2 d-flex align-items-center">
+                    <div style="color: darkgray; font-weight: bold">Servicio Automotriz Santa Beatriz</div>
+                </div>
+                <div class="col-sm-6 encabezadoCol3 d-flex align-items-center">
+                    <div style="margin-right: 10px;color:darkgrey">@Html.Partial("_LoginPartial")</div>
+                </div>
+            </div>
+        }
+        else
+        {
+    <div class="container-fluid">
+        <div class="row primerfila full">
+            <div class="col-sm-1 encabezadoCol d-flex align-items-center">
+                @if (Request.IsAuthenticated)
+                {
+                    <button class="openbtn" onclick="openNav()">&#9776; Menú</button>
+                }
+
+
+            </div>
+            <div class="col-sm-5 encabezadoCol2 d-flex align-items-center ">
+                <div style="color:white;font-weight:bold">Santa Beatriz Servicios</div>
+            </div>
+            <div class="col-sm-6 encabezadoCol3 d-flex align-items-center">
+                <div style="margin-right: 10px;">@Html.Partial("_LoginPartial")</div>
+            </div>
+
+        </div>
+        <div class="row primerfila mobil">
+            <div class="col-12 encabezadoCol d-flex align-items-center justify-content-around">
+                @if (Request.IsAuthenticated)
+                {
+                    <button class="openbtn" onclick="openNav()">&#9776; Menú</button>
+                }
+                <div style="margin-right: 10px;font-size:14px">@Html.Partial("_LoginPartial")</div>
+
+            </div>
+
+
+        </div>
+    </div>
+            
+        }
+    </header>
+    @if (Request.IsAuthenticated)
+    {
+        if (this.ViewContext.RouteData.Values["controller"].ToString() == "AdminServAuto")
+        {
+            <div id="mySidebar" class="sidebarb">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                @*Imágenes*@
+
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a style="text-decoration:none;color:darkgray" data-bs-toggle="collapse" href="#collapse1">Imágenes</a>
+                            </h4>
+                        </div>
+                        <div id="collapse1" class="panel-collapse collapse">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <a class="btn-block" style="font-size:15px;text-decoration:none" href="~/AdminServAuto/NuevaFoto">
+                                        <img style="width:50px;height:50px" src="~/Content/Pictures/picture.png" />   &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;      Nueva
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a class="btn-block" style="font-size:15px;text-decoration:none" href="~/AdminServAuto/VerFotos">
+                                        <img style="width:50px;height:50px" src="~/Content/Pictures/photo-gallery.png" />   &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;      Imágenes
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a class="btn-block" style="font-size:15px;text-decoration:none" href="~/AdminServAuto/VerSecciones">
+                                        <img style="width:50px;height:50px" src="~/Content/Pictures/sections.png" />   &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;      Secciones
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a class="btn-block" style="font-size:15px;text-decoration:none" href="~/AdminServAuto/VerCategoriasFoto">
+                                        <img style="width:50px;height:50px" src="~/Content/Pictures/categories.png" />   &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;      Categorías
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+                @*Productos*@
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a style="text-decoration:none;color:darkgray" data-bs-toggle="collapse" href="#collapse2">Productos</a>
+                            </h4>
+                        </div>
+                        <div id="collapse2" class="panel-collapse collapse">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <a class="btn-block" style="font-size:15px;text-decoration:none" href="~/AdminServAuto/VerInventarioAsync">
+                                        <img style="width:50px;height:50px" src="~/Content/Pictures/engine-oil.png" />   &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;      Nuevo
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a class="btn-block" style="font-size:15px;text-decoration:none" href="~/AdminServAuto/VerProductos">
+                                        <img style="width:50px;height:50px" src="~/Content/Pictures/stand.png" />   &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;      Productos
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a class="btn-block" style="font-size:15px;text-decoration:none" href="~/AdminServAuto/VerMarcas">
+                                        <img style="width:50px;height:50px" src="~/Content/Pictures/price-tag.png" />   &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;      Marcas
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+                @*Neumáticos*@
+                      <div class="panel-group">
+                          <div class="panel panel-default">
+                              <div class="panel-heading">
+                                  <h4 class="panel-title">
+                                      <a style="text-decoration:none;color:darkgray" data-bs-toggle="collapse" href="#collapse3">Neumáticos</a>
+                                  </h4>
+                              </div>
+                              <div id="collapse3" class="panel-collapse collapse">
+                                  <ul class="list-group">
+                                      <li class="list-group-item">
+                                          <a class="btn-block" style="font-size:15px;text-decoration:none" href="@Url.Action("VerInventarioAsync", "AdminServAuto", new {neuma = true })">
+                                              <img style="width:50px;height:50px" src="~/Content/Pictures/tyre.png" />   &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;      Nuevo
+                                          </a>
+                                      </li>
+                                      <li class="list-group-item">
+                                          <a class="btn-block" style="font-size:15px;text-decoration:none" href="~/AdminServAuto/ListaNeumaticos">
+                                              <img style="width:50px;height:50px" src="~/Content/Pictures/tyres.png" />   &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;      Lista
+                                          </a>
+                                      </li>
+                                      <li class="list-group-item">
+                                          <a class="btn-block" style="font-size:15px;text-decoration:none;" href="~/AdminServAuto/VerMarcaProductos">
+                                              <img style="width:50px;height:50px" src="~/Content/Pictures/radius.png" />   &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;      Aros
+                                          </a>
+                                      </li>
+                                      <li class="list-group-item">
+                                          <a class="btn-block" style="font-size:15px;text-decoration:none;" href="~/AdminServAuto/VerMarcaProductos">
+                                              <img style="width:50px;height:50px" src="~/Content/Pictures/text-height.png" />   &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;      Perfiles
+                                          </a>
+                                      </li>
+                                      <li class="list-group-item">
+                                          <a class="btn-block" style="font-size:15px;text-decoration:none;" href="~/AdminServAuto/VerMarcaProductos">
+                                              <img style="width:50px;height:50px" src="~/Content/Pictures/width.png" />   &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;      Anchos
+                                          </a>
+                                      </li>
+                                  </ul>
+
+                              </div>
+                          </div>
+                      </div>
+
+
+
+
+            </div>
+            }
+            else if(this.ViewContext.RouteData.Values["controller"].ToString() == "ServiciosIndustriales")
+                {
+                <div id="mySidebar" class="sidebarb">
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    @*Imágenes*@
+
+                    <div class="panel-group">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a style="text-decoration:none;color:darkgray" data-bs-toggle="collapse" href="#collapse1">Imágenes</a>
+                                </h4>
+                            </div>
+                            <div id="collapse1" class="panel-collapse collapse">
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <a class="btn-block" style="font-size:15px;text-decoration:none" href="~/AdminServAuto/NuevaFoto">
+                                            <img style="width:50px;height:50px" src="~/Content/Pictures/picture.png" />   &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;      Nueva
+                                        </a>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <a class="btn-block" style="font-size:15px;text-decoration:none" href="~/AdminServAuto/VerFotos">
+                                            <img style="width:50px;height:50px" src="~/Content/Pictures/photo-gallery.png" />   &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;      Imágenes
+                                        </a>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <a class="btn-block" style="font-size:15px;text-decoration:none" href="~/AdminServAuto/VerSecciones">
+                                            <img style="width:50px;height:50px" src="~/Content/Pictures/sections.png" />   &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;      Secciones
+                                        </a>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <a class="btn-block" style="font-size:15px;text-decoration:none" href="~/AdminServAuto/VerCategoriasFoto">
+                                            <img style="width:50px;height:50px" src="~/Content/Pictures/categories.png" />   &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;      Categorías
+                                        </a>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                    
+
+
+
+
+                </div>
+                }
+            else
+            {
+            <div id="mySidebar" class="sidebar">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                @* Personal *@
+
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a style="text-decoration:none;color:darkgray" data-bs-toggle="collapse" href="#collapse1">Personal</a>
+                            </h4>
+                        </div>
+                        <div id="collapse1" class="panel-collapse collapse" style="background-color:black">
+                            <ul class="list-group">
+                                <li class="list-group-item" style="background-color:black">
+                                    <a class="btn-block" style="text-align:center;font-size:15px;text-decoration:none" href="~/Empleados/CrearEmpleado">
+                                        <img style="width:50px;height:50px" src="~/Content/Pictures/iconfinder_serviceman_367233.png" />   &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;      Nuevo
+                                    </a>
+                                </li>
+                                <li class="list-group-item" style="background-color:black">
+                                    <a class="btn-block" style="text-align:center;font-size:15px;text-decoration:none" href="~/Empleados/VerEmpleados">
+                                        <img style="width:50px;height:50px" src="~/Content/Pictures/iconfinder_finance_team_crew_group-61_4229497.png" />   &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;      Ver
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a class="btn-block" style="text-align:center;font-size:15px;text-decoration:none" href="~/Empleados/VerEspecialidades">
+                                        <img style="width:50px;height:50px" src="~/Content/Pictures/iconfinder_electrician-technician-occupation-avatar_4549331.png" />       Especialidades
+                                    </a>
+
+                                </li>
+                                <li class="list-group-item">
+                                    <a class="btn-block" style="text-align:center;font-size:15px;text-decoration:none" href="~/Empleados/VerLiquidaciones">
+                                        <img style="width:50px;height:50px" src="~/Content/Pictures/invoiceliqu.png" />       Liquidaciones
+                                    </a>
+
+                                </li>
+                                <li class="list-group-item">
+                                    <a class="btn-block" style="text-align:center;font-size:15px;text-decoration:none" href="~/Account/VerUsuarios">
+                                        <img style="width:50px;height:50px" src="~/Content/Pictures/user.png" />       Usuarios
+                                    </a>
+
+                                </li>
+                                <li class="list-group-item">
+                                    <a class="btn-block" style="text-align:center;font-size:15px;text-decoration:none" href="~/Empleados/VerRegistroVacaciones">
+                                        <img style="width:50px;height:50px" src="~/Content/Pictures/vacaciones-de-verano.png" />       Vacaciones
+                                    </a>
+
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+
+                @* Clientes *@
+
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a style="text-decoration:none;color:darkgray" data-bs-toggle="collapse" href="#collapse2">Clientes</a>
+                            </h4>
+                        </div>
+                        <div id="collapse2" class="panel-collapse collapse" style="background-color:black">
+                            <ul class="list-group">
+                                <li class="list-group-item" style="background-color:black">
+
+                                    <a class="btn-block" style="text-align:center;font-size:20px;text-decoration:none" href="~/Clientes/Crear">
+
+                                        <img style="width:50px;height:50px" src="~/Content/Pictures/iconfinder_person-man_1120619.png" />  &nbsp;&nbsp;&nbsp;&nbsp;       Nuevo
+                                    </a>
+                                </li>
+                                <li class="list-group-item" style="background-color:black">
+                                    <a class="btn-block" style="text-align:center;font-size:20px;text-decoration:none" href="~/Clientes/VerClientes">
+
+                                        <img style="width:50px;height:50px" src="~/Content/Pictures/customers-icon.png" />  &nbsp;&nbsp;&nbsp;&nbsp;       Ver
+                                    </a>
+                                </li>
+
+
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+
+                @* Contabilidad *@
+
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a style="text-decoration:none;color:darkgray" data-bs-toggle="collapse" href="#collapse3">Contabilidad</a>
+                            </h4>
+                        </div>
+                        <div id="collapse3" class="panel-collapse collapse" style="background-color:black">
+                            <ul class="list-group">
+                                @* Documentos *@
+                                <li class="list-group-item" style="background-color:black">
+                                    <div class="panel-group">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a class="btn-block" style="text-align:start;font-size:18px;text-decoration:none;padding-left:10px" data-bs-toggle="collapse" href="#collapse3_1">
+                                                        <img style="width:50px;height:50px" src="~/Content/Pictures/iconfinder_cabinet_58873.png" /> Documentos
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapse3_1" class="panel-collapse collapse" style="background-color:black">
+                                                <ul class="list-group">
+                                                    <li class="list-group-item" style="background-color:black;padding:0px">
+                                                        <a class="btn-block" style="text-align:start;font-size:14px;text-decoration:none" href="~/Transaccion/NuevoTipoDocumento">
+                                                            <img style="width:50px;height:50px" src="~/Content/Pictures/documentos.png" /> Nuevo Tipo
+                                                        </a>
+                                                    </li>
+
+                                                </ul>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item" style="background-color:black;padding:0px">
+                                                        <a class="btn-block" style="text-align:start;font-size:14px;text-decoration:none" href="~/Transaccion/VerTiposDocumentos">
+                                                            <img style="width:50px;height:50px" src="~/Content/Pictures/contrato.png" /> Tipos
+                                                        </a>
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </li>
+                                @*Compras*@
+                                <li class="list-group-item" style="background-color:black">
+                                    <div class="panel-group">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a class="btn-block" style="text-align:start;font-size:18px;text-decoration:none" data-bs-toggle="collapse" href="#collapse3_2">
+                                                        <img style="width:50px;height:50px" src="~/Content/Pictures/monthly.png" /> Compras
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapse3_2" class="panel-collapse collapse" style="background-color:black">
+                                                <ul class="list-group">
+                                                    <li class="list-group-item" style="background-color:black;padding:0px">
+                                                        <a class="btn-block" style="text-align:start;font-size:14px;text-decoration:none" href="~/Transaccion/NuevaCompra">
+                                                            <img style="width:50px;height:50px" src="~/Content/Pictures/top-up.png" /> Nueva Compra
+                                                        </a>
+                                                    </li>
+
+                                                </ul>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item" style="background-color:black;padding:0px">
+                                                        <a class="btn-block" style="text-align:start;font-size:14px;text-decoration:none" href="~/Transaccion/VerCompras">
+                                                            <img style="width:50px;height:50px" src="~/Content/Pictures/invoice.png" /> Ver Compras
+                                                        </a>
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                @* Centros de Costos *@
+                                <li class="list-group-item" style="background-color:black">
+                                    <a class="btn-block" style="text-align:start;font-size:18px;text-decoration:none" href="~/Transaccion/VerCECOs">
+                                        <img style="width:50px;height:50px" src="~/Content/Pictures/iconfinder_money_bag_transactions_funds_3631754.png" />  CECOs
+
+
+                                    </a>
+                                </li>
+                                @* Cuentas *@
+                                <li class="list-group-item" style="background-color:black">
+                                    <div class="panel-group">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a class="btn-block" style="text-align:start;font-size:18px;text-decoration:none" data-bs-toggle="collapse" href="#collapse3_3">
+                                                        <img style="width:50px;height:50px" src="~/Content/Pictures/accounting.png" /> Cuentas
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapse3_3" class="panel-collapse collapse" style="background-color:black">
+                                                <ul class="list-group">
+                                                    <li class="list-group-item" style="background-color:black;padding:0px">
+                                                        <a class="btn-block" style="text-align:start;font-size:18px;text-decoration:none" href="~/Transaccion/VerCuentas">
+                                                            <img style="width:50px;height:50px" src="~/Content/Pictures/cuentas-1.png" /> Ver Cuentas
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item" style="background-color:black;padding:0px">
+                                                        <a class="btn-block" style="text-align:start;font-size:18px;text-decoration:none" href="~/Transaccion/VerTiposDeCuentas">
+                                                            <img style="width:50px;height:50px" src="~/Content/Pictures/cuentas-2.png" /> Tipos
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item" style="background-color:black;padding:0px">
+                                                        <a class="btn-block" style="text-align:start;font-size:18px;text-decoration:none" href="~/Transaccion/VerSubTipoCuentas">
+                                                            <img style="width:50px;height:50px" src="~/Content/Pictures/calculations.png" /> Sub Tipos
+                                                        </a>
+                                                    </li>
+                                                </ul>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                @* Traspasos *@
+                                <li class="list-group-item" style="background-color:black">
+                                    <a class="btn-block" style="text-align:start;font-size:18px;text-decoration:none" href="~/Transaccion/VerTransacciones">
+                                        <img style="width:50px;height:50px" src="~/Content/Pictures/cash-back.png" />  Traspasos
+
+
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+
+                @* Cotizaciones *@
+
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a style="text-decoration:none;color:darkgray" data-bs-toggle="collapse" href="#collapse4">Cotizaciones</a>
+                            </h4>
+                        </div>
+                        <div id="collapse4" class="panel-collapse collapse" style="background-color:black">
+                            <ul class="list-group">
+                                <li class="list-group-item" style="background-color:black">
+                                    <a class="btn-block" style="text-align:center;font-size:16px;text-decoration:none" href="~/CotizacionArauco/PanelCotizaciones">
+                                        <img style="width:100%;height:40px" src="~/Content/Pictures/800px-Arauco_Logo.svg.png" />
+
+                                    </a>
+                                </li>
+
+                                <li class="list-group-item" style="background-color:black">
+                                    <a class="btn-block" style="text-align:center;font-size:15px;text-decoration:none;font-weight:900;padding-left:5px!important" href="~/Cotizaciones/VerCotizaciones">
+                                        <img style="width:50px;height:50px" src="~/Content/Pictures/iconfinder_files_documents_folder_4852546.png" /> &nbsp;&nbsp;&nbsp;&nbsp; Otros Clientes
+
+
+                                    </a>
+                                </li>
+
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+
+                @* Servicios *@
+
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a style="text-decoration:none;color:darkgray" data-bs-toggle="collapse" href="#collapse5">Servicios</a>
+                            </h4>
+                        </div>
+                        <div id="collapse5" class="panel-collapse collapse" style="background-color:black">
+                            <ul class="list-group">
+                                <li class="list-group-item" style="background-color:black">
+                                    <a class="btn-block" style="text-align:center;font-size:16px;text-decoration:none" href="~/Servicios/VerServicios">
+                                        <img style="width:50px;height:50px" src="~/Content/Pictures/construction.png" /> Ver Servicios
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                @*Tareas*@
+
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a style="text-decoration:none;color:darkgray" data-bs-toggle="collapse" href="#collapse6">Tareas</a>
+                            </h4>
+                        </div>
+                        <div id="collapse6" class="panel-collapse collapse" style="background-color:black">
+                            <ul class="list-group">
+                                <li class="list-group-item" style="background-color:black">
+                                    <a class="btn-block" style="text-align:center;font-size:16px;text-decoration:none" href="~/Tareas/VerTiposTareas">
+                                        <img style="width:50px;height:50px" src="~/Content/Pictures/task-list.png" /> Ver Tipos
+                                    </a>
+                                </li>
+
+
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a style="text-decoration:none;color:darkgray" data-bs-toggle="collapse" href="#collapse7">Proveedores</a>
+                            </h4>
+                        </div>
+                        <div id="collapse7" class="panel-collapse collapse" style="background-color:black">
+                            <ul class="list-group">
+                                <li class="list-group-item" style="background-color:black">
+                                    <a class="btn-block" style="text-align:center;font-size:16px;text-decoration:none" href="~/Proveedores/VerProveedores">
+                                        <img style="width:50px;height:50px" src="~/Content/Pictures/supply.png" /> Ver Solicitudes
+                                    </a>
+                                </li>
+
+
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                @* Aprovisionamiento *@
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a style="text-decoration:none;color:darkgray" data-bs-toggle="collapse" href="#collapse8">Solicitudes</a>
+                            </h4>
+                        </div>
+                        <div id="collapse8" class="panel-collapse collapse" style="background-color:black">
+                            <ul class="list-group">
+                                <li class="list-group-item" style="background-color:black">
+                                    <a class="btn-block" style="text-align:center;font-size:16px;text-decoration:none" href="~/Solicitudes/VerSolicitudes">
+                                        <img style="width:50px;height:50px" src="~/Content/Pictures/compliant.png" /> Ver Solicitudes
+                                    </a>
+                                </li>
+
+
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        }
+
+
+    }
+
+
+    <div id="main">
+        @RenderBody()
+
+
+    </div>
+    @RenderSection("scripts", required: false)
+
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+﻿@model IEnumerable<AppWebSantaBeatriz.Models.Transacciones.SubTipoCuentaModel>
+
+@{
+    ViewBag.Title = "Ver SubTipo de Cuentas";
+}
+
+<h2 style="margin-top:20px;margin-bottom:20px">SubTipo de Cuentas</h2>
+
+<p>
+    <a class="btn btn-danger" href="@Url.Action("NuevoSubTipoCuenta")">Nuevo</a>
+</p>
+<table class="table">
+    <tr>
+        <th>
+          ID
+        </th>
+        <th>
+          Nombre
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </th>
+  
+        <th width="24%"></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SubTipo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descripcion)
+        </td>
+
+        <td>
+            <a class="btn btn-danger" href="@Url.Action("EditarSubTipoCuenta", new {idsubtipocuenta = item.ID })">Editar</a>
+            <a class="btn btn-success" href="@Url.Action("DetalleSubTipoCuenta", new {idsubtipocuenta = item.ID })">Detalles</a>
+            <a class="btn btn-primary" href="@Url.Action("EliminarSubTipoCuenta", new {idsubtipocuenta = item.ID })">Eliminar</a>
+   
+        </td>
+    </tr>
+}
+
+</table>

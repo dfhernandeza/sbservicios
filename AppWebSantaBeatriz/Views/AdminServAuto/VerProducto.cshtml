@@ -1,0 +1,120 @@
+﻿@model BibliotecaDeClases.Modelos.ServicioAutomotriz.ProductoModel
+
+@{
+    ViewBag.Title = "VerProducto";
+}
+@{ 
+
+    string[] newLineProcesador(string text)
+    {
+        string[] lines = text.Split('\n');
+        return lines;
+
+
+    }
+    var lista = newLineProcesador(Model.Descripcion);
+}
+<head>
+    <link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+    <style>
+        .contenedor {
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+            width: 95%;
+            background-color: white;
+            border-radius: 8px;
+            padding-top: 5px;
+            color: #302b2b
+        }
+        .fotoproducto{
+            height:180px;
+            width:180px;
+        }
+        .etiqueta{
+            color:#1e0086
+        }
+    </style>
+</head>
+
+<div class="container-fluid contenedor">
+    <h1 class="text-center mb-3">Detalle Producto</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Producto: <span class="etiqueta">@Model.Nombre</span> </h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Marca: <span class="etiqueta">@Model.Marca</span> </h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Precio Venta:  <span class="etiqueta">@Model.Precio.ToString("C")</span> </h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Precio Compra:  <span class="etiqueta">@(Model.PrecioCompra.ToString("C") + " (Neto)")</span> </h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Stock: <span class="etiqueta">@Model.Stock</span> </h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Descripción:</h3>
+                    <ul>
+                        @foreach (var item in lista)
+                        {
+                            <li class="etiqueta">@item</li>
+                        }
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="text-center">Imágenes</h3>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    @{var arreglo = Model.FotosProducto.ToArray();
+
+                        int i = 0;
+                        while (i < arreglo.Length)
+                        {
+                            <div class="row">
+                                @{int k = 0;
+                                    while (k < 3 && i < arreglo.Length)
+                                    {
+                                        <div class="col-md-4">
+                                            <img class="fotoproducto" src="@arreglo[i].URL" />
+                                        </div>
+                                        i++;
+                                        k++;
+                                    }
+                                }
+                            </div>
+                        }
+
+
+
+
+                    }
+
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+

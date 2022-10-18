@@ -1,0 +1,32 @@
+﻿@model BibliotecaDeClases.Modelos.ServicioAutomotriz.SeccionesModel
+
+@{
+    ViewBag.Title = "Nueva Sección";
+}
+
+<h2 class="text-center">Nueva Sección</h2>
+<div class="container-fluid">
+    <form method="post" action="@Url.Action("NuevaSeccion")">
+        <div class="row">
+            <div class="col-md-6">
+                <label class="form-label">Sección</label>
+                <input name="Seccion" class="form-control" />
+            </div>
+        </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="form-label">
+                        Descripcion
+                    </label>
+                    <textarea class="form-control" name="Descripcion"></textarea>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-2">
+                    <input type="submit" class="btn btn-outline-success" />
+                </div>
+               
+            </div>
+    </form>
+    
+</div>

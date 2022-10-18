@@ -1,0 +1,17 @@
+﻿@model AppWebSantaBeatriz.Models.Error.ErrorModel
+
+@{
+    ViewBag.Title = "Error";
+}
+@{
+    Layout = "";
+}
+<link href="~/Estilos/ErrorEstilos.css" rel="stylesheet" />
+<div class="noise"></div>
+<div class="overlay"></div>
+<div class="terminal">
+    <h1>Error <span class="errorcode">Se produjo un error al tratar de procesar la solicitud</span></h1>
+    <p class="output">@Model.Mensaje</p>
+
+</div>
+

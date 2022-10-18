@@ -1,0 +1,141 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "/Views/Shared/_LayoutAlternativo.cshtml";
+}
+<head>
+    <style>
+        .contenedor{
+            width:75%;
+            margin-right:auto;
+            margin-left:auto;
+        }
+        @@media(min-width:576px){
+           .fila1{
+               height:30rem;
+           }
+            .fila2 {
+                height: 20rem;
+            }
+        }
+      
+        .boton-blanco {
+            padding-left: 26px;
+            padding-right: 26px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border: none;
+            background-color: white;
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+        }
+        .boton-blanco:hover{
+            background-color:lightgray;
+        }
+       .electricidad-cont{
+           background-color:#0014f6
+       }
+        .mecanica-cont {
+            background-color: #2b3bf3;
+
+        }
+        .estructuras-cont {
+            background-color: #4957f5
+        }
+        .hidraulica-cont {
+            background-color: #6f7af5
+        }
+        body{
+            background-color:#f6f2f2;
+        }
+        .vermasbtn{
+            background-color:#cbb402;
+            color: black;
+            font-weight:bolder;
+            padding-left:30px;
+            padding-right:30px;
+            padding-top:8px;
+            padding-bottom:8px;
+            text-decoration:none;
+        }
+            .vermasbtn:hover {
+                cursor: pointer;
+                background-color: #8e7e02;
+                color:black;
+            }
+    </style>
+</head>
+
+<div class="container-fluid contenedor">
+    <div class="row">
+        <div class="col-sm-6 fila1" style="padding-left:0px">
+            <img class="w-100 h-100" src="~/Content/SB/a.png" />
+        </div>
+        <div class="col-sm-6 fila1 pt-5 pb-5">
+            <h5 class="mb-4 fw-bold text-primary">SOBRE NOSOTROS</h5>
+            <h1 class="mb-5 w-75 fw-bolder">El Servicio que espera y merece.</h1>
+            <p class="fs-6 fst-italic mb-5">
+                Con más de 10 años sirviendo a las comunidades industriales, comerciales y residenciales de la región de Ñuble, 
+                Santa Beatriz ofrece soluciones y servicios en electricidad, mecánica, estrucuturas e hidráulica.
+
+            </p>
+
+            <a class="vermasbtn">MÁS</a>
+
+        </div>
+        <div class="col-sm-3 fila2 text-center electricidad-cont">
+
+            <div class="h-25 d-flex align-items-center justify-content-center">
+                <i class="fa-solid fa-bolt text-white" style="font-size:3rem"></i>
+            </div>
+            <div class="h-50">
+                <h2 class="">Electricidad</h2>
+                <p class="">Servicios de alta calidad y a un precio justo en electricidad domiciliaria, comercial e industrial.</p>
+            </div>
+            <div class="h-25 d-flex align-items-center justify-content-center mb-5">
+                <a href="@Url.Action("Electricidad")" class="boton-blanco">Más</a>
+            </div>
+
+
+        </div>
+        <div class="col-sm-3 fila2 text-center mecanica-cont">
+            <div class="h-25 d-flex align-items-center justify-content-center">
+                <i class="fa-solid fa-wrench text-white" style="font-size:3rem"></i>
+            </div>
+            <div class="h-50">
+                <h2 class="">Mecánica</h2>
+                <p class="">Reparación mecánica de todo tipo de equipos.</p>
+            </div>
+            <div class="h-25 d-flex align-items-center justify-content-center mb-5">
+                <a href="@Url.Action("Mecanica")" class="boton-blanco">Más</a>
+            </div>
+        </div>
+        <div class="col-sm-3 fila2 text-center estructuras-cont">
+            <div class="h-25 d-flex align-items-center justify-content-center">
+                <i class="fa-solid fa-building text-white" style="font-size:3rem"></i>
+            </div>
+            <div class="h-50">
+                <h2 class="">Estructuras</h2>
+                <p class="">Fabricación de toda clase de estructuras.</p>
+            </div>
+            <div class="h-25 d-flex align-items-center justify-content-center mb-5">
+                <a href="@Url.Action("Estrucuturas")" class="boton-blanco">Más</a>
+            </div>
+        </div>
+        <div class="col-sm-3 fila2 text-center hidraulica-cont">
+            <div class="h-25 d-flex align-items-center justify-content-center">
+                <img src="~/Content/Pictures/hydraulic-energy.png" style="height:50px;width:38px" />
+            </div>
+            <div class="h-50">
+                <h2 class="">Hidráulica</h2>
+                <p class="">Reparación y fabricación de sistemas hidráulicos.</p>
+            </div>
+            <div class="h-25 d-flex align-items-center justify-content-center mb-5">
+                <a href="@Url.Action("Hidraulica")" class="boton-blanco">Más</a>
+            </div>
+        </div>
+
+
+    </div>
+</div>

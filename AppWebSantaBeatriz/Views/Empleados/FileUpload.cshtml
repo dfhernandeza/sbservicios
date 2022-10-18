@@ -1,0 +1,71 @@
+﻿@model AppWebSantaBeatriz.Models.Empleados.EmpModel
+
+@{
+    ViewBag.Title = "FileUpload";
+}
+
+<div id="descargar">
+
+
+    
+  
+    @using (Html.BeginForm("FileUploadAsync", "Empleados", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="row align-items-end">
+        @*<div class="col-3">
+            <label for="IDEmpleado">
+                Empleado
+            </label>
+            <select class="form-control" name="IDEmpleado">
+                <option value="0">-Seleccionar-</option>
+                @foreach (var row in Model.Empleados)
+                {
+                    <option value="@row.Value">@row.Text</option>
+                }
+            </select>
+        </div>*@
+        <div class="col-3">
+            <label>Mes</label>
+            <select name="Mes" class="form-control" id="Mes">
+                <option value="0">-Seleccionar-</option>
+                @foreach (var item in Model.Meses)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+            
+        </div>
+        <input type="text" class="d-none" name="Multi" />
+        <div class="col-3">
+            <label>Año</label>
+            <input type="number" min="2021" max="2030" autocomplete="off" class="form-control" name="Ano" />
+        </div>
+        <div class="col-5">
+            <label>Documento</label>
+            <input name="Documento" type="file" multiple class="form-control" />
+            
+        </div>
+        <div class="col-1">
+
+            <input type="submit" value="Aceptar" class="btn btn-success" />
+            
+        </div>
+
+    </div>
+
+        
+
+
+
+
+
+    }
+</div>
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

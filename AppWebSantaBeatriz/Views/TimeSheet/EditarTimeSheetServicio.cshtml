@@ -1,0 +1,47 @@
+﻿@model BibliotecaDeClases.Modelos.Transacciones.TimeSheetModel
+
+@{
+    ViewBag.Title = "EditarTimeSheetServicio";
+}
+
+<div id="contenedorform" class="contenedorform">
+    <form method="post" action="@Url.Action("editarTimeSheetServicioAsync")">
+        <div class="row align-items-end">
+            <div class="col-4 pe-2">
+                <label class="form-label">Empleado</label>
+                <input name="IDServicio" value="@Model.IDServicio" class="d-none" />
+                <input type="text" class="d-none" name="ID" value="@Model.ID" />
+                <input type="text"  class="form-textbox d-none" name="IDEmpleado" value="@Model.IDEmpleado" />
+               <input type="text" class="form-textbox" name="Empleado" value="@Model.Empleado" />
+            </div>
+            <div class="col-4 pe-2">
+                <label class="form-label">CECO</label>
+                <select class="form-textbox" name="IDCECO">
+                    <option value="">-Seleccionar-</option>
+                    @foreach (var item in Model.CECOsList)
+                    {
+                        <option selected="@item.Selected" value="@item.Value">@item.Text</option>
+                    }
+                </select>
+            </div>
+            <div class="col-2 pe-2">
+                <label class="form-label">Entrada</label>
+                <input type="text" name="Entrada" value="@Model.Entrada" class="date form-textbox" />
+            </div>
+            <div class="col-2 pe-2">
+                <label class="form-label">Salida</label>               
+                <input type="text" name="Salida" value="@Model.Salida" class="date form-textbox" />
+            </div>
+          
+        </div>
+    
+        <div class="row mt-3">
+            <div class="col-12">
+
+                <input type="submit" value="Ingresar" class="btn btn-danger" />
+
+            </div>
+        </div>
+    </form>
+</div>
+

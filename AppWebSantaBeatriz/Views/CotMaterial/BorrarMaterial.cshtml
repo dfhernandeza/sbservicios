@@ -1,0 +1,93 @@
+﻿@model AppWebSantaBeatriz.Models.CotizacionMaterialesModel
+
+@{
+    ViewBag.Title = "BorrarMaterial";
+}
+
+<h2>BorrarMaterial</h2>
+
+<h3>¿Confirmar que desea borrar este elemento?</h3>
+<div>
+    <h4>CotizacionMaterialesModel</h4>
+    <hr />
+
+    @using (Html.BeginForm("BorrarMaterial", "Cotizaciones"))
+    {
+       
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.IDCot)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.IDCot)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Item)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Item)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Unidad)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Unidad)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Cantidad)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Cantidad)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.PUnitario)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PUnitario)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.VTotal)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.VTotal)
+            </dd>
+
+            @Html.HiddenFor(Model => Model.IDCot)
+
+        </dl>
+
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "VerMateriales", new { Model.IDCot })
+        </div>
+
+
+
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+    
+</div>

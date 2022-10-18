@@ -1,0 +1,56 @@
+﻿@model AppWebSantaBeatriz.Models.Servicios.TipoTareaModel
+
+@{
+    ViewBag.Title = "CreaTipoTarea";
+}
+
+<h2>Nuevo Tipo de Tarea</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+
+    <div class="container-fluid fondogris">
+
+        
+            <div class="row align-items-end">
+                <div class="form-group col-md-8">
+                    <label for="Especialidad">Nombre</label>
+                    @Html.EditorFor(model => model.TipoTarea, new { htmlAttributes = new { @class = "form-control", @style = "text-transform:uppercase" } })
+                    @Html.ValidationMessageFor(model => model.TipoTarea, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-4">
+
+
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-danger" type="submit">Ingresar</button>
+                    
+                    </div>
+                
+                </div>
+
+
+
+            </div>
+            <div class="row border-dark">
+                <div class="form-group col-md-12">
+                    <label for="Descripcion">Descripción</label>
+                    <textarea id="Descripcion" name="Descripcion" style="text-transform:uppercase" rows="2" class="form-control"></textarea>
+
+                    @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+                <div class="margenes">
+                    <a href="@Url.Action("VerTiposTareas")" class="btn btn-primary">Volver</a>
+
+                </div>
+
+            </div>
+
+
+}
+
+

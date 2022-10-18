@@ -1,0 +1,70 @@
+﻿@model IEnumerable<AppWebSantaBeatriz.Models.Clientes.ClienteModel>
+
+@{
+    ViewBag.Title = "VerClientes";
+}
+
+<h2 class="margenes">Listado de Clientes</h2>
+<link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+<p>
+    <a href="~/Clientes/Crear" class="btn btn-danger">Nuevo</a>
+</p>
+<style>
+    .encabezado {
+        background: rgb(195,34,34);
+        background: linear-gradient(37deg, rgba(195,34,34,1) 0%, rgba(0,255,64,1) 100%);
+    }
+</style>
+<table class="tabla">
+    <tr class="encabezado">
+    
+        <th>
+            @Html.DisplayNameFor(model => model.IDCliente)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RazonSocial)
+        </th>
+        <th style="width:50%">
+            @Html.DisplayNameFor(model => model.Giro)
+        </th>
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+           
+            <td>
+                @Html.HiddenFor(ModelItem => item.IDSinFormato)
+                @Html.DisplayFor(modelItem => item.IDCliente)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RazonSocial)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Giro)
+            </td>
+
+            
+            
+            <td>
+                <div class="d-flex justify-content-around">
+                    <a class="btn btn-success" href="@Url.Action("Edit","Clientes",new { id= item.ID})">
+                        <img src="~/Content/Pictures/editar.png" />
+                    </a>
+                    <a class="btn btn-primary" href="@Url.Action("Detalles","Clientes",new { id= item.ID})">
+                        <img src="~/Content/Pictures/detail.png" />
+                    </a>
+                    <a class="btn btn-danger" href="@Url.Action("Delete","Clientes",new { id= item.ID})">
+                        <img src="~/Content/Pictures/delete.png" />
+                    </a>
+                </div>
+                
+            </td>
+          
+            
+        </tr>
+    }
+
+</table>

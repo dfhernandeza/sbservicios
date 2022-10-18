@@ -1,0 +1,345 @@
+﻿@model IEnumerable<AppWebSantaBeatriz.Models.CotizacionMaterialesModel>
+
+
+
+@{
+    ViewBag.Title = "Detalle de Materiales";
+}
+@{double suma = 0;
+    foreach (var row in Model)
+    {
+        suma = suma + (double)row.VTotal;
+    }
+}
+
+
+<h1 style="text-align:center">Detalle de Materiales</h1>
+
+
+<div class="row">
+    <div class="col-md-9">
+        <h3 class="margenes">Cotización: @ViewBag.id </h3>
+    </div>
+    <div class="col-md-3">
+        <h3 id="Total" class="margenes">Total : @suma.ToString("C") </h3>
+    </div>
+
+</div>
+
+
+<p>
+    <button type="button" class="btn btn-primary" id="boton" style="margin-top:10px">Nuevo</button>
+    
+</p>
+
+
+<script type="text/javascript">
+
+    var origen;
+    var IDMaterial;
+    $(function () {
+        $(document).ready(function (e) {
+            $(document).on('click', "#abrireditar", function () {
+
+                var row = $(this).closest("tr");   // Finds the closest row <tr>
+                var tds = row.find("td");
+                IDMaterial = tds[0].innerText;
+                $("#ItemModal").val(tds[1].innerText);
+                $("#UnidadModal").val(tds[2].innerText);
+                $("#CantidadModal").val(tds[3].innerText);
+                $("#PrecioModal").val(tds[4].innerText.replace(/[^0-9,-]+/g, ""));
+                $("#VTotalModal").val(tds[5].innerText.replace(/[^0-9,-]+/g, ""));
+
+                $("#nuevoMaterialModal").modal('show');
+                origen = 'Editar'
+            });
+
+            $(document).on('click', "#abrireliminar", function () {
+                var row = $(this).closest("tr");   // Finds the closest row <tr>
+                var tds = row.find("td");
+                IDMaterial = tds[0].innerText;
+
+                $("#eliminaMaterialModal").modal('show');
+                document.getElementById("MaterialEliminado").innerHTML = '¿Confirma que desea eliminar  ' + tds[1].innerText + ' de la lista de materiales?';
+            });
+
+            $(document).on('click', "#EliminaMaterial", function () {
+
+                $.ajax({
+                    url: "/CotMaterial/BorrarMaterial/",
+                    type: 'POST',
+                    async: false,
+                    dataType: 'text',
+                    data: {
+                        id: IDMaterial,
+                     },
+                    success: function (data) {
+
+                        $("#eliminaMaterialModal").modal('hide');
+                        location.reload();
+                    },
+                });
+
+
+            });
+
+
+        });
+
+                   
+    });
+
+    function LimpiarModal() {
+        $("#ItemModal").val('');
+        $("#UnidadModal").val('');
+        $("#CantidadModal").val('');
+        $("#PrecioModal").val('');
+        $("#VTotalModal").val('');
+    };
+
+    $(function () {
+
+        $("#CantidadModal,#PrecioModal").keyup(function (e) {
+
+            var q = $("#CantidadModal").val();
+            var p = $("#PrecioModal").val();
+            var result = "";
+
+            if (q !== "" && p !== "" && $.isNumeric(q) && $.isNumeric(p)) {
+                result = parseFloat(q) * parseFloat(p);
+            }
+            $("#VTotalModal").val(result);
+
+        });
+
+        $("#boton").click(function () {
+
+            $("#nuevoMaterialModal").modal('show');
+            origen = 'Nuevo'
+
+
+
+        });
+
+        $("#CerrarModal").click(function () {
+
+
+            $("#nuevoMaterialModal").modal('hide');
+            LimpiarModal();
+        });
+
+        $("#CerrarEliminarMaterial").click(function () {
+
+
+            $("#eliminaMaterialModal").modal('hide');
+        
+        });
+        $("#CerrarEliminarMaaterialF").click(function () {
+
+
+            $("#eliminaMaterialModal").modal('hide');
+            
+        });
+
+
+
+
+
+
+
+
+         $(document).on('click', "#IngresarModal", function () {
+
+             if (origen == 'Nuevo') {
+                 $.ajax({
+                     url: "/CotMaterial/NuevoMaterial/",
+                     type: 'POST',
+                     async: false,
+                     dataType: 'text',
+                     data: {
+                         idcot: '@ViewBag.id',
+                         item: $("#ItemModal").val(),
+                         unidad: $("#UnidadModal").val(),
+                         punitario: $("#PrecioModal").val(),
+                         cantidad: $("#CantidadModal").val()
+
+                     },
+                     success: function (data) {
+
+                         $("#nuevoMaterialModal").modal('hide');
+                         location.reload();
+                     },
+                 });
+             }
+             else {
+                 var precio = $("#PrecioModal").val();
+
+                 $.ajax({
+                     url: "/CotMaterial/EditaMaterial/",
+                     type: 'POST',
+                     async: false,
+                     dataType: 'text',
+                     data: {
+                         idcot: IDMaterial,
+                         item: $("#ItemModal").val(),
+                         unidad: $("#UnidadModal").val(),
+                         punitario: Number(precio.replace(/[^0-9,-]+/g, "")),
+                         cantidad: $("#CantidadModal").val()
+
+                     },
+                     success: function (data) {
+
+                         $("#nuevoMaterialModal").modal('hide');
+                         location.reload();
+                     },
+                 });
+
+
+
+
+
+             }
+
+
+        });
+
+       });
+
+</script>
+
+<table id="tabla" class="table" style="font-size:15px;margin-top:20px">
+
+    <tr>
+        <th style="display:none">
+            ID
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Item)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Unidad)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Cantidad)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PUnitario)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.VTotal)
+        </th>
+        <th width="16%"></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td style="display:none">
+                @item.ID
+            </td>
+            
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Item)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Unidad)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cantidad)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PUnitario)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VTotal)
+            </td>
+            <td>
+                <input type="button" value="Editar" id="abrireditar" class="btn btn-danger">
+                <input type="button" value="Eliminar" id="abrireliminar" class="btn btn-primary">
+           
+
+            </td>
+        </tr>
+    }
+
+</table>
+
+@*  =======================================================================================================================
+    //Modal
+    ================================================================================================================*@
+<div class="modal fade" id="nuevoMaterialModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header botonrojo">
+                <h5 class="modal-title" id="exampleModalLabel">Nuevo Material</h5>
+                <button type="button" class="close" data-dismiss="modal" id="CerrarModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group form-inline">
+
+                            <label class="sr-only" for="ItemModal">Item</label>
+                            <input id="ItemModal" placeholder="Item" style="width:600px;text-transform:uppercase" type="text" class="form-control" />
+                            <label class="sr-only" for="UnidadModal">Item</label>
+                            <input id="UnidadModal" style="width:95px;margin-left:5px;text-transform:uppercase" placeholder="Unidad" type="text" class="form-control" />
+                            <label class="sr-only" for="CantidadModal">Cantidad</label>
+                            <input id="CantidadModal" style="width:95px;margin-left:5px" placeholder="Cantidad" type="text" class="form-control" />
+                            <label class="sr-only" for="PrecioModal">Precio</label>
+                            <input id="PrecioModal" placeholder="Precio" style="width:95px;margin-left:5px" type="text" class="form-control" />
+                            <label class="sr-only" for="VTotalModal">Item</label>
+                            <input id="VTotalModal" style="width:95px;margin-left:5px" placeholder="Total" type="text" class="form-control" />
+
+
+                            <input type="button" id="IngresarModal" value="Ingresar" class="btn btn-primary" style="margin-left:10px" />
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="eliminaMaterialModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header botonazul">
+                <h5 class="modal-title" id="exampleModalLabel">Eliminar Material</h5>
+                <button type="button" class="close" id="CerrarEliminarMaterial" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                <h2 id="MaterialEliminado"></h2>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="CerrarEliminarMaaterialF">Cerrar</button>
+                <button type="button" id="EliminaMaterial" class="btn btn-primary">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a class="btn btn-danger" href="@Url.Action("VerCotizacion","Cotizaciones", new {id = ViewBag.id})">Volver</a>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval", "~/bundles/jquery", "~/ bundles/popper", "~/bundles/bootstrap", "~/Content/css")
+
+}

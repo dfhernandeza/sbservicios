@@ -1,0 +1,69 @@
+﻿@model BibliotecaDeClases.Modelos.Transacciones.CECOsModel
+
+@{
+    ViewBag.Title = "EditarCECO";
+}
+
+<h2 style="text-align:center">Editar Centro de Costos</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="container-fluid fondogris">
+        <form>
+            <div class="row align-items-end">
+                <div class="form-group col-md-3">
+                    @Html.HiddenFor(x => x.ID)
+                    <label for="Nombre">Nombre</label>
+                    <input type="text" class="form-control" value="@Model.Nombre" name="Nombre" id="Nombre">
+                    @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                </div>
+
+
+
+
+                <div class="form-group col-md-3">
+                    <label for="IDEstadoCECO">Estado</label>
+                    @Html.DropDownListFor(model => model.IDEstadoCECO, new SelectList(Model.Estados, "Value", "Text"), "-Seleccionar-", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.IDEstadoCECO, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="IDEncargado">Encargado</label>
+                    @Html.DropDownListFor(model => model.IDEncargado, new SelectList(Model.Encargados, "Value", "Text"), "-Seleccionar-", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.IDEncargado, "", new { @class = "text-danger" })
+
+                </div>
+                <div class="form-group col-md-3 align-bottom" style="vertical-align:bottom !important">
+
+                    <button type="submit" class="btn btn-block botonrojo">Aceptar </button>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label for="Descripcion">Descripción</label>
+                <textarea class="form-control" rows="2" id="Descripcion" name="Descripcion">@Model.Descripcion</textarea>
+
+                @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+            </div>
+
+
+
+            <div style="margin-top:15px">
+                <a href="@Url.Action("VerCECOs")" class="btn btn-success">Volver</a>
+
+            </div>
+
+        </form>
+
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

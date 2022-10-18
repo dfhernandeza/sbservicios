@@ -1,0 +1,54 @@
+﻿@model IEnumerable<BibliotecaDeClases.Modelos.ServicioAutomotriz.SeccionesModel>
+
+@{
+    ViewBag.Title = "VerSecciones";
+}
+<head>
+    <link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+    <style>
+        .encabezado {
+            background: rgb(241,0,82);
+            background: linear-gradient(94deg, rgba(241,0,82,1) 18%, rgba(218,139,0,1) 45%, rgba(255,132,0,1) 76%);
+        }
+        .btn{
+            padding:3px;
+        }
+    </style>
+</head>
+
+<h2>Ver Secciones</h2>
+
+<p>
+   <a class="btn btn-outline-primary" href="@Url.Action("NuevaSeccion")">Nueva</a>
+</p>
+<table class="tabla">
+    <tr class="encabezado">
+        <th>
+            @Html.DisplayNameFor(model => model.Seccion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Seccion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descripcion)
+        </td>
+        <td class="d-flex justify-content-around">
+            <a class="btn btn-success" href="@Url.Action("EditarSeccion",new {id = item.ID })">
+                <img src="~/Content/Pictures/editar.png" />
+            </a>
+            <a class="btn btn-danger" href="@Url.Action("EliminarSeccion",new {id = item.ID })">
+                <img src="~/Content/Pictures/delete.png" />
+            </a>
+        </td>
+    </tr>
+}
+
+</table>

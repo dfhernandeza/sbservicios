@@ -1,0 +1,71 @@
+﻿@model BibliotecaDeClases.Modelos.ServicioAutomotriz.MarcaProductoModel
+
+@{
+    ViewBag.Title = "VerMarca";
+}
+<head>
+    <link href="~/Estilos/EstilosSB.css" rel="stylesheet" />
+    <style>
+        .encabezado {
+            background: rgb(111,48,212);
+            background: linear-gradient(37deg, rgba(111,48,212,1) 28%, rgba(213,213,213,1) 72%);
+        }
+    </style>
+</head>
+<h2 class="mb-5">Detalle Marca</h2>
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="cont">
+                <div class="row">
+                    <div class="col-md-12"><h3>Marca: @Model.Marca</h3></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12"><h3>Descripción:</h3></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <span style="white-space: pre-line">@Model.Descripcion</span>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="col-md-9">
+            <table class="tabla" style="margin-top:0px">
+                <tr class="encabezado">
+                    <th width="15%">
+                        Modelo
+                    </th>
+                    <th>
+                        Descripcion
+                    </th>
+                    <th width="15%"><a class="btn btn-danger" href="@Url.Action("NuevoModelo",new {idmarca = Model.ID, marca = Model.Marca })">+</a>
+                    </th>
+                </tr>
+                @foreach (var item in Model.Modelos)
+                {
+                    <tr>
+                        <td>@item.Nombre</td>
+                        <td><span style="white-space: pre-line">@item.Descripcion</span></td>
+                        <td>
+                            <div class="d-flex justify-content-around">
+                                <a class="btn btn-primary" href="@Url.Action("EditarModelo",new {id = item.ID})">
+                                    <img src="~/Content/Pictures/editar.png" />
+                                </a>
+                                <a class="btn btn-danger" href="@Url.Action("EliminarModelo",new {id = item.ID})">
+                                    <img src="~/Content/Pictures/delete.png" />
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+
+</div>
+

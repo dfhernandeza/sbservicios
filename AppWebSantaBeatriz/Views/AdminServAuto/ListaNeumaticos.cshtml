@@ -1,0 +1,107 @@
+﻿@model IEnumerable<BibliotecaDeClases.Modelos.ServicioAutomotriz.NeumaticosModel>
+@{
+    ViewBag.Title = "ListaNeumaticos";
+
+
+}
+<style>
+    .body {
+        background: #F5F6F7;
+    }
+    .carousel-control-next-icon, .carousel-control-prev-icon {
+    background-color:black;
+    }
+</style>
+<div class="container-fluid fondoplomo">
+    <div class="row">
+        @{ int j = 1; }
+        @foreach (var item in Model)
+        {
+
+            <div class="col-md-4 p-2 fila-cont-neu">
+                <div class="cont-neuma">
+                    <div class="row h-100">
+                        <div class="col-5 h-100">
+                            <div id="carouselExampleControls@(j)" class="carousel slide h-100" data-bs-ride="carousel">
+                                <div class="carousel-inner h-100">
+                                    <div class="carousel-item active h-100">
+                                        <img src="@item.Fotos.FirstOrDefault().URL"  class="d-block h-100 w-100">
+                                    </div>
+                                    @if (item.Fotos.ToArray().Length > 1)
+                                    {
+                                        for (int i = 1; i < item.Fotos.ToArray().Length; i++)
+                                        {
+                                            <div class="carousel-item h-100">
+                                                <img src="@item.Fotos.ToArray()[i].URL" class="d-block w-100 h-100">
+                                            </div>
+                                        }
+                                    }
+
+
+
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls@(j)" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls@(j)" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-7">
+
+                            <img height="40" width="150" src="@item.URLLogo" />
+
+                            <p class="fuente-precio">
+                                @(item.Ancho + "/" + item.Perfil + "R" + item.Aro + " " + item.IndiceV )<br />
+                            </p>
+
+                            <p class="fuente-cont">
+                                Modelo @item.Modelo<br />
+                                Velocidad Máx. @(item.VMax + " km/h")
+                                Origen  @item.Origen
+                            </p>
+                            <p class="fuente-precio">@item.Precio.ToString("C")</p>
+                 
+                               @if (item.Stock > 0) {
+                            <p class="stock-verde ">
+
+
+                                Stock @item.Stock.ToString("0.##") Unidades
+
+                            </p>
+                               }
+                               else
+                               {
+                            <p class="stock-rojo">
+
+                                Stock @item.Stock.ToString("0.##") Unidades
+
+                            </p>
+
+                               }
+
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" href="@Url.Action("EditarNeumatico", new { id = item.ID })">
+                            <img height="14" width="14" class="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbG5zOnN2Z2pzPSJodHRwOi8vc3ZnanMuY29tL3N2Z2pzIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgeD0iMCIgeT0iMCIgdmlld0JveD0iMCAwIDUxMiA1MTEiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDUxMiA1MTIiIHhtbDpzcGFjZT0icHJlc2VydmUiIGNsYXNzPSIiPjxnPjxwYXRoIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZD0ibTQwNS4zMzIwMzEgMjU2LjQ4NDM3NWMtMTEuNzk2ODc1IDAtMjEuMzMyMDMxIDkuNTU4NTk0LTIxLjMzMjAzMSAyMS4zMzIwMzF2MTcwLjY2Nzk2OWMwIDExLjc1MzkwNi05LjU1ODU5NCAyMS4zMzIwMzEtMjEuMzMyMDMxIDIxLjMzMjAzMWgtMjk4LjY2Nzk2OWMtMTEuNzc3MzQ0IDAtMjEuMzMyMDMxLTkuNTc4MTI1LTIxLjMzMjAzMS0yMS4zMzIwMzF2LTI5OC42Njc5NjljMC0xMS43NTM5MDYgOS41NTQ2ODctMjEuMzMyMDMxIDIxLjMzMjAzMS0yMS4zMzIwMzFoMTcwLjY2Nzk2OWMxMS43OTY4NzUgMCAyMS4zMzIwMzEtOS41NTg1OTQgMjEuMzMyMDMxLTIxLjMzMjAzMSAwLTExLjc3NzM0NC05LjUzNTE1Ni0yMS4zMzU5MzgtMjEuMzMyMDMxLTIxLjMzNTkzOGgtMTcwLjY2Nzk2OWMtMzUuMjg1MTU2IDAtNjQgMjguNzE0ODQ0LTY0IDY0djI5OC42Njc5NjljMCAzNS4yODUxNTYgMjguNzE0ODQ0IDY0IDY0IDY0aDI5OC42Njc5NjljMzUuMjg1MTU2IDAgNjQtMjguNzE0ODQ0IDY0LTY0di0xNzAuNjY3OTY5YzAtMTEuNzk2ODc1LTkuNTM5MDYzLTIxLjMzMjAzMS0yMS4zMzU5MzgtMjEuMzMyMDMxem0wIDAiIGZpbGw9IiNjZGNkY2QiIGRhdGEtb3JpZ2luYWw9IiMwMDAwMDAiIHN0eWxlPSIiIGNsYXNzPSIiPjwvcGF0aD48cGF0aCB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGQ9Im0yMDAuMDE5NTMxIDIzNy4wNTA3ODFjLTEuNDkyMTg3IDEuNDkyMTg4LTIuNDk2MDkzIDMuMzkwNjI1LTIuOTIxODc1IDUuNDM3NWwtMTUuMDgyMDMxIDc1LjQzNzVjLS43MDMxMjUgMy40OTYwOTQuNDA2MjUgNy4xMDE1NjMgMi45MjE4NzUgOS42NDA2MjUgMi4wMjczNDQgMi4wMjczNDQgNC43NTc4MTIgMy4xMTMyODIgNy41NTQ2ODggMy4xMTMyODIuNjc5Njg3IDAgMS4zODY3MTgtLjA2MjUgMi4wODk4NDMtLjIxMDkzOGw3NS40MTQwNjMtMTUuMDgyMDMxYzIuMDg5ODQ0LS40Mjk2ODggMy45ODgyODEtMS40Mjk2ODggNS40NjA5MzctMi45MjU3ODFsMTY4Ljc4OTA2My0xNjguNzg5MDYzLTc1LjQxNDA2My03NS40MTAxNTZ6bTAgMCIgZmlsbD0iI2NkY2RjZCIgZGF0YS1vcmlnaW5hbD0iIzAwMDAwMCIgc3R5bGU9IiIgY2xhc3M9IiI+PC9wYXRoPjxwYXRoIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZD0ibTQ5Ni4zODI4MTIgMTYuMTAxNTYyYy0yMC43OTY4NzQtMjAuODAwNzgxLTU0LjYzMjgxMi0yMC44MDA3ODEtNzUuNDE0MDYyIDBsLTI5LjUyMzQzOCAyOS41MjM0MzggNzUuNDE0MDYzIDc1LjQxNDA2MiAyOS41MjM0MzctMjkuNTI3MzQzYzEwLjA3MDMxMy0xMC4wNDY4NzUgMTUuNjE3MTg4LTIzLjQ0NTMxMyAxNS42MTcxODgtMzcuNjk1MzEzcy01LjU0Njg3NS0yNy42NDg0MzctMTUuNjE3MTg4LTM3LjcxNDg0NHptMCAwIiBmaWxsPSIjY2RjZGNkIiBkYXRhLW9yaWdpbmFsPSIjMDAwMDAwIiBzdHlsZT0iIiBjbGFzcz0iIj48L3BhdGg+PC9nPjwvc3ZnPg==" />
+                            @*<img src="~/Content/FotoSA/editar.png" height="14" width="14"  />*@
+                        </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            j++;
+        }
+    </div>
+
+</div>
+
+<script>
+    $(function () { $('[data-bs-toggle="tooltip"]').tooltip() });
+    $(document).ready(function () {
+        $('.carousel').carousel({ interval: false});
+    });
+</script>

@@ -1,0 +1,24 @@
+﻿@model BibliotecaDeClases.Modelos.Transacciones.HorasExtraModel
+
+@{
+    ViewBag.Title = "elimnaHoraExtraAsync";
+}
+<div id="eliminaForm" class="container-fluid">
+    <form method="post" action="@Url.Action("eliminaHoraExtraAsync")">
+        <input class="d-none" name="IDTransaccion" value="@Model.IDTransaccion" />
+        <input class="d-none" name="ID" value="@Model.ID" />
+        <input class="d-none" name="IDDocumento" value="@Model.IDDocumento" />
+        <div class="row">
+            <div class="col-sm-12">
+                <h2>
+                    ¿Confirma que desea eliminar @Model.Horas.ToString("0.##") horas correspondientes al @Model.Fecha.ToString("D")?
+                </h2>
+            </div>
+            <div class="col-12 mt-3">
+                <input type="submit" class="btn btn-outline-success" value="Confirmar" />
+            </div>
+        </div>
+    </form>
+</div>
+
+

@@ -1,0 +1,553 @@
+﻿@model AppWebSantaBeatriz.Models.Servicios.ServicioModel
+
+@{
+    ViewBag.Title = "Nuevo Servicio";
+}
+
+
+
+
+<style>
+    tr:hover {
+        background-color: yellow;
+    }
+</style>
+
+<script>
+    $(function () {
+        $('#IDCotizacion').change(function (e) {
+            var idcoti = $('#IDCotizacion').val()
+            $.ajax({
+                url: "/Servicios/ObtenerPresupuesto/",
+                type: 'POST',
+                async: false,
+                dataType: 'json',
+                data: {
+                    idcot: idcoti
+
+                },
+                success: function (data) {
+
+                    $("#PresupuestoMateriales").val(data.PresupuestoMateriales);
+                    $("#PresupuestoPersonal").val(data.PresupuestoPersonal);
+                    $("#PresupuestoEquiposServicios").val(data.PresupuestoEquiposServicios);
+                    $("#PresupuestoSeguridad").val(data.PresupuestoSeguridad);
+
+                    //$("#PresupuestoMateriales").val(Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP" }).format(data[0].PresupuestoMateriales));
+                    //$("#PresupuestoPersonal").val(Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP" }).format(data[0].PresupuestoPersonal));
+                    //$("#PresupuestoEquiposServicios").val(Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP" }).format(data[0].PresupuestoEquiposServicios));
+                    //$("#PresupuestoSeguridad").val(Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP" }).format(data[0].PresupuestoSeguridad));
+
+                },
+            });
+
+        });
+
+    });
+
+    $(function () {
+        $('#ACoti').click(function (e) {
+            var url = '@Url.Action("VerCotizacion", "Cotizaciones", new { id = "__id__" })';
+            var id = $("#IDCotizacion").val()
+            window.location.href = url.replace('__id__', id);
+        });
+    });
+
+    $(function () {
+        $('#Guardar').click(function (e) {
+            var idencargado = $('#IDEncargado').val();
+            var nombreservicio = $('#NombreServicio').val();
+            var fechainicio = $('#FechaInicio').val();
+            var fechatermino = $('#FechaTermino').val();
+            var descripcion = $('#Descripcion').val();
+            var idcotizacion = $('#IDCotizacion').val();
+            var idcliente = $('#IDCliente').val();
+            var idcontacto = $('#IDContacto').val();
+            $.ajax({
+                url: "/Servicios/Crear/",
+                type: 'POST',
+                async: false,
+                dataType: 'text',
+                data: {
+                    idencargado: idencargado,
+                    nombreservicio: nombreservicio,
+                    fechainicio: fechainicio,
+                    fechatermino: fechatermino,
+                    descripcion: descripcion,
+                    idcotizacion: idcotizacion,
+                    idcliente: idcliente,
+                    idcontacto: idcontacto
+
+                },
+                success: function (response) {
+
+                    $('#alerta').addClass('show');
+                    $('#Guardar').prop('disabled', true);
+                },
+            });
+        });
+    });
+
+
+
+    //$(function () {
+    //    $('#IDCliente').change(function (e) {
+
+    //        $.ajax({
+    //            url: "/Clientes/Contactos/",
+    //            type: 'POST',
+    //            async: false,
+    //            dataType: 'text',
+    //            data: {
+    //                idcliente: $("#IDCliente").val()
+    //            },
+    //            success: function (data) {
+    //                $("#IDContacto").empty();
+    //                data = JSON.parse(data);
+    //                $(data).each(function (i, item) {
+
+    //                    $('#IDContacto').append(
+    //                        $('<option></option>').val(item.IDContacto).html(item.NombreApellido)
+    //                    );
+    //                });
+    //            },
+    //        });
+
+    //        $.ajax({
+    //            url: "/Clientes/Ubicaciones/",
+    //            type: 'POST',
+    //            async: false,
+    //            dataType: 'text',
+    //            data: {
+    //                idcliente: $("#IDCliente").val()
+    //            },
+    //            success: function (data) {
+    //                $("#IDUbicacion").empty();
+    //                data = JSON.parse(data);
+    //                $(data).each(function (i, item) {
+
+    //                    $('#IDUbicacion').append(
+    //                        $('<option></option>').val(item.ID).html(item.Direccion)
+    //                    );
+    //                });
+    //            },
+    //        });
+
+    //    });
+    //});
+
+    $(function () {
+        $('#Cliente').click(function (e) {
+
+                $('#FilaOculta').css('display','inline-block')
+        });
+
+
+    });
+
+
+
+        $(function () {
+            $(document).on('click', '#LinkIDCliente', function () {
+                var IDCliente;
+                var row = $(this).closest("tr");   // Finds the closest row <tr>
+                var tds = row.find("td");
+                IDCliente = GetRut(tds[0].innerText);
+
+
+
+                $('#FilaOculta').css('display', 'none');
+                $('#Cliente').val(tds[1].innerText.trim());
+                $('#IDCliente').val(IDCliente);
+
+
+                $.ajax({
+                    url: "/Clientes/Contactos/",
+                    type: 'POST',
+                    async: false,
+                    dataType: 'text',
+                    data: {
+                        idcliente: $("#IDCliente").val()
+                    },
+                    success: function (data) {
+                        $("#IDContacto").empty();
+                        data = JSON.parse(data);
+                        $(data).each(function (i, item) {
+
+                            $('#IDContacto').append(
+                                $('<option></option>').val(item.IDContacto).html(item.NombreApellido)
+                            );
+                        });
+                    },
+
+                });
+
+
+                $.ajax({
+                    url: "/Clientes/Ubicaciones/",
+                    type: 'POST',
+                    async: false,
+                    dataType: 'text',
+                    data: {
+                        idcliente: $("#IDCliente").val()
+                    },
+                    success: function (data) {
+                        $("#IDUbicacion").empty();
+                        data = JSON.parse(data);
+                        $(data).each(function (i, item) {
+
+                            $('#IDUbicacion').append(
+                                $('<option></option>').val(item.ID).html(item.Direccion)
+                            );
+                        });
+                    },
+                });
+
+
+                $.ajax({
+                    url: "/Servicios/ObtenerCotizaciones/",
+                    type: 'POST',
+                    async: false,
+                    dataType: 'text',
+                    data: {
+                        idcliente: $("#IDCliente").val()
+                    },
+                    success: function (data) {
+                        $("#IDCotizacion").empty();
+                        data = JSON.parse(data);
+                        $(data).each(function (i, item) {
+
+                            $('#IDCotizacion').append(
+                                $('<option></option>').val(item.IDCotizacion).html(item.IDCotizacion)
+                            );
+                        });
+                    },
+                });
+
+
+
+                $.ajax({
+                    url: "/Servicios/ObtenerPresupuesto/",
+                    type: 'POST',
+                    async: false,
+                    dataType: 'json',
+                    data: {
+                        idcot: $('#IDCotizacion').val()
+
+                    },
+                    success: function (data) {
+
+                        $("#PresupuestoMateriales").val(data.PresupuestoMateriales);
+                        $("#PresupuestoPersonal").val(data.PresupuestoPersonal);
+                        $("#PresupuestoEquiposServicios").val(data.PresupuestoEquiposServicios);
+                        $("#PresupuestoSeguridad").val(data.PresupuestoSeguridad);
+
+                        //$("#PresupuestoMateriales").val(Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP" }).format(data[0].PresupuestoMateriales));
+                        //$("#PresupuestoPersonal").val(Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP" }).format(data[0].PresupuestoPersonal));
+                        //$("#PresupuestoEquiposServicios").val(Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP" }).format(data[0].PresupuestoEquiposServicios));
+                        //$("#PresupuestoSeguridad").val(Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP" }).format(data[0].PresupuestoSeguridad));
+
+                    },
+                });
+
+
+
+
+
+
+
+
+
+            });
+
+        });
+
+
+        $(function () {
+            $(document).on('keyup', '#BuscarBox', function () {
+                var Buscado =  $(this).val();
+
+                $.ajax({
+                    url: "/Clientes/FiltroCliente/",
+                    type: 'POST',
+                    async: false,
+                    dataType: 'text',
+                    data: {
+                        palabra: Buscado
+                    },
+                    success: function (data) {
+
+                        data = JSON.parse(data)
+                        $("#TablaClientes").find("tr:not(:first)").remove();
+                        $(data).each(function (i, item) {
+
+                            var row = $(
+                                '<tr style="border-bottom:groove"><td style="padding:10px">' + '<a  style="text-decoration:none;color:black" id="LinkIDCliente" href="javascript:void(0)">' + item.IDCliente + '</a> </td><td style="padding:10px">' + '<a style="text-decoration:none" id="LinkIDCliente" href="javascript:void(0)">' + item.RazonSocial + '</a></td><td style="padding:10px">' + '<a style="text-decoration:none" id="LinkIDCliente" href="javascript:void(0)">' + item.Alias + '</a></td></tr>');
+                            $('#TablaClientes').append(row);
+
+                        });
+
+
+                    },
+                });
+
+            });
+        });
+
+
+
+
+
+
+</script>
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container-fluid fondogris">
+
+
+
+        <form>
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="card" style="margin-bottom:20px;margin-top:30px">
+                <div class="card-header" style="background-color:green;color:white">
+                    <Strong style="font-size:x-large">Nuevo Servicio</Strong><div class="float-end"><button type="submit" id="Guardar" class="btn btn-primary">Guardar</button></div>
+                </div>
+                <div class="card-body">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-2">
+                            <label for="IDServicio">ID Servicio</label>
+                            <input type="text" class="form-control" id="IDServicio" value="@Model.ID" name="IDServicio" readonly>
+                            @Html.ValidationMessageFor(model => model.ID, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group col-md-5">
+                            <label for="IDEncargado">Encargado</label>
+                            @Html.DropDownListFor(model => model.IDEncargado, new SelectList(Model.Empleados, "Value", "Text"), "-Seleccionar-", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.IDEncargado, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-md-5">
+                            <label for="Ceco">Nombre Centro de Costos</label>
+                            @Html.EditorFor(model => model.Ceco, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Ceco, "", new { @class = "text-danger" })
+                        </div>
+
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="NombreServicio">Nombre Servicio</label>
+                        @Html.EditorFor(model => model.NombreServicio, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.NombreServicio, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        <label for="NombreServicio">Descripción</label>
+                        <textarea class="form-control" style="padding:1px" id="Descripcion" name="Descripcion" rows="6">@Model.Descripcion</textarea>
+
+                        @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-row" id="divB">
+
+
+                        <div class="form-group col-md-12">
+                            <label for="Cliente">Cliente</label>
+                            @Html.HiddenFor(model => model.IDCliente, new { htmlAttributes = new { @class = "form-control" } })
+                            <input class="form-control" id="Cliente" value="-Seleccionar-" readonly />
+                            @Html.ValidationMessageFor(model => model.IDCliente, "", new { @class = "text-danger" })
+                        </div>
+
+
+                    </div>
+
+
+
+                    @*<div class="form-row" id="divA" style="display:none">
+
+
+                            <div class="form-group col-md-12">
+                                <label for="IDCliente">Cliente</label>
+                                @Html.DropDownListFor(model => model.IDCliente, new SelectList(Model.Clientes, "Value", "Text"), "-Seleccionar-", new { @class = "form-control"})
+                                @Html.ValidationMessageFor(model => model.IDCliente, "", new { @class = "text-danger" })
+                            </div>
+
+
+                        </div>*@
+
+                    <div class="row" id="FilaOculta" style="display:none">
+
+
+                        <div class="form-group col-md-12">
+                            <label for="BuscarBox">Buscar Cliente</label>
+                            <input style="width:50%" id="BuscarBox" name="BuscarBox" class="form-control" />
+                        </div>
+                        <div class="container fondogris margenes" style="box-shadow: inset 0 3px 6px rgba(0,0,0,0.16), 0 4px 6px rgba(0,0,0,0.45);margin-left:10px">
+                            <table id="TablaClientes">
+
+                                <tr><th style=" padding:10px">Rut</th><th style="padding:10px">Razón Social</th><th style="padding:10px">Alias</th></tr>
+
+
+                                @{ foreach (var item in Model.ListaClientes)
+                                    {
+
+                                        <tr style="border-bottom:groove">
+                                            <td style="padding:10px">
+
+
+                                                <a style="text-decoration:none" id="LinkIDCliente" href="javascript:void(0)"> @item.IDCliente </a>
+                                            </td>
+                                            <td style="padding:10px">
+                                                <a style="text-decoration:none" id="LinkIDCliente" href="javascript:void(0)"> @item.RazonSocial </a>
+                                            </td>
+                                            <td style="padding:10px">
+                                                <a style="text-decoration:none" id="LinkIDCliente" href="javascript:void(0)"> @item.Alias </a>
+                                            </td>
+
+
+
+                                        </tr>
+
+                                    }
+                                }
+
+
+
+                            </table>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label for="IDCotizacion">Cotización</label>
+                            @Html.DropDownListFor(model => model.IDCotizacion, new SelectList(Model.Cotizaciones, "Value", "Text"), "-Seleccionar-", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.IDCotizacion, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="IDCotacto">Contacto</label>
+                            @Html.DropDownListFor(model => model.IDContacto, new SelectList(Model.Contactos, "Value", "Text"), "-Seleccionar-", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.IDContacto, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label for="IDUbicacion">Ubicación</label>
+                            @Html.DropDownListFor(model => model.IDUbicacion, new SelectList(Model.Ubicaciones, "Value", "Text"), "-Seleccionar-", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.IDUbicacion, "", new { @class = "text-danger" })
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </form>
+
+
+
+
+
+
+        <div class="card" style="margin-bottom:20px">
+            <div class="card-header" style="background-color:#ff6a00;color:white">
+                <Strong style="font-size:x-large">Presupuesto</Strong> <div class="float-end"><button type="button" id="ACoti" class="btn btn-primary">Modificar Presupuesto</button></div>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label for="PresupuestoMateriales">Materiales</label>
+                        @Html.EditorFor(model => model.PresupuestoMateriales, new { htmlAttributes = new { @class = "form-control" } })
+
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <label for="PresupuestoPersonal">Personal</label>
+                        @Html.EditorFor(model => model.PresupuestoPersonal, new { htmlAttributes = new { @class = "form-control" } })
+
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="PresupuestoEquiposServicios">Equipos y Servicios</label>
+                        @Html.EditorFor(model => model.PresupuestoEquiposServicios, new { htmlAttributes = new { @class = "form-control" } })
+
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="PresupuestoSeguridad">Seguridad</label>
+                        @Html.EditorFor(model => model.PresupuestoSeguridad, new { htmlAttributes = new { @class = "form-control" } })
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <a class="btn btn-danger" href="@Url.Action("VerServicios")">Volver</a>
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+<script>
+    //$(function () {
+    //    $(document).ready(function (e) {
+
+    //        $("#PresupuestoMateriales").val(Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP" }).format($("#PresupuestoMateriales").val()));
+    //        $("#PresupuestoPersonal").val(Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP" }).format($("#PresupuestoPersonal").val()));
+    //        $("#PresupuestoEquiposServicios").val(Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP" }).format($("#PresupuestoEquiposServicios").val()));
+    //        $("#PresupuestoSeguridad").val(Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP" }).format($("#PresupuestoSeguridad").val()));
+
+
+
+
+    //    });
+    //});
+
+
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,117 @@
+﻿
+/*.body {
+            background: #606c88;
+        }*/
+/* .resaltada:hover{
+            background-color:goldenrod;
+            color:white;
+        }*/
+/*tr:not(:first-child){
+            font-size:13px;
+            background:white
+        }*/
+
+
+    .boton2 {
+        padding: 10px;
+        color: white;
+        border: solid;
+        border-width: thin;
+        border-color: white;
+        text-decoration: none;
+        background: rgba(0,0,0,0);
+    }
+
+    .cont {
+        box-shadow: inset 0 3px 6px rgba(0,0,0,0.16), 0 4px 6px rgba(0,0,0,0.45);
+        background-color: #f1f1f1;
+        width: 100%;
+        height: 100%;
+        border-radius: 8px;
+        padding: 8px
+    }
+
+
+
+    img {
+        height: 15px
+    }
+
+    .body {
+        width: 100%;
+        height: 100%;
+        font-family: sans-serif;
+        background: #606c88; /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #3f4c6b, #606c88); /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+@media only screen and (min-width : 768px) {
+    .tabla td, .tabla th {
+        font-size:12px;
+    }
+}
+/* typical phone screen resolution */
+@media only screen and (max-width : 576px) {
+    .tabla td, .tabla th {
+        font-size: 9px;
+    }
+}
+/* landscape orientation */
+
+    .tabla {
+        margin-top: 15px;
+        box-shadow: inset 0 3px 6px rgba(0,0,0,0.16), 0 4px 6px rgba(0,0,0,0.45);
+        border-radius: 8px;
+        width: 100%;
+        /*width: 100%*/
+    }
+
+    .encabezado {
+        background: rgb(34,193,195);
+        background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(0,0,0,1) 100%);
+    }
+
+        .encabezado:hover {
+            cursor: pointer;
+        }
+
+    th {
+        padding: 10px !important;
+        color: white;
+    }
+
+    h2 {
+        color: white;
+        text-align: center
+    }
+
+    td {
+        background-color: white;
+        padding: 15px;
+        text-align: left;
+        vertical-align: middle;
+        font-weight: 300;
+        font-size: 12px;
+    }
+
+    /*  tr:hover{
+            background-color:black!important;
+            color:white;
+        }*/
+    tr:last-child > td:first-child {
+        border-bottom-left-radius: 8px
+    }
+
+    tr:last-child > td:last-child {
+        border-bottom-right-radius: 8px
+    }
+
+    th:first-child {
+        border-top-left-radius: 8px;
+    }
+
+    th:last-child {
+        border-top-right-radius: 8px;
+    }
+
+
